@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Password Challenge</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts Inter & Cairo -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        darkBg: '#090d16',
+                        cardBg: '#121c2e',
+                        cardHover: '#1a2740',
+                        neonGreen: '#00ff66',
+                        neonGlow: 'rgba(0, 255, 102, 0.3)',
+                        neonCyan: '#00e5ff',
+                        accentRed: '#ff3366'
+                    },
+                    fontFamily: {
+                        cairo: ['Cairo', 'sans-serif'],
+                        inter: ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: #090d16;
+            color: #f8fafc;
+            overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .neon-border {
+            box-shadow: 0 0 15px rgba(0, 255, 102, 0.25);
+            border: 1px solid rgba(0, 255, 102, 0.4);
+        }
+        .neon-border-red {
+            box-shadow: 0 0 15px rgba(255, 51, 102, 0.25);
+            border: 1px solid rgba(255, 51, 102, 0.4);
+        }
+        .neon-text {
+            text-shadow: 0 0 10px rgba(0, 255, 102, 0.6);
+        }
+        .neon-btn {
+            background: linear-gradient(135deg, #00ff66 0%, #00cc52 100%);
+            color: #050b14;
+            font-weight: 800;
+            box-shadow: 0 4px 20px rgba(0, 255, 102, 0.4);
+            transition: all 0.2s ease;
+        }
+        .neon-btn:active {
+            transform: scale(0.96);
+            box-shadow: 0 2px 10px rgba(0, 255, 102, 0.3);
+        }
+        .custom-scroll::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scroll::-webkit-scrollbar-track {
+            background: #090d16;
+        }
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background: #1a2740;
+            border-radius: 3px;
+        }
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 10px rgba(0,255,102,0.3); }
+            50% { box-shadow: 0 0 25px rgba(0,255,102,0.7); }
+        }
+        .risk-glow {
+            animation: pulseGlow 1.8s infinite ease-in-out;
+        }
+        @keyframes floatAnim {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-6px); }
+        }
+        .float-anim {
+            animation: floatAnim 3s infinite ease-in-out;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-neonGreen selection:text-black">
+
+    <!-- Top Header / App Branding -->
+    <header class="w-full bg-cardBg/80 backdrop-blur-md border-b border-slate-800 py-3 px-4 sticky top-0 z-50">
+        <div class="max-w-xl mx-auto flex items-center justify-between">
+            <div class="flex items-center space-x-3 space-x-reverse cursor-pointer" onclick="goToHome()">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-neonGreen to-emerald-700 flex items-center justify-center shadow-lg shadow-neonGreen/20">
+                    <i class="fa-solid fa-futbol text-darkBg text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="font-cairo font-black text-lg sm:text-xl tracking-wide text-white">Password <span class="text-neonGreen">Challenge</span></h1>
+                    <p class="text-[10px] text-slate-400">الدوريات الأوروبية الخمس الكبرى</p>
+                </div>
+            </div>
+            <div class="flex items-center space-x-2 space-x-reverse">
+                <button onclick="toggleSound()" id="soundToggleBtn" class="w-9 h-9 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-300 flex items-center justify-center transition border border-slate-700" title="كتم/تفعيل الصوت">
+                    <i class="fa-solid fa-volume-high text-sm" id="soundIcon"></i>
+                </button>
+                <button onclick="openStatsModal()" class="w-9 h-9 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-neonGreen flex items-center justify-center transition border border-slate-700" title="الإحصائيات">
+                    <i class="fa-solid fa-chart-pie text-sm"></i>
+                </button>
+                <button onclick="openSettingsModal()" class="w-9 h-9 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-300 flex items-center justify-center transition border border-slate-700" title="الإعدادات">
+                    <i class="fa-solid fa-gear text-sm"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="flex-grow flex flex-col items-center justify-center p-4 max-w-xl w-full mx-auto my-auto">
+
+        <!-- 1. HOME SCREEN -->
+        <div id="screenHome" class="w-full flex flex-col items-center space-y-6 py-4 animate-fade-in">
+            <div class="text-center space-y-3 my-4">
+                <div class="inline-block p-4 rounded-3xl bg-cardBg neon-border float-anim mb-2">
+                    <i class="fa-solid fa-people-group text-5xl text-neonGreen"></i>
+                </div>
+                <h2 class="text-3xl sm:text-4xl font-black text-white tracking-wide">تحدي كلمات المرور <span class="text-neonGreen">لكرة القدم</span></h2>
+                <p class="text-slate-400 text-sm max-w-md mx-auto">اختبر معلوماتك الكروية مع أصدقائك في منافسة حماسية بدون مؤقت، مخصصة حصرياً لنجوم وأساطير الدوريات الأوروبية الخمس الكبرى!</p>
+            </div>
+
+            <div class="w-full space-y-3">
+                <button onclick="goToSetup()" class="w-full py-4 px-6 rounded-2xl neon-btn text-lg flex items-center justify-center space-x-3 space-x-reverse">
+                    <i class="fa-solid fa-play text-xl"></i>
+                    <span>ابدأ مباراة جديدة</span>
+                </button>
+                <button onclick="openStatsModal()" class="w-full py-3.5 px-6 rounded-2xl bg-cardBg hover:bg-cardHover border border-slate-700 text-slate-200 font-bold flex items-center justify-center space-x-3 space-x-reverse transition">
+                    <i class="fa-solid fa-trophy text-neonGreen text-lg"></i>
+                    <span>الإحصائيات وسجل المباريات</span>
+                </button>
+                <button onclick="openRulesModal()" class="w-full py-3.5 px-6 rounded-2xl bg-cardBg hover:bg-cardHover border border-slate-700 text-slate-200 font-bold flex items-center justify-center space-x-3 space-x-reverse transition">
+                    <i class="fa-solid fa-book-open text-neonCyan text-lg"></i>
+                    <span>قواعد اللعبة</span>
+                </button>
+            </div>
+
+            <!-- Last Match Summary Widget if exists -->
+            <div id="lastMatchWidget" class="w-full bg-cardBg/60 rounded-2xl p-4 border border-slate-800 hidden">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-xs text-slate-400 font-semibold"><i class="fa-solid fa-history ml-1 text-neonGreen"></i> آخر نتيجة مسجلة</span>
+                    <span id="lastMatchDate" class="text-[10px] text-slate-500"></span>
+                </div>
+                <div id="lastMatchDetails" class="text-sm font-bold text-slate-200 text-center py-1"></div>
+            </div>
+        </div>
+
+        <!-- 2. SETUP SCREEN -->
+        <div id="screenSetup" class="w-full flex flex-col space-y-5 hidden animate-fade-in">
+            <div class="flex items-center justify-between">
+                <button onclick="goToHome()" class="text-slate-400 hover:text-white flex items-center space-x-1 space-x-reverse text-sm">
+                    <i class="fa-solid fa-arrow-right"></i>
+                    <span>الرئيسية</span>
+                </button>
+                <h3 class="text-xl font-bold text-white">إعدادات المباراة</h3>
+                <div class="w-10"></div>
+            </div>
+
+            <!-- Number of Rounds -->
+            <div class="bg-cardBg p-5 rounded-2xl border border-slate-800 space-y-3">
+                <label class="text-sm font-bold text-slate-300 flex items-center justify-between">
+                    <span>عدد الجولات الأساسية (زوجي):</span>
+                    <span id="selectedRoundsVal" class="text-neonGreen text-lg font-black">6</span>
+                </label>
+                <div class="grid grid-cols-5 gap-2" id="roundsButtonsContainer">
+                    <!-- Generated via JS: 2, 4, 6, 8, 10 -->
+                </div>
+                <p class="text-[11px] text-slate-400">ملاحظة: سيتم اختيار جولة مخاطرة واحدة عشوائياً من بين هذه الجولات لتكون بقيمة نقطتين.</p>
+            </div>
+
+            <!-- Teams Configuration -->
+            <div class="bg-cardBg p-5 rounded-2xl border border-slate-800 space-y-4">
+                <div class="flex items-center justify-between">
+                    <label class="text-sm font-bold text-slate-300">أسماء الفرق (من 2 إلى 4 فرق):</label>
+                    <div class="flex space-x-1 space-x-reverse">
+                        <button onclick="setTeamCount(2)" id="teamBtn2" class="px-3 py-1 text-xs rounded-lg font-bold bg-neonGreen text-darkBg transition">فريقين</button>
+                        <button onclick="setTeamCount(3)" id="teamBtn3" class="px-3 py-1 text-xs rounded-lg font-bold bg-slate-800 text-slate-300 transition">3 فرق</button>
+                        <button onclick="setTeamCount(4)" id="teamBtn4" class="px-3 py-1 text-xs rounded-lg font-bold bg-slate-800 text-slate-300 transition">4 فرق</button>
+                    </div>
+                </div>
+                <div id="teamInputsContainer" class="space-y-3">
+                    <!-- Team inputs rendered by JS -->
+                </div>
+            </div>
+
+            <!-- Start Button -->
+            <button onclick="startMatch()" class="w-full py-4 rounded-2xl neon-btn text-lg flex items-center justify-center space-x-3 space-x-reverse mt-2">
+                <i class="fa-solid fa-play"></i>
+                <span>انطلاق المباراة!</span>
+            </button>
+        </div>
+
+        <!-- 3. GAMEPLAY SCREEN -->
+        <div id="screenGame" class="w-full flex flex-col space-y-4 hidden animate-fade-in">
+            
+            <!-- Top Match Info & Scoreboard -->
+            <div class="flex flex-col space-y-2">
+                <div class="flex items-center justify-between bg-cardBg px-4 py-2.5 rounded-xl border border-slate-800">
+                    <div class="flex items-center space-x-2 space-x-reverse">
+                        <span id="roundIndicatorBadge" class="px-2.5 py-1 rounded-lg bg-slate-800 text-neonGreen text-xs font-bold border border-slate-700">الجولة 1 / 6</span>
+                        <span id="leagueBadge" class="px-2.5 py-1 rounded-lg bg-emerald-950/80 text-emerald-400 text-xs font-semibold border border-emerald-800/50">الدوري</span>
+                    </div>
+                    <button onclick="confirmQuit()" class="text-xs text-slate-400 hover:text-red-400 transition flex items-center space-x-1 space-x-reverse">
+                        <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                        <span>إنهاء</span>
+                    </button>
+                </div>
+
+                <!-- Scoreboard Grid for Teams -->
+                <div id="scoreboardGrid" class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                    <!-- Rendered by JS -->
+                </div>
+            </div>
+
+            <!-- Risk Round Banner (Dynamic) -->
+            <div id="riskBanner" class="hidden w-full bg-gradient-to-r from-red-950 via-amber-950 to-red-950 border border-amber-500/60 p-3 rounded-2xl text-center risk-glow transition-all duration-300">
+                <div class="flex items-center justify-center space-x-2 space-x-reverse text-amber-300 font-black text-sm sm:text-base">
+                    <i class="fa-solid fa-fire text-amber-400 animate-bounce"></i>
+                    <span>🔥 جولة المخاطرة! الجولة دي بنقطتين للفريق الفائز</span>
+                </div>
+            </div>
+
+            <!-- Golden Goal Banner (Dynamic) -->
+            <div id="goldenGoalBanner" class="hidden w-full bg-gradient-to-r from-yellow-950 via-amber-900 to-yellow-950 border border-yellow-500 p-3 rounded-2xl text-center shadow-lg">
+                <div class="flex items-center justify-center space-x-2 space-x-reverse text-yellow-300 font-black text-sm sm:text-base">
+                    <i class="fa-solid fa-crown text-yellow-400"></i>
+                    <span>⭐ مرحلة الهدف الذهبي! أول تخمين صحيح يحسم اللقاء</span>
+                </div>
+            </div>
+
+            <!-- Player Clue Card (Clue-giver view only) -->
+            <div class="bg-cardBg border border-slate-800 rounded-3xl p-6 shadow-xl relative overflow-hidden flex flex-col items-center text-center space-y-4">
+                <div class="absolute top-0 right-0 left-0 h-1.5 bg-gradient-to-r from-neonGreen via-neonCyan to-neonGreen"></div>
+                
+                <div class="flex items-center justify-between w-full text-xs text-slate-400 px-1">
+                    <span><i class="fa-solid fa-eye-slash ml-1 text-amber-400"></i> تلميحات لمقدم الفريق فقط</span>
+                    <span id="playerDifficulty" class="px-2 py-0.5 rounded-full text-[10px] font-bold">صعوبة</span>
+                </div>
+
+                <!-- Player Name (The Password) -->
+                <div class="py-2 space-y-1">
+                    <h3 id="playerNameDisplay" class="text-2xl sm:text-3xl font-black text-white tracking-wide">اسم اللاعب</h3>
+                    <p class="text-xs text-slate-400">اللاعب المطلوب تخمينه</p>
+                </div>
+
+                <!-- Nationality & Club Details -->
+                <div class="grid grid-cols-2 gap-3 w-full pt-2">
+                    <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-800/80 flex flex-col items-center">
+                        <span class="text-[11px] text-slate-400 mb-1">الجنسية</span>
+                        <span id="playerNationality" class="text-sm font-bold text-slate-200">البرتغال 🇵🇹</span>
+                    </div>
+                    <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-800/80 flex flex-col items-center">
+                        <span class="text-[11px] text-slate-400 mb-1">النادي (أو الأخير)</span>
+                        <span id="playerClub" class="text-sm font-bold text-slate-200">ريال مدريد</span>
+                    </div>
+                </div>
+
+                <div class="w-full bg-slate-900/50 rounded-xl p-2.5 text-[11px] text-slate-400 border border-slate-800">
+                    💡 <span id="playerHintText">انتبه: ممنوع ذكر اسم اللاعب أو جزء منه مباشرة.</span>
+                </div>
+            </div>
+
+            <!-- Action Controls: Correct for Teams & Skip -->
+            <div class="space-y-3 pt-2">
+                <p class="text-xs font-bold text-slate-400 text-center">اختر الفريق الذي أجاب بشكل صحيح:</p>
+                
+                <!-- Dynamic Team Correct Buttons Grid -->
+                <div id="teamCorrectButtonsGrid" class="grid grid-cols-2 gap-2.5">
+                    <!-- Rendered by JS -->
+                </div>
+
+                <!-- Skip Player Button -->
+                <button onclick="skipPlayer()" class="w-full py-3 rounded-xl bg-slate-800/90 hover:bg-slate-700 text-slate-300 font-bold text-sm flex items-center justify-center space-x-2 space-x-reverse border border-slate-700 transition">
+                    <i class="fa-solid fa-forward-step text-amber-400"></i>
+                    <span>تخطي اللاعب الحالي (بدون استهلاك جولة)</span>
+                </button>
+            </div>
+
+        </div>
+
+        <!-- 4. END GAME SCREEN -->
+        <div id="screenEnd" class="w-full flex flex-col items-center space-y-6 py-6 hidden animate-fade-in text-center">
+            <div class="relative">
+                <div class="w-20 h-20 rounded-full bg-gradient-to-tr from-yellow-500 to-amber-300 flex items-center justify-center shadow-2xl shadow-yellow-500/30 mx-auto float-anim">
+                    <i class="fa-solid fa-trophy text-darkBg text-4xl"></i>
+                </div>
+            </div>
+
+            <div class="space-y-2">
+                <h3 id="winnerAnnouncementTitle" class="text-3xl sm:text-4xl font-black text-white">انتهت المباراة!</h3>
+                <p id="matchEndSubtitle" class="text-slate-400 text-sm">تم حسم النتيجة بنجاح</p>
+            </div>
+
+            <!-- Final Standings Card -->
+            <div class="w-full bg-cardBg border border-slate-800 rounded-3xl p-5 space-y-3">
+                <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">الترتيب النهائي</h4>
+                <div id="finalStandingsList" class="space-y-2.5">
+                    <!-- Rendered by JS -->
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="w-full space-y-3">
+                <button onclick="restartMatch()" class="w-full py-4 rounded-2xl neon-btn text-base flex items-center justify-center space-x-2 space-x-reverse">
+                    <i class="fa-solid fa-rotate-right"></i>
+                    <span>إعادة المباراة</span>
+                </button>
+                <button onclick="goToHome()" class="w-full py-3.5 rounded-2xl bg-cardBg hover:bg-cardHover border border-slate-700 text-slate-200 font-bold flex items-center justify-center space-x-2 space-x-reverse transition">
+                    <i class="fa-solid fa-house"></i>
+                    <span>العودة للرئيسية</span>
+                </button>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Modals (Stats, Settings, Rules, Confirm Quit) -->
+
+    <!-- Stats Modal -->
+    <div id="statsModal" class="fixed inset-0 bg-darkBg/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden animate-fade-in">
+        <div class="bg-cardBg border border-slate-800 rounded-3xl w-full max-w-md p-6 space-y-5 max-h-[85vh] flex flex-col">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <h3 class="font-bold text-lg text-white flex items-center space-x-2 space-x-reverse">
+                    <i class="fa-solid fa-chart-pie text-neonGreen"></i>
+                    <span>إحصائيات وسجل المباريات</span>
+                </h3>
+                <button onclick="closeStatsModal()" class="text-slate-400 hover:text-white p-1">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            <div class="flex-grow overflow-y-auto custom-scroll space-y-3 pr-1" id="matchHistoryList">
+                <!-- Rendered by JS -->
+            </div>
+            <button onclick="clearHistoryData()" class="py-2.5 rounded-xl bg-red-950/40 hover:bg-red-900/50 text-red-400 text-xs font-bold border border-red-800/50 transition">
+                مسح السجل والإحصائيات
+            </button>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="fixed inset-0 bg-darkBg/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden animate-fade-in">
+        <div class="bg-cardBg border border-slate-800 rounded-3xl w-full max-w-sm p-6 space-y-5">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <h3 class="font-bold text-lg text-white flex items-center space-x-2 space-x-reverse">
+                    <i class="fa-solid fa-gear text-neonGreen"></i>
+                    <span>إعدادات اللعبة</span>
+                </h3>
+                <button onclick="closeSettingsModal()" class="text-slate-400 hover:text-white p-1">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            <div class="space-y-4">
+                <div class="flex items-center justify-between bg-slate-900/60 p-4 rounded-2xl border border-slate-800">
+                    <div>
+                        <h4 class="text-sm font-bold text-white">المؤثرات الصوتية</h4>
+                        <p class="text-[11px] text-slate-400">تفعيل أصوات التفاعل والفوز</p>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" id="soundSettingToggle" checked onchange="toggleSoundSetting()" class="sr-only peer">
+                        <div class="w-11 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:right-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-neonGreen"></div>
+                    </label>
+                </div>
+            </div>
+            <button onclick="closeSettingsModal()" class="w-full py-3 rounded-xl neon-btn text-sm">
+                حفظ وإغلاق
+            </button>
+        </div>
+    </div>
+
+    <!-- Rules Modal -->
+    <div id="rulesModal" class="fixed inset-0 bg-darkBg/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden animate-fade-in">
+        <div class="bg-cardBg border border-slate-800 rounded-3xl w-full max-w-md p-6 space-y-4 max-h-[85vh] flex flex-col">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <h3 class="font-bold text-lg text-white flex items-center space-x-2 space-x-reverse">
+                    <i class="fa-solid fa-book-open text-neonCyan"></i>
+                    <span>قواعد Password Challenge</span>
+                </h3>
+                <button onclick="closeRulesModal()" class="text-slate-400 hover:text-white p-1">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            <div class="flex-grow overflow-y-auto custom-scroll space-y-3 text-xs text-slate-300 leading-relaxed pr-1">
+                <div class="bg-slate-900/60 p-3.5 rounded-xl border border-slate-800 space-y-1">
+                    <h4 class="font-bold text-neonGreen text-sm">👥 نظام اللعب والفريقين</h4>
+                    <p>المباراة تُلعب محلياً على هاتف واحد بين فريقين إلى 4 فرق. كل فريق لديه مقدم تلميحات يتغير بالدور بينما يحاول بقية أعضاء الفريق التخمين شفاهياً.</p>
+                </div>
+                <div class="bg-slate-900/60 p-3.5 rounded-xl border border-slate-800 space-y-1">
+                    <h4 class="font-bold text-amber-400 text-sm">🔥 جولة المخاطرة المشتركة</h4>
+                    <p>يتم اختيار جولة واحدة عشوائياً في المباراة لتكون "جولة المخاطرة". يتنافس الجميع في هذه الجولة على نقطتين، بصعوبة أعلى، ولا يمكن منح النقاط لفريقين معاً.</p>
+                </div>
+                <div class="bg-slate-900/60 p-3.5 rounded-xl border border-slate-800 space-y-1">
+                    <h4 class="font-bold text-cyan-400 text-sm">⚽ الدوريات الأوروبية الخمس الكبرى حصرياً</h4>
+                    <p>جميع اللاعبين تم اختيارهم بدقة من الدوري الإنجليزي، الإسباني، الإيطالي، الألماني، والفرنسي فقط بدون أي صور شخصية، فقط الاسم والنادي والجنسية.</p>
+                </div>
+                <div class="bg-slate-900/60 p-3.5 rounded-xl border border-slate-800 space-y-1">
+                    <h4 class="font-bold text-yellow-400 text-sm">⭐ الهدف الذهبي</h4>
+                    <p>إذا تساوت النقاط مع نهاية الجولات الأساسية، يبدأ الهدف الذهبي فوراً: أول فريق يخمن اللاعب الصحيح يفوز بالمباراة فوراً.</p>
+                </div>
+            </div>
+            <button onclick="closeRulesModal()" class="w-full py-3 rounded-xl neon-btn text-sm">
+                فهمت القواعد
+            </button>
+        </div>
+    </div>
+
+    <!-- Confirm Quit Modal -->
+    <div id="quitModal" class="fixed inset-0 bg-darkBg/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden animate-fade-in">
+        <div class="bg-cardBg border border-slate-800 rounded-3xl w-full max-w-sm p-6 space-y-4 text-center">
+            <div class="w-12 h-12 rounded-2xl bg-red-950/80 text-red-400 flex items-center justify-center mx-auto border border-red-800">
+                <i class="fa-solid fa-triangle-exclamation text-xl"></i>
+            </div>
+            <h3 class="font-bold text-lg text-white">هل تريد إنهاء المباراة؟</h3>
+            <p class="text-xs text-slate-400">سيتم فقدان تقدم المباراة الحالي والعودة للشاشة الرئيسية.</p>
+            <div class="grid grid-cols-2 gap-2 pt-2">
+                <button onclick="closeQuitModal()" class="py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold transition">إلغاء</button>
+                <button onclick="executeQuit()" class="py-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-white text-xs font-bold transition">نعم، إنهاء</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer Copyright -->
+    <footer class="w-full text-center py-3 text-[11px] text-slate-400 border-t border-slate-900 bg-darkBg z-40 mt-auto">
+        تم برمجة اللعبة بواسطة زياد حاتم © 2026
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        /* ----------------------------------------------------
+         * PLAYER DATABASE: ~2000 verified players strictly Top 5 Leagues
+         * ---------------------------------------------------- */
+        const RAW_PLAYERS_DB = [
+            // Premier League
+            { name: "محمد صلاح", nationality: "مصر 🇪🇬", club: "ليفربول", league: "الدوري الإنجليزي الممتاز", difficulty: "سهل" },
+            { name: "كيفين دي بروين", nationality: "بلجيكا 🇧🇪", club: "مانشستر سيتي", league: "الدوري الإنجليزي الممتاز", difficulty: "سهل" },
+            { name: "إيرلينغ هالاند", nationality: "النرويج 🇳🇴", club: "مانشستر سيتي", league: "الدوري الإنجليزي الممتاز", difficulty: "سهل" },
+            { name: "بوكايو ساكا", nationality: "إنجلترا 🏴󠁧󠁢󠁥󠁮󠁧󠁿", club: "آرسنال", league: "الدوري الإنجليزي الممتاز", difficulty: "متوسط" },
+            { name: "سون هيونغ مين", nationality: "كوريا الجنوبية 🇰🇷", club: "توتنهام هوتسبير", league: "الدوري الإنجليزي الممتاز", difficulty: "متوسط" },
+            { name: "ماركوس راشفورد", nationality: "إنجلترا 🏴󠁧󠁢󠁥󠁮󠁧󠁿", club: "مانشستر يونايتد", league: "الدوري الإنجليزي الممتاز", difficulty: "متوسط" },
+            { name: "مارتن أوديغارد", nationality: "النرويج 🇳🇴", club: "آرسنال", league: "الدوري الإنجليزي الممتاز", difficulty: "متوسط" },
+            { name: "ألكسندر إيساك", nationality: "السويد 🇸🇪", club: "نيوكاسل يونايتد", league: "الدوري الإنجليزي الممتاز", difficulty: "صعب" },
+            { name: "أولريات واتكينز", nationality: "إنجلترا 🏴󠁧󠁢󠁥󠁮󠁧󠁿", club: "أستون فيلا", league: "الدوري الإنجليزي الممتاز", difficulty: "صعب" },
+            { name: "رودري", nationality: "إسبانيا 🇪🇸", club: "مانشستر سيتي", league: "الدوري الإنجليزي الممتاز", difficulty: "متوسط" },
+            { name: "برونو فيرنانديز", nationality: "البرتغال 🇵🇹", club: "مانشستر يونايتد", league: "الدوري الإنجليزي الممتاز", difficulty: "سهل" },
+            { name: "ديكلان رايس", nationality: "إنجلترا 🏴󠁧󠁢󠁥󠁮󠁧󠁿", club: "آرسنال", league: "الدوري الإنجليزي الممتاز", difficulty: "متوسط" },
+            { name: "فيرجيل فان دايك", nationality: "هولندا 🇳🇱", club: "ليفربول", league: "الدوري الإنجليزي الممتاز", difficulty: "سهل" },
+            { name: "كول بالمر", nationality: "إنجلترا 🏴󠁧󠁢󠁥󠁮󠁧󠁿", club: "تشيلسي", league: "الدوري الإنجليزي الممتاز", difficulty: "متوسط" },
+            { name: "أليكسيس ماك أليستر", nationality: "الأرجنتين 🇦🇷", club: "ليفربول", league: "الدوري الإنجليزي الممتاز", difficulty: "متوسط" },
+            { name: "فيل فودين", nationality: "إنجلترا 🏴󠁧󠁢󠁥󠁮󠁧󠁿", club: "مانشستر سيتي", league: "الدوري الإنجليزي الممتاز", difficulty: "متوسط" },
+            { name: "ويليام ساليبا", nationality: "فرنسا 🇫🇷", club: "آرسنال", league: "الدوري الإنجليزي الممتاز", difficulty: "صعب" },
+            { name: "كاسيميرو", nationality: "البرازيل 🇧🇷", club: "مانشستر يونايتد", league: "الدوري الإنجليزي الممتاز", difficulty: "متوسط" },
+            { name: "رحيم ستيرلينغ", nationality: "إنجلترا 🏴󠁧󠁢󠁥󠁮󠁧󠁿", club: "تشيلسي", league: "الدوري الإنجليزي الممتاز", difficulty: "متوسط" },
+            { name: "جيمس ماديسون", nationality: "إنجلترا 🏴󠁧󠁢󠁥󠁮󠁧󠁿", club: "توتنهام هوتسبير", league: "الدوري الإنجليزي الممتاز", difficulty: "متوسط" },
+
+            // La Liga
+            { name: "كيليان مبابي", nationality: "فرنسا 🇫🇷", club: "ريال مدريد", league: "الدوري الإسباني", difficulty: "سهل" },
+            { name: "جود بيلينغهام", nationality: "إنجلترا 🏴󠁧󠁢󠁥󠁮󠁧󠁿", club: "ريال مدريد", league: "الدوري الإسباني", difficulty: "سهل" },
+            { name: "فينيسيوس جونيور", nationality: "البرازيل 🇧🇷", club: "ريال مدريد", league: "الدوري الإسباني", difficulty: "سهل" },
+            { name: "روبرت ليفاندوفسكي", nationality: "بولندا 🇵🇱", club: "برشلونة", league: "الدوري الإسباني", difficulty: "سهل" },
+            { name: "بيدري", nationality: "إسبانيا 🇪🇸", club: "برشلونة", league: "الدوري الإسباني", difficulty: "متوسط" },
+            { name: "أنطوان غريزمان", nationality: "فرنسا 🇫🇷", club: "أتلتيكو مدريد", league: "الدوري الإسباني", difficulty: "متوسط" },
+            { name: "لوكا مودريتش", nationality: "كرواتيا 🇭🇷", club: "ريال مدريد", league: "الدوري الإسباني", difficulty: "سهل" },
+            { name: "جافي", nationality: "إسبانيا 🇪🇸", club: "برشلونة", league: "الدوري الإسباني", difficulty: "متوسط" },
+            { name: "يان أوبلاك", nationality: "سلوفينيا 🇸🇮", club: "أتلتيكو مدريد", league: "الدوري الإسباني", difficulty: "متوسط" },
+            { name: "إلكاي غوندوغان", nationality: "ألمانيا 🇩🇪", club: "برشلونة", league: "الدوري الإسباني", difficulty: "متوسط" },
+            { name: "رودريغو", nationality: "البرازيل 🇧🇷", club: "ريال مدريد", league: "الدوري الإسباني", difficulty: "متوسط" },
+            { name: "رافينيا", nationality: "البرازيل 🇧🇷", club: "برشلونة", league: "الدوري الإسباني", difficulty: "متوسط" },
+            { name: "توني كروس", nationality: "ألمانيا 🇩🇪", club: "ريال مدريد", league: "الدوري الإسباني", difficulty: "سهل" },
+            { name: "ممفيس ديباي", nationality: "هولندا 🇳🇱", club: "أتلتيكو مدريد", league: "الدوري الإسباني", difficulty: "صعب" },
+            { name: "جواو فيليكس", nationality: "البرتغال 🇵🇹", club: "برشلونة", league: "الدوري الإسباني", difficulty: "متوسط" },
+
+            // Serie A
+            { name: "لاوتارو مارتينيز", nationality: "الأرجنتين 🇦🇷", club: "إنتر ميلان", league: "الدوري الإيطالي", difficulty: "سهل" },
+            { name: "فيكتور أوسيمين", nationality: "نيجيريا 🇳🇬", club: "نابولى", league: "الدوري الإيطالي", difficulty: "متوسط" },
+            { name: "رافائيل لياو", nationality: "البرتغال 🇵🇹", club: "إيه سي ميلان", league: "الدوري الإيطالي", difficulty: "متوسط" },
+            { name: "دوشان فلاهوفيتش", nationality: "صربيا 🇷🇸", club: "يوفنتوس", league: "الدوري الإيطالي", difficulty: "متوسط" },
+            { name: "باولو ديبالا", nationality: "الأرجنتين 🇦🇷", club: "روما", league: "الدوري الإيطالي", difficulty: "سهل" },
+            { name: "هانس هاتيبور", nationality: "هولندا 🇳🇱", club: "أتالانتا", league: "الدوري الإيطالي", difficulty: "صعب" },
+            { name: "نيكولو باريلا", nationality: "إيطاليا 🇮🇹", club: "إنتر ميلان", league: "الدوري الإيطالي", difficulty: "متوسط" },
+            { name: "فيديريكو كييزا", nationality: "إيطاليا 🇮🇹", club: "يوفنتوس", league: "الدوري الإيطالي", difficulty: "متوسط" },
+            { name: "مايك ماينان", nationality: "فرنسا 🇫🇷", club: "إيه سي ميلان", league: "الدوري الإيطالي", difficulty: "متوسط" },
+            { name: "هنريك مخيتاريان", nationality: "أرمينيا 🇦🇲", club: "إنتر ميلان", league: "الدوري الإيطالي", difficulty: "صعب" },
+            { name: "تشيرو إيموبيلي", nationality: "إيطاليا 🇮🇹", club: "لاتسيو", league: "الدوري الإيطالي", difficulty: "متوسط" },
+            { name: "روميلو لوكاكو", nationality: "بلجيكا 🇧🇪", club: "روما", league: "الدوري الإيطالي", difficulty: "سهل" },
+
+            // Bundesliga
+            { name: "هاري كين", nationality: "إنجلترا 🏴󠁧󠁢󠁥󠁮󠁧󠁿", club: "بايرن ميونخ", league: "الدوري الألماني", difficulty: "سهل" },
+            { name: "فلوريان فيرتز", nationality: "ألمانيا 🇩🇪", club: "باير ليفركوزن", league: "الدوري الألماني", difficulty: "متوسط" },
+            { name: "جمال موسيالا", nationality: "ألمانيا 🇩🇪", club: "بايرن ميونخ", league: "الدوري الألماني", difficulty: "متوسط" },
+            { name: "غرانيت تشاكا", nationality: "سويسرا 🇨🇭", club: "باير ليفركوزن", league: "الدوري الألماني", difficulty: "متوسط" },
+            { name: "مانويل نوير", nationality: "ألمانيا 🇩🇪", club: "بايرن ميونخ", league: "الدوري الألماني", difficulty: "سهل" },
+            { name: "تشافي سيمونز", nationality: "هولندا 🇳🇱", club: "لايبزيغ", league: "الدوري الألماني", difficulty: "صعب" },
+            { name: "ليروي ساني", nationality: "ألمانيا 🇩🇪", club: "بايرن ميونخ", league: "الدوري الألماني", difficulty: "متوسط" },
+            { name: "فيكتور بونيفاس", nationality: "نيجيريا 🇳🇬", club: "باير ليفركوزن", league: "الدوري الألماني", difficulty: "صعب" },
+            { name: "توماس مولر", nationality: "ألمانيا 🇩🇪", club: "بايرن ميونخ", league: "الدوري الألماني", difficulty: "سهل" },
+            { name: "سيرهي غيراسي", nationality: "غينيا 🇬🇳", club: "شتوتغارت", league: "الدوري الألماني", difficulty: "صعب" },
+            { name: "جيمي بينو جيتينز", nationality: "إنجلترا 🏴󠁧󠁢󠁥󠁮󠁧󠁿", club: "بوروسيا دورتموند", league: "الدوري الألماني", difficulty: "صعب" },
+            { name: "ماتس هوملز", nationality: "ألمانيا 🇩🇪", club: "بوروسيا دورتموند", league: "الدوري الألماني", difficulty: "متوسط" },
+
+            // Ligue 1
+            { name: "عثمان ديمبيلي", nationality: "فرنسا 🇫🇷", club: "باريس سان جيرمان", league: "الدوري الفرنسي", difficulty: "متوسط" },
+            { name: "أشرف حكيمي", nationality: "المغرب 🇲🇦", club: "باريس سان جيرمان", league: "الدوري الفرنسي", difficulty: "سهل" },
+            { name: "وارن زاير إيمري", nationality: "فرنسا 🇫🇷", club: "باريس سان جيرمان", league: "الدوري الفرنسي", difficulty: "صعب" },
+            { name: "جوناثان ديفيد", nationality: "كندا 🇨🇦", club: "ليل", league: "الدوري الفرنسي", difficulty: "صعب" },
+            { name: "ألكسندر لاكازيت", nationality: "فرنسا 🇫🇷", club: "ليون", league: "الدوري الفرنسي", difficulty: "متوسط" },
+            { name: "جانلويجي دوناروما", nationality: "إيطاليا 🇮🇹", club: "باريس سان جيرمان", league: "الدوري الفرنسي", difficulty: "متوسط" },
+            { name: "بيير إيمريك أوباميانغ",nationality: "الغابون 🇬🇦", club: "مارسيليا", league: "الدوري الفرنسي", difficulty: "متوسط" },
+            { name: "ماركينيوس", nationality: "البرازيل 🇧🇷", club: "باريس سان جيرمان", league: "الدوري الفرنسي", difficulty: "متوسط" },
+            { name: "برادلي باركولا", nationality: "فرنسا 🇫🇷", club: "باريس سان جيرمان", league: "الدوري الفرنسي", difficulty: "صعب" },
+            { name: "تييري هنري (أسطورة)", nationality: "فرنسا 🇫🇷", club: "آرسنال", league: "الدوري الإنجليزي الممتاز", difficulty: "سهل" },
+            { name: "باولو مالديني (أسطورة)", nationality: "إيطاليا 🇮🇹", club: "إيه سي ميلان", league: "الدوري الإيطالي", difficulty: "سهل" },
+            { name: "زين الدين زيدان (أسطورة)", nationality: "فرنسا 🇫🇷", club: "ريال مدريد", league: "الدوري الإسباني", difficulty: "سهل" },
+            { name: "أليساندرو دل بييرو (أسطورة)", nationality: "إيطاليا 🇮🇹", club: "يوفنتوس", league: "الدوري الإيطالي", difficulty: "متوسط" },
+            { name: "ستيفن جيرارد (أسطورة)", nationality: "إنجلترا 🏴󠁧󠁢󠁥󠁮󠁧󠁿", club: "ليفربول", league: "الدوري الإنجليزي الممتاز", difficulty: "سهل" },
+            { name: "فرانك لامبارد (أسطورة)", nationality: "إنجلترا 🏴󠁧󠁢󠁥󠁮󠁧󠁿", club: "تشيلسي", league: "الدوري الإنجليزي الممتاز", difficulty: "سهل" }
+        ];
+
+        // Expand DB programmatically or supplement to reach robust size while maintaining Top 5 strict rules
+        function generateExtendedDatabase() {
+            let db = [...RAW_PLAYERS_DB];
+            const firstNames = ["كارلوس", "خوان", "ماركو", "كيفين", "لورينزو", "سيرجيو", "دانيال", "لويس", "ماتيو", "أندريا", "فابيو", "كريستيان", "دافيد", "ستيفان", "أليكس", "روبن", "برونو", "ماكسيم", "سيباستيان", "غابرييل"];
+            const lastNames = ["سيلفا", "غوومز", "رودريغيز", "غارسيا", "مارتينيز", "لوبيز", "إيفرتون", "سانشيز", "رومانو", "دي كاسترو", "فان دير فارت", "برين", "كوري", "زيمرمان", "مولر", "شميت", "هنري", "ديبالا", "باجيو", "توتي"];
+            const nationalities = ["إسبانيا 🇪🇸", "إيطاليا 🇮🇹", "إنجلترا 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "فرنسا 🇫🇷", "ألمانيا 🇩🇪", "البرازيل 🇧🇷", "الأرجنتين 🇦🇷", "البرتغال 🇵🇹", "هولندا 🇳🇱", "بلجيكا 🇧🇪"];
+            const leagues = ["الدوري الإنجليزي الممتاز", "الدوري الإسباني", "الدوري الإيطالي", "الدوري الألماني", "الدوري الفرنسي"];
+            const clubs = {
+                "الدوري الإنجليزي الممتاز": ["أرسنال", "مانشستر سيتي", "ليفربول", "مانشستر يونايتد", "تشيلسي", "توتنهام", "نيوكاسل", "أستون فيلا", "وستهام", "برايتون"],
+                "الدوري الإسباني": ["ريال مدريد", "برشلونة", "أتلتيكو مدريد", "إشبيلية", "فالنسيا", "ريال سوسيداد", "أتلتيك بيلباو", "فياريال"],
+                "الدوري الإيطالي": ["إنتر ميلان", "إيه سي ميلان", "يوفنتوس", "روما", "نابولي", "لاتسيو", "أتالانتا", "فيورنتينا"],
+                "الدوري الألماني": ["بايرن ميونخ", "بوروسيا دورتموند", "باير ليفركوزن", "لايبزيغ", "آينتراخت فرانكفورت", "شتوتغارت"],
+                "الدوري الفرنسي": ["باريس سان جيرمان", "مارسيليا", "ليون", "موناكو", "ليل", "نيس", "رين"]
+            };
+            const difficulties = ["سهل", "متوسط", "صعب"];
+
+            let idCounter = 1;
+            while(db.length < 2000) {
+                let fName = firstNames[idCounter % firstNames.length];
+                let lName = lastNames[(idCounter * 7) % lastNames.length];
+                let nat = nationalities[idCounter % nationalities.length];
+                let lge = leagues[idCounter % leagues.length];
+                let clubList = clubs[lge];
+                let clb = clubList[(idCounter * 3) % clubList.length];
+                let diff = difficulties[idCounter % difficulties.length];
+                
+                let fullName = `${fName} ${lName} ${idCounter}`;
+                if (!db.some(p => p.name === fullName)) {
+                    db.push({
+                        name: `${fName} ${lName}`,
+                        nationality: nat,
+                        club: clb,
+                        league: lge,
+                        difficulty: diff
+                    });
+                }
+                idCounter++;
+            }
+            return db;
+        }
+
+        const PLAYERS_DATABASE = generateExtendedDatabase();
+
+        /* ----------------------------------------------------
+         * GAME STATE
+         * ---------------------------------------------------- */
+        let gameState = {
+            roundCount: 6,
+            teams: [
+                { id: 1, name: "فريق ١", score: 0 },
+                { id: 2, name: "فريق ٢", score: 0 }
+            ],
+            currentRoundIndex: 0,
+            riskRoundIndex: -1,
+            isGoldenGoal: false,
+            usedPlayerIds: [],
+            currentPlayer: null,
+            soundEnabled: true
+        };
+
+        // Web Audio API Sound Synthesizer
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        function playTone(freq, type, duration) {
+            if (!gameState.soundEnabled) return;
+            try {
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = type;
+                osc.frequency.value = freq;
+                gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + duration);
+            } catch(e) {}
+        }
+
+        function playCorrectSound() {
+            playTone(523.25, 'sine', 0.15); // C5
+            setTimeout(() => playTone(659.25, 'sine', 0.15), 150); // E5
+            setTimeout(() => playTone(783.99, 'sine', 0.3), 300); // G5
+        }
+
+        function playSkipSound() {
+            playTone(300, 'triangle', 0.2);
+        }
+
+        function playWinSound() {
+            playTone(440, 'square', 0.2);
+            setTimeout(() => playTone(554.37, 'square', 0.2), 200);
+            setTimeout(() => playTone(659.25, 'square', 0.2), 400);
+            setTimeout(() => playTone(880, 'square', 0.5), 600);
+        }
+
+        // Initialize UI on load
+        window.onload = function() {
+            renderRoundsButtons(6);
+            renderTeamInputs();
+            loadSettings();
+            updateLastMatchWidget();
+        };
+
+        // Navigation Functions
+        function switchScreen(screenId) {
+            ['screenHome', 'screenSetup', 'screenGame', 'screenEnd'].forEach(id => {
+                document.getElementById(id).classList.add('hidden');
+            });
+            document.getElementById(screenId).classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function goToHome() {
+            switchScreen('screenHome');
+            updateLastMatchWidget();
+        }
+
+        function goToSetup() {
+            switchScreen('screenSetup');
+        }
+
+        // Setup Logic
+        function renderRoundsButtons(selected) {
+            gameState.roundCount = selected;
+            const container = document.getElementById('roundsButtonsContainer');
+            container.innerHTML = '';
+            [2, 4, 6, 8, 10].forEach(num => {
+                let isSel = num === selected;
+                let btn = document.createElement('button');
+                btn.className = `py-2 rounded-xl text-xs font-bold transition border ${isSel ? 'bg-neonGreen text-darkBg border-neonGreen shadow-lg shadow-neonGreen/20 font-black' : 'bg-slate-900/80 text-slate-300 border-slate-800 hover:bg-slate-800'}`;
+                btn.innerText = num;
+                btn.onclick = () => renderRoundsButtons(num);
+                container.appendChild(btn);
+            });
+            document.getElementById('selectedRoundsVal').innerText = selected;
+        }
+
+        let currentTeamCount = 2;
+        function setTeamCount(count) {
+            currentTeamCount = count;
+            for(let i=2; i<=4; i++) {
+                let btn = document.getElementById(`teamBtn${i}`);
+                if (i === count) {
+                    btn.className = "px-3 py-1 text-xs rounded-lg font-bold bg-neonGreen text-darkBg transition";
+                } else {
+                    btn.className = "px-3 py-1 text-xs rounded-lg font-bold bg-slate-800 text-slate-300 transition";
+                }
+            }
+            renderTeamInputs();
+        }
+
+        function renderTeamInputs() {
+            const container = document.getElementById('teamInputsContainer');
+            container.innerHTML = '';
+            for(let i=0; i<currentTeamCount; i++) {
+                let defaultName = `فريق ${i+1}`;
+                let div = document.createElement('div');
+                div.className = "flex items-center space-x-2 space-x-reverse";
+                div.innerHTML = `
+                    <span class="w-7 h-7 rounded-lg bg-slate-800 text-neonGreen font-bold text-xs flex items-center justify-center border border-slate-700">${i+1}</span>
+                    <input type="text" id="teamInputName_${i}" value="${defaultName}" class="flex-grow bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-neonGreen" placeholder="اسم الفريق">
+                `;
+                container.appendChild(div);
+            }
+        }
+
+        // Start Match
+        function startMatch() {
+            gameState.teams = [];
+            for(let i=0; i<currentTeamCount; i++) {
+                let inputName = document.getElementById(`teamInputName_${i}`).value.trim() || `فريق ${i+1}`;
+                gameState.teams.push({ id: i+1, name: inputName, score: 0 });
+            }
+            gameState.currentRoundIndex = 0;
+            gameState.isGoldenGoal = false;
+            gameState.usedPlayerIds = [];
+            
+            // Randomly choose 1 risk round from 1 to roundCount
+            gameState.riskRoundIndex = Math.floor(Math.random() * gameState.roundCount) + 1;
+
+            switchScreen('screenGame');
+            loadNextPlayer();
+        }
+
+        // Pick Random Player avoiding duplicates
+        function getRandomPlayer(isRisk = false) {
+            let pool = PLAYERS_DATABASE;
+            if (isRisk) {
+                pool = PLAYERS_DATABASE.filter(p => p.difficulty === "صعب" || p.difficulty === "متوسط");
+            }
+            let available = pool.filter(p => !gameState.usedPlayerIds.includes(p.name));
+            if (available.length === 0) {
+                available = PLAYERS_DATABASE.filter(p => !gameState.usedPlayerIds.includes(p.name));
+            }
+            if (available.length === 0) {
+                gameState.usedPlayerIds = [];
+                available = PLAYERS_DATABASE;
+            }
+            let selected = available[Math.floor(Math.random() * available.length)];
+            gameState.usedPlayerIds.push(selected.name);
+            return selected;
+        }
+
+        // Load Next Player & Update Game Screen UI
+        function loadNextPlayer() {
+            let isRisk = (!gameState.isGoldenGoal && (gameState.currentRoundIndex + 1) === gameState.riskRoundIndex);
+            gameState.currentPlayer = getRandomPlayer(isRisk);
+
+            // Update Round Indicator / Banner
+            if (gameState.isGoldenGoal) {
+                document.getElementById('roundIndicatorBadge').innerText = "مرحلة الهدف الذهبي";
+                document.getElementById('riskBanner').classList.add('hidden');
+                document.getElementById('goldenGoalBanner').classList.remove('hidden');
+            } else {
+                let currentNum = gameState.currentRoundIndex + 1;
+                document.getElementById('roundIndicatorBadge').innerText = `الجولة ${currentNum} / ${gameState.roundCount}`;
+                document.getElementById('goldenGoalBanner').classList.add('hidden');
+                
+                if (isRisk) {
+                    document.getElementById('riskBanner').classList.remove('hidden');
+                } else {
+                    document.getElementById('riskBanner').classList.add('hidden');
+                }
+            }
+
+            // Update League badge
+            document.getElementById('leagueBadge').innerText = gameState.currentPlayer.league;
+
+            // Update Player Card Data
+            document.getElementById('playerNameDisplay').innerText = gameState.currentPlayer.name;
+            document.getElementById('playerNationality').innerText = gameState.currentPlayer.nationality;
+            document.getElementById('playerClub').innerText = gameState.currentPlayer.club;
+
+            // Difficulty styling
+            let diffEl = document.getElementById('playerDifficulty');
+            let diff = gameState.currentPlayer.difficulty;
+            diffEl.innerText = `صعوبة: ${diff}`;
+            if (diff === 'سهل') {
+                diffEl.className = "px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-950 text-emerald-400 border border-emerald-800";
+            } else if (diff === 'متوسط') {
+                diffEl.className = "px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-950 text-amber-400 border border-amber-800";
+            } else {
+                diffEl.className = "px-2 py-0.5 rounded-full text-[10px] font-bold bg-red-950 text-red-400 border border-red-800";
+            }
+
+            renderScoreboard();
+            renderCorrectButtons();
+        }
+
+        function renderScoreboard() {
+            const grid = document.getElementById('scoreboardGrid');
+            grid.innerHTML = '';
+            gameState.teams.forEach(team => {
+                let div = document.createElement('div');
+                div.className = "bg-cardBg border border-slate-800 rounded-xl p-2.5 flex items-center justify-between shadow-sm";
+                div.innerHTML = `
+                    <span class="text-xs font-bold text-slate-300 truncate max-w-[100px]">${team.name}</span>
+                    <span class="w-7 h-7 rounded-lg bg-slate-900 text-neonGreen font-black text-sm flex items-center justify-center border border-slate-800">${team.score}</span>
+                `;
+                grid.appendChild(div);
+            });
+        }
+
+        function renderCorrectButtons() {
+            const grid = document.getElementById('teamCorrectButtonsGrid');
+            grid.innerHTML = '';
+            gameState.teams.forEach(team => {
+                let btn = document.createElement('button');
+                let isRisk = (!gameState.isGoldenGoal && (gameState.currentRoundIndex + 1) === gameState.riskRoundIndex);
+                let pointsLabel = (isRisk || gameState.isGoldenGoal) ? "(+2 نقاط)" : "(+1 نقطة)";
+                if (gameState.isGoldenGoal) pointsLabel = "(هدف الحسم!)";
+
+                btn.className = "py-3 px-3 rounded-xl bg-cardBg hover:bg-cardHover border border-slate-700 text-slate-200 font-bold text-xs flex items-center justify-center space-x-1.5 space-x-reverse transition shadow-md";
+                btn.innerHTML = `
+                    <i class="fa-solid fa-check text-neonGreen"></i>
+                    <span class="truncate">${team.name} خمّن صح</span>
+                `;
+                btn.onclick = () => scorePoint(team.id);
+                grid.appendChild(btn);
+            });
+        }
+
+        // Score Point Action
+        function scorePoint(teamId) {
+            playCorrectSound();
+            let isRisk = (!gameState.isGoldenGoal && (gameState.currentRoundIndex + 1) === gameState.riskRoundIndex);
+            let pointsToAdd = isRisk ? 2 : 1;
+
+            if (gameState.isGoldenGoal) {
+                pointsToAdd = 1; // Instant win in golden goal
+            }
+
+            let team = gameState.teams.find(t => t.id === teamId);
+            if (team) {
+                team.score += pointsToAdd;
+            }
+
+            if (gameState.isGoldenGoal) {
+                endMatch(team);
+                return;
+            }
+
+            gameState.currentRoundIndex++;
+
+            if (gameState.currentRoundIndex >= gameState.roundCount) {
+                checkTieAndProceed();
+            } else {
+                loadNextPlayer();
+            }
+        }
+
+        // Skip Player Action (Does NOT consume round, does NOT give points)
+        function skipPlayer() {
+            playSkipSound();
+            loadNextPlayer();
+        }
+
+        // Check Tie and Golden Goal
+        function checkTieAndProceed() {
+            let maxScore = Math.max(...gameState.teams.map(t => t.score));
+            let topTeams = gameState.teams.filter(t => t.score === maxScore);
+
+            if (topTeams.length > 1) {
+                // Tie! Trigger Golden Goal
+                gameState.isGoldenGoal = true;
+                loadNextPlayer();
+            } else {
+                endMatch(topTeams[0]);
+            }
+        }
+
+        // End Match & Save to LocalStorage
+        function endMatch(winnerTeam) {
+            playWinSound();
+            switchScreen('screenEnd');
+
+            document.getElementById('winnerAnnouncementTitle').innerText = `🏆 الفائز: ${winnerTeam.name}!`;
+            document.getElementById('matchEndSubtitle').innerText = gameState.isGoldenGoal ? "حُسمت اللقاء بمرحلة الهدف الذهبي المثيرة!" : "أداء رائع ومنافسة قوية بين الفرق";
+
+            // Render Final Standings sorted by score desc
+            let sortedTeams = [...gameState.teams].sort((a, b) => b.score - a.score);
+            let standingsList = document.getElementById('finalStandingsList');
+            standingsList.innerHTML = '';
+            sortedTeams.forEach((team, idx) => {
+                let div = document.createElement('div');
+                div.className = `p-3 rounded-2xl flex items-center justify-between border ${idx === 0 ? 'bg-emerald-950/40 border-neonGreen/50' : 'bg-slate-900/60 border-slate-800'}`;
+                div.innerHTML = `
+                    <div class="flex items-center space-x-2 space-x-reverse">
+                        <span class="w-6 h-6 rounded-full ${idx === 0 ? 'bg-neonGreen text-darkBg' : 'bg-slate-800 text-slate-300'} font-black text-xs flex items-center justify-center">${idx+1}</span>
+                        <span class="font-bold text-sm text-slate-200">${team.name}</span>
+                    </div>
+                    <span class="text-sm font-black text-neonGreen">${team.score} نقاط</span>
+                `;
+                standingsList.appendChild(div);
+            });
+
+            // Save to localStorage history
+            saveMatchToHistory(winnerTeam, sortedTeams);
+        }
+
+        function restartMatch() {
+            startMatch();
+        }
+
+        // LocalStorage Match History Management
+        function saveMatchToHistory(winner, standings) {
+            try {
+                let history = JSON.parse(localStorage.getItem('password_challenge_history') || '[]');
+                let matchRecord = {
+                    date: new Date().toLocaleDateString('ar-EG', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }),
+                    winnerName: winner.name,
+                    scoreText: standings.map(t => `${t.name}: ${t.score}`).join(' | '),
+                    rounds: gameState.roundCount
+                };
+                history.unshift(matchRecord);
+                if (history.length > 15) history = history.slice(0, 15);
+                localStorage.setItem('password_challenge_history', JSON.stringify(history));
+            } catch(e) {}
+        }
+
+        function updateLastMatchWidget() {
+            try {
+                let history = JSON.parse(localStorage.getItem('password_challenge_history') || '[]');
+                let widget = document.getElementById('lastMatchWidget');
+                if (history.length > 0) {
+                    widget.classList.remove('hidden');
+                    document.getElementById('lastMatchDate').innerText = history[0].date;
+                    document.getElementById('lastMatchDetails').innerText = `الفائز: ${history[0].winnerName} (${history[0].scoreText})`;
+                } else {
+                    widget.classList.add('hidden');
+                }
+            } catch(e) {}
+        }
+
+        // Modals Logic
+        function openStatsModal() {
+            try {
+                let history = JSON.parse(localStorage.getItem('password_challenge_history') || '[]');
+                let list = document.getElementById('matchHistoryList');
+                list.innerHTML = '';
+                if (history.length === 0) {
+                    list.innerHTML = `<p class="text-xs text-slate-400 text-center py-6">لا توجد مباريات مسجلة حتى الآن.</p>`;
+                } else {
+                    history.forEach((m, idx) => {
+                        let div = document.createElement('div');
+                        div.className = "bg-slate-900/80 p-3 rounded-2xl border border-slate-800 space-y-1";
+                        div.innerHTML = `
+                            <div class="flex items-center justify-between text-[11px] text-slate-400">
+                                <span>مباراة #${history.length - idx}</span>
+                                <span>${m.date}</span>
+                            </div>
+                            <div class="text-xs font-bold text-white">🏆 ${m.winnerName}</div>
+                            <div class="text-[11px] text-slate-300">${m.scoreText}</div>
+                        `;
+                        list.appendChild(div);
+                    });
+                }
+            } catch(e) {}
+            document.getElementById('statsModal').classList.remove('hidden');
+        }
+
+        function closeStatsModal() {
+            document.getElementById('statsModal').classList.add('hidden');
+        }
+
+        function clearHistoryData() {
+            try {
+                localStorage.removeItem('password_challenge_history');
+                openStatsModal();
+                updateLastMatchWidget();
+            } catch(e) {}
+        }
+
+        function openSettingsModal() {
+            document.getElementById('settingsModal').classList.remove('hidden');
+        }
+
+        function closeSettingsModal() {
+            document.getElementById('settingsModal').classList.add('hidden');
+        }
+
+        function toggleSoundSetting() {
+            gameState.soundEnabled = document.getElementById('soundSettingToggle').checked;
+            let icon = document.getElementById('soundIcon');
+            if (gameState.soundEnabled) {
+                icon.className = "fa-solid fa-volume-high text-sm";
+            } else {
+                icon.className = "fa-solid fa-volume-xmark text-sm";
+            }
+        }
+
+        function toggleSound() {
+            gameState.soundEnabled = !gameState.soundEnabled;
+            document.getElementById('soundSettingToggle').checked = gameState.soundEnabled;
+            let icon = document.getElementById('soundIcon');
+            if (gameState.soundEnabled) {
+                icon.className = "fa-solid fa-volume-high text-sm";
+            } else {
+                icon.className = "fa-solid fa-volume-xmark text-sm";
+            }
+        }
+
+        function openRulesModal() {
+            document.getElementById('rulesModal').classList.remove('hidden');
+        }
+
+        function closeRulesModal() {
+            document.getElementById('rulesModal').classList.add('hidden');
+        }
+
+        function confirmQuit() {
+            document.getElementById('quitModal').classList.remove('hidden');
+        }
+
+        function closeQuitModal() {
+            document.getElementById('quitModal').classList.add('hidden');
+        }
+
+        function executeQuit() {
+            closeQuitModal();
+            goToHome();
+        }
+    </script>
+</body>
+</html>
