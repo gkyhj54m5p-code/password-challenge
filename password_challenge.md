@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تحدي كلمات المرور السريعة - Password Challenge</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap');
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+            color: #f8fafc;
+        }
+        .glow {
+            box-shadow: 0 0 25px rgba(99, 102, 241, 0.4);
+        }
+        .glow-green {
+            box-shadow: 0 0 25px rgba(34, 197, 94, 0.4);
+        }
+        .glow-red {
+            box-shadow: 0 0 25px rgba(239, 68, 68, 0.4);
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-8px); }
+            40%, 80% { transform: translateX(8px); }
+        }
+        .animate-shake {
+            animation: shake 0.4s ease-in-out;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center p-4">
+
+    <!-- حاوية اللعبة الرئيسية -->
+    <div id="game-container" class="w-full max-w-xl bg-slate-900/80 backdrop-blur-xl border border-indigo-500/30 rounded-2xl p-6 md:p-8 glow transition-all duration-300">
+        
+        <!-- شاشة البداية -->
+        <div id="screen-start" class="text-center space-y-6">
+            <div class="inline-block p-4 bg-indigo-600/20 border border-indigo-500/40 rounded-full text-indigo-400 mb-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
+            </div>
+            <h1 class="text-3xl md:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">
+                تحدي كلمات المرور السريعة
+            </h1>
+            <p class="text-slate-400 text-sm md:text-base max-w-md mx-auto">
+                أمامك مراحل متسارعة لحل ألغاز كلمات المرور وقواعد الأمان المعقدة. هل يمكنك الوصول إلى النهاية قبل نفاد الوقت؟
+            </p>
+            <button onclick="startGame()" class="w-full py-4 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 font-bold text-lg rounded-xl shadow-lg transition-all transform hover:scale-[1.02] active:scale-[0.98]">
+                ابدأ التحدي الآن
+            </button>
+        </div>
+
+        <!-- شاشة اللعب -->
+        <div id="screen-game" class="hidden space-y-6">
+            <!-- شريط المعلومات العلوي -->
+            <div class="flex justify-between items-center bg-slate-800/60 p-4 rounded-xl border border-slate-700/50">
+                <div>
+                    <span class="text-xs text-slate-400 block">المرحلة</span>
+                    <span id="level-indicator" class="text-xl font-black text-indigo-400">1 / 10</span>
+                </div>
+                <div>
+                    <span class="text-xs text-slate-400 block">الوقت المتبقي</span>
+                    <span id="timer-indicator" class="text-xl font-black text-amber-400">30ث</span>
+                </div>
+                <div>
+                    <span class="text-xs text-slate-400 block">النقاط</span>
+                    <span id="score-indicator" class="text-xl font-black text-emerald-400">0</span>
+                </div>
+            </div>
+
+            <!-- شريط تقدم الوقت -->
+            <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                <div id="timer-bar" class="bg-gradient-to-r from-amber-500 to-red-500 h-full w-full transition-all duration-1000"></div>
+            </div>
+
+            <!-- محتوى اللغز الحالي -->
+            <div class="bg-slate-800/40 border border-slate-700/60 p-5 rounded-xl space-y-4">
+                <h2 id="puzzle-title" class="text-xl font-bold text-indigo-300">عنوان اللغز</h2>
+                <p id="puzzle-desc" class="text-slate-300 text-sm leading-relaxed">وصف اللغز وقواعد إنشاء كلمة المرور هنا...</p>
+                
+                <!-- حقل إدخال كلمة المرور -->
+                <div class="relative">
+                    <input type="text" id="password-input" placeholder="اكتب كلمة المرور هنا..." 
+                        class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3.5 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all font-mono"
+                        oninput="checkPasswordInput()">
+                </div>
+            </div>
+
+            <!-- قائمة القواعد المطلوبة (ديناميكية) -->
+            <div class="space-y-2">
+                <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">الشروط المطلوبة:</h3>
+                <div id="rules-list" class="space-y-2">
+                    <!-- تتعبأ ديناميكياً -->
+                </div>
+            </div>
+        </div>
+
+        <!-- شاشة النهاية (فوز أو خسارة) -->
+        <div id="screen-gameover" class="hidden text-center space-y-6">
+            <div id="gameover-icon" class="inline-block p-4 rounded-full mb-2">
+                <!-- أيقونة ديناميكية -->
+            </div>
+            <h2 id="gameover-title" class="text-3xl font-black">إنتهت اللعبة</h2>
+            <p id="gameover-desc" class="text-slate-400">نتيجة الأداء الخاص بك...</p>
+            
+            <div class="bg-slate-800/50 p-4 rounded-xl max-w-xs mx-auto space-y-2">
+                <div class="flex justify-between text-sm">
+                    <span class="text-slate-400">النقاط النهائية:</span>
+                    <span id="final-score" class="font-bold text-emerald-400">0</span>
+                </div>
+                <div class="flex justify-between text-sm">
+                    <span class="text-slate-400">المراحل المجتازة:</span>
+                    <span id="final-stages" class="font-bold text-indigo-400">0</span>
+                </div>
+            </div>
+
+            <button onclick="startGame()" class="w-full py-4 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 font-bold text-lg rounded-xl shadow-lg transition-all">
+                العب مرة أخرى
+            </button>
+        </div>
+
+    </div>
+
+    <script>
+        const puzzles = [
+            {
+                title: "المرحلة 1: البداية البسيطة",
+                desc: "أنشئ كلمة مرور تحتوي على 6 أحرف على الأقل، وتحتوي على حرف كبير واحد على الأقل.",
+                check: (val) => val.length >= 6 && /[A-Z]/.test(val),
+                rules: [
+                    { text: "6 أحرف على الأقل", test: (v) => v.length >= 6 },
+                    { text: "تحتوي على حرف كبير (A-Z)", test: (v) => /[A-Z]/.test(v) }
+                ]
+            },
+            {
+                title: "المرحلة 2: الأرقام والرموز",
+                desc: "كلمة المرور يجب أن تطول لتصبح 8 أحرف، وتتضمن رقماً واحداً وعلامة خاصة (!, @, #, $).",
+                check: (val) => val.length >= 8 && /\d/.test(val) && /[!@#$%^&*(),.?":{}|<>]/.test(val),
+                rules: [
+                    { text: "8 أحرف على الأقل", test: (v) => v.length >= 8 },
+                    { text: "تحتوي على رقم واحد على الأقل", test: (v) => /\d/.test(v) },
+                    { text: "تحتوي على رمز خاص واحد على الأقل", test: (v) => /[!@#$%^&*(),.?":{}|<>]/.test(v) }
+                ]
+            },
+            {
+                title: "المرحلة 3: لغز الأعداد",
+                desc: "يجب أن يكون مجموع الأرقام داخل كلمة المرور يساوي 10 أو أكثر، مع بقاء الطول 8 أحرف أو أكثر.",
+                check: (val) => {
+                    if (val.length < 8) return false;
+                    const digits = val.match(/\d/g);
+                    if (!digits) return false;
+                    const sum = digits.reduce((acc, d) => acc + parseInt(d), 0);
+                    return sum >= 10;
+                },
+                rules: [
+                    { text: "8 أحرف على الأقل", test: (v) => v.length >= 8 },
+                    { text: "مجموع الأرقام فيها يساوي 10 أو أكثر", test: (v) => {
+                        const digits = v.match(/\d/g);
+                        if (!digits) return false;
+                        return digits.reduce((acc, d) => acc + parseInt(d), 0) >= 10;
+                    }}
+                ]
+            },
+            {
+                title: "المرحلة 4: الحروف الخاصة والشهر",
+                desc: "أدخل كلمة مرور تتضمن اسماً لشهر ميلادي بالإنجليزية (مثل: Jan, Feb, Mar) وطول لا يقل عن 9 أحرف.",
+                check: (val) => {
+                    if (val.length < 9) return false;
+                    const months = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
+                    return months.some(m => val.toLowerCase().includes(m));
+                },
+                rules: [
+                    { text: "9 أحرف على الأقل", test: (v) => v.length >= 9 },
+                    { text: "تحتوي على اسم شهر إنجليزي (اختصار أو كامل مثل Jan)", test: (v) => {
+                        const months = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
+                        return months.some(m => v.toLowerCase().includes(m));
+                    }}
+                ]
+            },
+            {
+                title: "المرحلة 5: التحدي الرياضي",
+                desc: "يجب أن تحتوي كلمة المرور على ناتج ضرب 4 في 5 (أي الرقم 20) وأن تحتوي على رمز النسبة المئوية '%'.",
+                check: (val) => val.includes('20') && val.includes('%') && val.length >= 10,
+                rules: [
+                    { text: "10 أحرف على الأقل", test: (v) => v.length >= 10 },
+                    { text: "تحتوي على الرقم '20'", test: (v) => v.includes('20') },
+                    { text: "تحتوي على الرمز '%'", test: (v) => v.includes('%') }
+                ]
+            }
+        ];
+
+        let currentLevel = 0;
+        let score = 0;
+        let timeLeft = 35;
+        let timerInterval = null;
+
+        function startGame() {
+            currentLevel = 0;
+            score = 0;
+            document.getElementById('screen-start').classList.add('hidden');
+            document.getElementById('screen-gameover').classList.add('hidden');
+            document.getElementById('screen-game').classList.remove('hidden');
+            loadLevel();
+        }
+
+        function loadLevel() {
+            if (currentLevel >= puzzles.length) {
+                endGame(true);
+                return;
+            }
+
+            const puzzle = puzzles[currentLevel];
+            document.getElementById('level-indicator').innerText = `${currentLevel + 1} / ${puzzles.length}`;
+            document.getElementById('score-indicator').innerText = score;
+            document.getElementById('puzzle-title').innerText = puzzle.title;
+            document.getElementById('puzzle-desc').innerText = puzzle.desc;
+            document.getElementById('password-input').value = '';
+            
+            renderRules();
+            resetTimer();
+        }
+
+        function renderRules() {
+            const puzzle = puzzles[currentLevel];
+            const rulesContainer = document.getElementById('rules-list');
+            rulesContainer.innerHTML = '';
+
+            puzzle.rules.forEach(rule => {
+                const div = document.createElement('div');
+                div.className = "flex items-center space-x-3 space-x-reverse text-sm p-2 rounded-lg bg-slate-900/40 border border-slate-800 rule-item";
+                div.innerHTML = `
+                    <span class="w-5 h-5 rounded-full flex items-center justify-center text-xs bg-slate-800 text-slate-400 indicator-icon">❌</span>
+                    <span class="text-slate-300 rule-text">${rule.text}</span>
+                `;
+                rulesContainer.appendChild(div);
+            });
+        }
+
+        function resetTimer() {
+            clearInterval(timerInterval);
+            timeLeft = 30 + (currentLevel * 5); // زيادة زمن بسيطة مع التقدم
+            const maxTime = timeLeft;
+            
+            updateTimerDisplay();
+
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                updateTimerDisplay();
+
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    endGame(false);
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            document.getElementById('timer-indicator').innerText = `${timeLeft}ث`;
+            const maxTime = 30 + (currentLevel * 5);
+            const percentage = (timeLeft / maxTime) * 100;
+            document.getElementById('timer-bar').style.width = `${percentage}%`;
+        }
+
+        function checkPasswordInput() {
+            const val = document.getElementById('password-input').value;
+            const puzzle = puzzles[currentLevel];
+            const ruleElements = document.querySelectorAll('.rule-item');
+
+            let allPassed = true;
+
+            puzzle.rules.forEach((rule, index) => {
+                const element = ruleElements[index];
+                const icon = element.querySelector('.indicator-icon');
+                const text = element.querySelector('.rule-text');
+
+                if (rule.test(val)) {
+                    icon.innerText = '✅';
+                    icon.className = "w-5 h-5 rounded-full flex items-center justify-center text-xs bg-emerald-500/20 text-emerald-400 indicator-icon";
+                    text.classList.add('text-emerald-300');
+                    text.classList.remove('text-slate-300');
+                } else {
+                    allPassed = false;
+                    icon.innerText = '❌';
+                    icon.className = "w-5 h-5 rounded-full flex items-center justify-center text-xs bg-slate-800 text-slate-400 indicator-icon";
+                    text.classList.remove('text-emerald-300');
+                    text.classList.add('text-slate-300');
+                }
+            });
+
+            if (allPassed && puzzle.check(val)) {
+                clearInterval(timerInterval);
+                score += timeLeft * 10 + 100;
+                currentLevel++;
+                
+                // تأثير بصري بسيط عند اجتياز المرحلة
+                const container = document.getElementById('game-container');
+                container.classList.add('glow-green');
+                setTimeout(() => container.classList.remove('glow-green'), 500);
+
+                setTimeout(() => {
+                    loadLevel();
+                }, 600);
+            }
+        }
+
+        function endGame(isWin) {
+            clearInterval(timerInterval);
+            document.getElementById('screen-game').classList.add('hidden');
+            document.getElementById('screen-gameover').classList.remove('hidden');
+
+            const iconDiv = document.getElementById('gameover-icon');
+            const titleElem = document.getElementById('gameover-title');
+            const descElem = document.getElementById('gameover-desc');
+
+            document.getElementById('final-score').innerText = score;
+            document.getElementById('final-stages').innerText = `${currentLevel} / ${puzzles.length}`;
+
+            const container = document.getElementById('game-container');
+
+            if (isWin) {
+                iconDiv.className = "inline-block p-4 bg-emerald-600/20 border border-emerald-500/40 rounded-full text-emerald-400 mb-2";
+                iconDiv.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>`;
+                titleElem.innerText = "أنت خبير أمن معلومات!";
+                titleElem.className = "text-3xl font-black text-emerald-400";
+                descElem.innerText = "لقد أجتزت جميع مراحل تحدي كلمات المرور بنجاح تام وبصمة زمنية ممتازة.";
+                container.classList.add('glow-green');
+            } else {
+                iconDiv.className = "inline-block p-4 bg-red-600/20 border border-red-500/40 rounded-full text-red-400 mb-2";
+                iconDiv.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>`;
+                titleElem.innerText = "انتهى الوقت!";
+                titleElem.className = "text-3xl font-black text-red-400";
+                descElem.innerText = "لم تتمكن من إكمال شروط كلمة المرور في الوقت المحدد. حاول مرة أخرى!";
+                container.classList.add('glow-red');
+                container.classList.add('animate-shake');
+                setTimeout(() => {
+                    container.classList.remove('glow-red');
+                    container.classList.remove('animate-shake');
+                }, 500);
+            }
+        }
+    </script>
+</body>
+</html>
