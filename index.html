@@ -11,7 +11,7 @@
   <style>
     :root {
       --bg-dark: #0a0f0d;
-      --bg-card: rgba(18, 28, 23, 0.85);
+      --bg-card: rgba(18, 28, 23, 0.88);
       --bg-card-border: rgba(46, 204, 113, 0.25);
       --neon-green: #2ecc71;
       --neon-green-glow: rgba(46, 204, 113, 0.4);
@@ -49,7 +49,7 @@
 
     .container {
       width: 100%;
-      max-width: 480px;
+      max-width: 500px;
       margin: 0 auto;
       display: flex;
       flex-direction: column;
@@ -73,17 +73,17 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* Top Bar & Title Header */
+    /* Header & Logo */
     .app-header {
       text-align: center;
       margin-bottom: 20px;
     }
 
     .app-logo {
-      font-size: 2rem;
+      font-size: 2.1rem;
       font-weight: 900;
       color: #fff;
-      text-shadow: 0 0 12px var(--neon-green-glow);
+      text-shadow: 0 0 14px var(--neon-green-glow);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -149,13 +149,7 @@
       background: rgba(255, 255, 255, 0.15);
     }
 
-    .btn-risk {
-      background: linear-gradient(135deg, #e67e22, #d35400);
-      color: #fff;
-      box-shadow: 0 4px 15px rgba(230, 126, 34, 0.4);
-    }
-
-    /* Form Inputs & Options */
+    /* Form Controls */
     .form-group {
       margin-bottom: 16px;
       text-align: right;
@@ -184,13 +178,15 @@
       border-color: var(--neon-green);
     }
 
-    .round-selector {
+    .selector-grid {
       display: grid;
-      grid-template-columns: repeat(5, 1fr);
       gap: 8px;
     }
 
-    .round-opt {
+    .grid-3 { grid-template-columns: repeat(3, 1fr); }
+    .grid-5 { grid-template-columns: repeat(5, 1fr); }
+
+    .opt-btn {
       padding: 10px;
       border-radius: 8px;
       background: rgba(0,0,0,0.3);
@@ -201,46 +197,44 @@
       cursor: pointer;
     }
 
-    .round-opt.selected {
+    .opt-btn.selected {
       background: var(--neon-green);
       color: #000;
       border-color: var(--neon-green);
     }
 
-    /* Game Screen HUD */
+    /* Scoreboard HUD */
     .score-board {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      display: grid;
+      gap: 8px;
       background: rgba(0,0,0,0.6);
-      padding: 12px 16px;
+      padding: 12px;
       border-radius: 14px;
       border: 1px solid var(--bg-card-border);
       margin-bottom: 15px;
     }
 
-    .team-score {
+    .team-score-card {
       text-align: center;
-      flex: 1;
+      background: rgba(255,255,255,0.04);
+      padding: 8px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.08);
     }
 
-    .team-name {
-      font-size: 0.85rem;
+    .team-name-lbl {
+      font-size: 0.8rem;
       color: var(--text-muted);
       font-weight: 700;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
-    .team-pts {
-      font-size: 1.8rem;
+    .team-pts-val {
+      font-size: 1.5rem;
       font-weight: 900;
       color: var(--neon-green);
-    }
-
-    .vs-divider {
-      font-size: 0.9rem;
-      color: rgba(255,255,255,0.3);
-      font-weight: 900;
-      padding: 0 10px;
     }
 
     .round-badge {
@@ -268,54 +262,77 @@
     }
 
     @keyframes pulse {
-      0% { opacity: 0.8; }
+      0% { opacity: 0.85; }
       50% { opacity: 1; }
-      100% { opacity: 0.8; }
+      100% { opacity: 0.85; }
     }
 
     /* Player Profile Card */
     .player-card {
       text-align: center;
-      padding: 25px 15px;
-      position: relative;
+      padding: 22px 15px;
     }
 
     .player-name {
-      font-size: 1.8rem;
+      font-size: 1.7rem;
       font-weight: 900;
       color: #fff;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
     }
 
     .player-en {
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       color: var(--text-muted);
-      margin-bottom: 15px;
+      margin-bottom: 14px;
     }
 
     .player-meta {
       display: flex;
       justify-content: center;
-      gap: 12px;
+      gap: 10px;
       flex-wrap: wrap;
     }
 
     .meta-tag {
       background: rgba(255,255,255,0.08);
       border: 1px solid rgba(255,255,255,0.12);
-      padding: 6px 14px;
+      padding: 5px 12px;
       border-radius: 20px;
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       font-weight: 700;
     }
 
-    .action-grid {
+    .guess-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
+      gap: 8px;
       margin-top: 15px;
     }
 
+    /* Rules Modal Box */
+    .rules-body {
+      font-size: 0.9rem;
+      line-height: 1.7;
+      color: #e2e8f0;
+      max-height: 60vh;
+      overflow-y: auto;
+      text-align: right;
+      padding-left: 5px;
+    }
+
+    .rules-section {
+      margin-bottom: 14px;
+    }
+
+    .rules-section h4 {
+      color: var(--neon-green);
+      font-size: 1rem;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Footer */
     .copyright-footer {
       text-align: center;
       font-size: 0.78rem;
@@ -341,10 +358,11 @@
       <div class="app-subtitle">تحدي كرة القدم الجماعي — بدون مؤقت</div>
     </header>
 
-    <!-- 1. Main Home Screen -->
+    <!-- 1. Home Screen -->
     <div id="screen-home" class="screen active">
       <div class="card">
         <button class="btn btn-primary" onclick="showScreen('screen-setup')">🎮 ابدأ مباراة جديدة</button>
+        <button class="btn btn-secondary" onclick="showScreen('screen-rules')">📜 قواعد اللعبة وطريقة اللعب</button>
         <button class="btn btn-secondary" onclick="showStats()">📊 الإحصائيات وسجل المباريات</button>
       </div>
 
@@ -357,23 +375,28 @@
     <!-- 2. Match Setup Screen -->
     <div id="screen-setup" class="screen">
       <div class="card">
+        
         <div class="form-group">
-          <label class="form-label">اسم الفريق الأول:</label>
-          <input type="text" id="team1-input" class="form-input" value="فريق ١">
+          <label class="form-label">اختر عدد الفرق المشاركة:</label>
+          <div class="selector-grid grid-3">
+            <div class="opt-btn opt-team selected" onclick="selectTeamCount(2)">فريقين (2)</div>
+            <div class="opt-btn opt-team" onclick="selectTeamCount(3)">3 فرق</div>
+            <div class="opt-btn opt-team" onclick="selectTeamCount(4)">4 فرق</div>
+          </div>
         </div>
-        <div class="form-group">
-          <label class="form-label">اسم الفريق الثاني:</label>
-          <input type="text" id="team2-input" class="form-input" value="فريق ٢">
+
+        <div id="team-inputs-container">
+          <!-- Inputs dynamically rendered here -->
         </div>
         
         <div class="form-group">
           <label class="form-label">عدد الجولات الأساسية:</label>
-          <div class="round-selector">
-            <div class="round-opt" onclick="selectRounds(2)">2</div>
-            <div class="round-opt selected" onclick="selectRounds(4)">4</div>
-            <div class="round-opt" onclick="selectRounds(6)">6</div>
-            <div class="round-opt" onclick="selectRounds(8)">8</div>
-            <div class="round-opt" onclick="selectRounds(10)">10</div>
+          <div class="selector-grid grid-5">
+            <div class="opt-btn opt-round" onclick="selectRounds(2)">2</div>
+            <div class="opt-btn opt-round selected" onclick="selectRounds(4)">4</div>
+            <div class="opt-btn opt-round" onclick="selectRounds(6)">6</div>
+            <div class="opt-btn opt-round" onclick="selectRounds(8)">8</div>
+            <div class="opt-btn opt-round" onclick="selectRounds(10)">10</div>
           </div>
         </div>
 
@@ -386,26 +409,19 @@
     <div id="screen-game" class="screen">
       
       <div id="risk-alert" class="risk-banner" style="display:none;">
-        🔥 جولة المخاطرة! الجولة دي بنقطتين للفريق الفائز
+        🔥 جولة المخاطرة المشتركة! الفريق الكسبان ياخد (2) نقطتين
       </div>
 
       <div style="text-align: center;">
         <div id="round-badge" class="round-badge">الجولة 1 من 4</div>
       </div>
 
-      <div class="score-board">
-        <div class="team-score">
-          <div id="t1-display-name" class="team-name">فريق ١</div>
-          <div id="t1-score" class="team-pts">0</div>
-        </div>
-        <div class="vs-divider">VS</div>
-        <div class="team-score">
-          <div id="t2-display-name" class="team-name">فريق ٢</div>
-          <div id="t2-score" class="team-pts">0</div>
-        </div>
+      <!-- Scoreboard HUD Dynamic -->
+      <div id="scoreboard-hud" class="score-board">
+        <!-- Rendered dynamically -->
       </div>
 
-      <!-- Player Card (For Hint Giver) -->
+      <!-- Player Profile Card (For Hint Giver) -->
       <div class="card player-card">
         <div id="card-player-name" class="player-name">---</div>
         <div id="card-player-en" class="player-en">---</div>
@@ -416,28 +432,56 @@
         </div>
       </div>
 
-      <!-- Control Buttons -->
-      <div class="action-grid">
-        <button id="btn-t1-win" class="btn btn-primary" onclick="scorePoint(1)">✅ تخمين <span id="btn-t1-txt">فريق ١</span></button>
-        <button id="btn-t2-win" class="btn btn-primary" onclick="scorePoint(2)">✅ تخمين <span id="btn-t2-txt">فريق ٢</span></button>
+      <!-- Guess Action Buttons -->
+      <div id="guess-buttons-container" class="guess-grid">
+        <!-- Action buttons rendered dynamically -->
       </div>
-      <button class="btn btn-secondary" onclick="skipPlayer()">🔄 تخطي اللاعب (دون ضياع الجولة)</button>
+
+      <button class="btn btn-secondary" style="margin-top:10px;" onclick="skipPlayer()">🔄 تخطي اللاعب (دون ضياع الجولة)</button>
     </div>
 
-    <!-- 4. Match Results Screen -->
+    <!-- 4. Game Rules Screen -->
+    <div id="screen-rules" class="screen">
+      <div class="card">
+        <h3 style="color: var(--neon-green); text-align: center; margin-bottom: 15px;">📜 دليل وقواعد اللعبة</h3>
+        <div class="rules-body">
+          <div class="rules-section">
+            <h4>🎯 هدف اللعبة</h4>
+            <p>تخمين اسم لاعب كرة القدم المستهدف من خلال التلميحات التي يقدمها موجه الكلمة، وتجميع أكبر عدد من النقاط للفوز.</p>
+          </div>
+          <div class="rules-section">
+            <h4>⚽ طريقة اللعب</h4>
+            <p>يتولى أحد اللاعبين في كل دور دور "مقدم التلميح" حيث تظهر له بيانات البطاقة (الاسم، الجنسية، النادي، والمركز)، ويقوم بإعطاء كلمات دالة دون نطق اسم اللاعب نفسه. يُسمح للفرق بالتخمين.</p>
+          </div>
+          <div class="rules-section">
+            <h4>💯 نظام النقاط والجولات</h4>
+            <p>• الإجابة الصحيحة = <strong>1 نقطة</strong>.<br>
+            • في <strong>جولة المخاطرة العشوائية</strong> = تُحسب الإجابة الصحيحة بـ <strong>2 نقطتين</strong>.<br>
+            • التخطي لا يستهلك الجولة ولا يخصم نقاطاً.</p>
+          </div>
+          <div class="rules-section">
+            <h4>🏆 قواعد الفوز والتعادل</h4>
+            <p>الفريق صاحب أكبر عدد من النقاط في نهاية الجولات هو الفائز. عند التعادل، يتم الانتقال تلقائياً إلى <strong>الهدف الذهبي</strong> (أول فريق يسجل يفوز فوراً).</p>
+          </div>
+        </div>
+        <button class="btn btn-secondary" style="margin-top: 15px;" onclick="showScreen('screen-home')">العودة للرئيسية</button>
+      </div>
+    </div>
+
+    <!-- 5. Match Results Screen -->
     <div id="screen-result" class="screen">
-      <div class="card" style="text-align: center; padding: 30px 15px;">
-        <h2 style="color: var(--neon-gold); font-size: 1.5rem; margin-bottom: 10px;">🏆 بطل المباراة</h2>
-        <div id="winner-name" style="font-size: 2.2rem; font-weight: 900; color: #fff; margin-bottom: 15px;">---</div>
-        <div id="final-score-display" style="font-size: 1.2rem; color: var(--text-muted); margin-bottom: 20px;">0 - 0</div>
+      <div class="card" style="text-align: center; padding: 25px 15px;">
+        <h2 style="color: var(--neon-gold); font-size: 1.4rem; margin-bottom: 10px;">🏆 بطل المباراة</h2>
+        <div id="winner-name" style="font-size: 2rem; font-weight: 900; color: #fff; margin-bottom: 15px;">---</div>
+        <div id="final-scoreboard-summary" style="font-size: 1rem; color: var(--text-muted); margin-bottom: 20px; line-height: 1.8;"></div>
         <div id="golden-goal-note" style="color: var(--neon-green); font-weight: 700; margin-bottom: 15px; display:none;">✨ حُسمت بالهدف الذهبي!</div>
 
-        <button class="btn btn-primary" onclick="restartMatch()">🔄 إعادة المباراة بنفس الفرق</button>
+        <button class="btn btn-primary" onclick="restartMatch()">🔄 إعادة المباراة</button>
         <button class="btn btn-secondary" onclick="showScreen('screen-home')">العودة للرئيسية</button>
       </div>
     </div>
 
-    <!-- 5. Stats Screen -->
+    <!-- 6. Stats Screen -->
     <div id="screen-stats" class="screen">
       <div class="card">
         <h3 style="margin-bottom: 15px; text-align: center; color: var(--neon-green);">📊 إحصائيات المباريات السابقة</h3>
@@ -456,7 +500,7 @@
   </footer>
 
   <script>
-    // --- Complete Top 5 European Leagues Verified Database (152 Players) ---
+    // --- Full Verified Top 5 Leagues Database (152 Players) ---
     const PLAYERS_DB = [
       // PSG & Ligue 1
       { id: "dembele", name: "عثمان ديمبيلي", enName: "Ousmane Dembélé", club: "باريس سان جيرمان", league: "الدوري الفرنسي", nation: "فرنسا", flag: "🇫🇷", pos: "مهاجم / جناح", diff: "easy" },
@@ -470,7 +514,7 @@
       { id: "doue", name: "ديزيري دويه", enName: "Désiré Doué", club: "باريس سان جيرمان", league: "الدوري الفرنسي", nation: "فرنسا", flag: "🇫🇷", pos: "وسط / جناح", diff: "medium" },
       { id: "zaire_emery", name: "وارن زاير إيمري", enName: "Warren Zaïre-Emery", club: "باريس سان جيرمان", league: "الدوري الفرنسي", nation: "فرنسا", flag: "🇫🇷", pos: "وسط", diff: "medium" },
       
-      // Premier League Stars (Easy & Medium)
+      // Premier League Stars
       { id: "salah", name: "محمد صلاح", enName: "Mohamed Salah", club: "ليفربول", league: "الدوري الإنجليزي", nation: "مصر", flag: "🇪🇬", pos: "مهاجم / جناح", diff: "easy" },
       { id: "haaland", name: "إيرلينغ هالاند", enName: "Erling Haaland", club: "مانشستر سيتي", league: "الدوري الإنجليزي", nation: "النرويج", flag: "🇳🇴", pos: "مهاجم", diff: "easy" },
       { id: "rodri", name: "رودري", enName: "Rodri", club: "مانشستر سيتي", league: "الدوري الإنجليزي", nation: "إسبانيا", flag: "🇪🇸", pos: "وسط", diff: "easy" },
@@ -497,7 +541,7 @@
       { id: "caicedo", name: "مويسيس كايسيدو", enName: "Moisés Caicedo", club: "تشيلسي", league: "الدوري الإنجليزي", nation: "الإكوادور", flag: "🇪🇨", pos: "وسط", diff: "easy" },
       { id: "reece_james", name: "ريس جيمس", enName: "Reece James", club: "تشيلسي", league: "الدوري الإنجليزي", nation: "إنجلترا", flag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿", pos: "مدافع", diff: "easy" },
       { id: "maddison", name: "جيمس ماديسون", enName: "James Maddison", club: "توتنهام هوتسبير", league: "الدوري الإنجليزي", nation: "إنجلترا", flag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿", pos: "وسط", diff: "easy" },
-      { id: "richarlison", name: "ريشارليسون", enName: "Richarlison", club: "توتنهام هوتسبير", league: "الدوري الإنجليزي", nation: "البرازيل", "flag": "🇧🇷", pos: "مهاجم", diff: "easy" },
+      { id: "richarlison", name: "ريشارليسون", enName: "Richarlison", club: "توتنهام هوتسبير", league: "الدوري الإنجليزي", nation: "البرازيل", flag: "🇧🇷", pos: "مهاجم", diff: "easy" },
       { id: "romero", name: "كريستيان روميرو", enName: "Cristian Romero", club: "توتنهام هوتسبير", league: "الدوري الإنجليزي", nation: "الأرجنتين", flag: "🇦🇷", pos: "مدافع", diff: "easy" },
       { id: "solanke", name: "دومينيك سولانكي", enName: "Dominic Solanke", club: "توتنهام هوتسبير", league: "الدوري الإنجليزي", nation: "إنجلترا", flag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿", pos: "مهاجم", diff: "easy" },
       { id: "bruno_guimaraes", name: "برونو غيماريش", enName: "Bruno Guimarães", club: "نيوكاسل يونايتد", league: "الدوري الإنجليزي", nation: "البرازيل", flag: "🇧🇷", pos: "وسط", diff: "easy" },
@@ -527,12 +571,15 @@
       { id: "isco", name: "إيسكو", enName: "Isco", club: "ريال بيتيس", league: "الدوري الإسباني", nation: "إسبانيا", flag: "🇪🇸", pos: "وسط", diff: "easy" }
     ];
 
-    // --- State Management ---
+    // --- State ---
+    let selectedTeamCount = 2;
+    let selectedRoundsCount = 4;
+
     let gameState = {
-      team1: "فريق ١",
-      team2: "فريق ٢",
-      score1: 0,
-      score2: 0,
+      teams: [
+        { name: "فريق ١", score: 0 },
+        { name: "فريق ٢", score: 0 }
+      ],
       totalRounds: 4,
       currentRound: 1,
       riskRoundNumber: 2,
@@ -542,51 +589,84 @@
       playedPlayerIds: []
     };
 
-    let selectedRoundsCount = 4;
-
-    // --- UI Navigation ---
     function showScreen(screenId) {
       document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
       document.getElementById(screenId).classList.add('active');
     }
 
+    function selectTeamCount(count) {
+      selectedTeamCount = count;
+      document.querySelectorAll('.opt-team').forEach((btn, idx) => {
+        btn.classList.toggle('selected', idx === (count - 2));
+      });
+      renderTeamInputs();
+    }
+
     function selectRounds(num) {
       selectedRoundsCount = num;
-      document.querySelectorAll('.round-opt').forEach(opt => {
-        opt.classList.toggle('selected', parseInt(opt.innerText) === num);
+      document.querySelectorAll('.opt-round').forEach(btn => {
+        btn.classList.toggle('selected', parseInt(btn.innerText) === num);
       });
     }
 
-    // --- Game Logic ---
-    function startGame() {
-      const t1 = document.getElementById('team1-input').value.trim() || "فريق ١";
-      const t2 = document.getElementById('team2-input').value.trim() || "فريق ٢";
+    function renderTeamInputs() {
+      const container = document.getElementById('team-inputs-container');
+      container.innerHTML = '';
+      for (let i = 1; i <= selectedTeamCount; i++) {
+        container.innerHTML += `
+          <div class="form-group">
+            <label class="form-label">اسم الفريق ${i}:</label>
+            <input type="text" id="team-input-${i}" class="form-input" value="فريق ${i}">
+          </div>
+        `;
+      }
+    }
 
-      gameState.team1 = t1;
-      gameState.team2 = t2;
-      gameState.score1 = 0;
-      gameState.score2 = 0;
+    function startGame() {
+      gameState.teams = [];
+      for (let i = 1; i <= selectedTeamCount; i++) {
+        const val = document.getElementById(`team-input-${i}`).value.trim() || `فريق ${i}`;
+        gameState.teams.push({ name: val, score: 0 });
+      }
+
       gameState.totalRounds = selectedRoundsCount;
       gameState.currentRound = 1;
       gameState.isGoldenGoal = false;
-      
-      // Random Shared Risk Round
       gameState.riskRoundNumber = Math.floor(Math.random() * selectedRoundsCount) + 1;
 
-      // Update UI Header
-      document.getElementById('t1-display-name').innerText = t1;
-      document.getElementById('t2-display-name').innerText = t2;
-      document.getElementById('btn-t1-txt').innerText = t1;
-      document.getElementById('btn-t2-txt').innerText = t2;
-
+      renderScoreboardHUD();
+      renderGuessButtons();
       updateRoundHUD();
       nextPlayer();
       showScreen('screen-game');
     }
 
+    function renderScoreboardHUD() {
+      const hud = document.getElementById('scoreboard-hud');
+      hud.style.gridTemplateColumns = `repeat(${gameState.teams.length}, 1fr)`;
+      hud.innerHTML = gameState.teams.map((t, idx) => `
+        <div class="team-score-card">
+          <div class="team-name-lbl">${t.name}</div>
+          <div id="score-val-${idx}" class="team-pts-val">${t.score}</div>
+        </div>
+      `).join('');
+    }
+
+    function renderGuessButtons() {
+      const container = document.getElementById('guess-buttons-container');
+      container.style.gridTemplateColumns = gameState.teams.length > 2 ? '1fr 1fr' : '1fr 1fr';
+      container.innerHTML = gameState.teams.map((t, idx) => `
+        <button class="btn btn-primary" onclick="scorePoint(${idx})">
+          ✅ تخمين ${t.name}
+        </button>
+      `).join('');
+    }
+
     function updateRoundHUD() {
-      document.getElementById('t1-score').innerText = gameState.score1;
-      document.getElementById('t2-score').innerText = gameState.score2;
+      gameState.teams.forEach((t, idx) => {
+        const elem = document.getElementById(`score-val-${idx}`);
+        if (elem) elem.innerText = t.score;
+      });
 
       if (gameState.isGoldenGoal) {
         document.getElementById('round-badge').innerText = "⚽ الهدف الذهبي";
@@ -609,14 +689,11 @@
       let available = PLAYERS_DB.filter(p => !gameState.playedPlayerIds.includes(p.id) && !history.includes(p.id));
 
       if (available.length === 0) {
-        // Reset history if exhausted
         localStorage.setItem('global_played_players', '[]');
         available = PLAYERS_DB.filter(p => !gameState.playedPlayerIds.includes(p.id));
       }
 
       const player = available[Math.floor(Math.random() * available.length)];
-      
-      // Save history
       gameState.playedPlayerIds.push(player.id);
       history.push(player.id);
       localStorage.setItem('global_played_players', JSON.stringify(history));
@@ -639,14 +716,12 @@
       nextPlayer();
     }
 
-    function scorePoint(teamNum) {
-      const points = gameState.isRiskActive ? 2 : 1;
-
-      if (teamNum === 1) gameState.score1 += points;
-      else gameState.score2 += points;
+    function scorePoint(teamIdx) {
+      const pts = gameState.isRiskActive ? 2 : 1;
+      gameState.teams[teamIdx].score += pts;
 
       if (gameState.isGoldenGoal) {
-        endMatch(teamNum === 1 ? gameState.team1 : gameState.team2);
+        endMatch(gameState.teams[teamIdx].name);
         return;
       }
 
@@ -655,43 +730,43 @@
         updateRoundHUD();
         nextPlayer();
       } else {
-        // End of main rounds -> Check tiebreaker or winner
-        if (gameState.score1 === gameState.score2) {
+        // Check ties among highest score
+        let maxScore = Math.max(...gameState.teams.map(t => t.score));
+        let winners = gameState.teams.filter(t => t.score === maxScore);
+
+        if (winners.length > 1) {
           gameState.isGoldenGoal = true;
           updateRoundHUD();
           nextPlayer();
         } else {
-          const winner = gameState.score1 > gameState.score2 ? gameState.team1 : gameState.team2;
-          endMatch(winner);
+          endMatch(winners[0].name);
         }
       }
     }
 
     function endMatch(winnerName) {
       document.getElementById('winner-name').innerText = winnerName;
-      document.getElementById('final-score-display').innerText = `${gameState.team1} (${gameState.score1}) - (${gameState.score2}) ${gameState.team2}`;
+      
+      const summaryText = gameState.teams.map(t => `${t.name}: ${t.score}`).join(' | ');
+      document.getElementById('final-scoreboard-summary').innerText = summaryText;
       document.getElementById('golden-goal-note').style.display = gameState.isGoldenGoal ? "block" : "none";
 
-      saveMatchResult(winnerName);
+      saveMatchResult(winnerName, summaryText);
       showScreen('screen-result');
     }
 
-    function saveMatchResult(winner) {
+    function saveMatchResult(winner, summary) {
       let stats = JSON.parse(localStorage.getItem('match_history') || '[]');
       const record = {
         date: new Date().toLocaleDateString('ar-EG'),
-        t1: gameState.team1,
-        t2: gameState.team2,
-        s1: gameState.score1,
-        s2: gameState.score2,
-        winner: winner
+        winner: winner,
+        summary: summary
       };
       stats.unshift(record);
       localStorage.setItem('match_history', JSON.stringify(stats));
 
-      // Display in home
       document.getElementById('last-match-card').style.display = 'block';
-      document.getElementById('last-match-summary').innerText = `${record.t1} (${record.s1}) - (${record.s2}) ${record.t2} | الفائز: ${winner}`;
+      document.getElementById('last-match-summary').innerText = `${summary} (الفائز: ${winner})`;
     }
 
     function showStats() {
@@ -702,7 +777,7 @@
       } else {
         container.innerHTML = stats.slice(0, 5).map(s => `
           <div style="border-bottom: 1px solid rgba(255,255,255,0.1); padding: 8px 0;">
-            🏆 <strong>${s.winner}</strong> (${s.t1} ${s.s1} - ${s.s2} ${s.t2}) <br>
+            🏆 <strong>${s.winner}</strong> (${s.summary}) <br>
             <small style="color:#718096;">📅 ${s.date}</small>
           </div>
         `).join('');
@@ -714,13 +789,14 @@
       startGame();
     }
 
-    // Init on Load
+    // Init
     window.onload = function() {
+      renderTeamInputs();
       let stats = JSON.parse(localStorage.getItem('match_history') || '[]');
       if (stats.length > 0) {
         const last = stats[0];
         document.getElementById('last-match-card').style.display = 'block';
-        document.getElementById('last-match-summary').innerText = `${last.t1} (${last.s1}) - (${last.s2}) ${last.t2} | الفائز: ${last.winner}`;
+        document.getElementById('last-match-summary').innerText = `${last.summary} | الفائز: ${last.winner}`;
       }
     };
   </script>
