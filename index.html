@@ -253,6 +253,18 @@
       font-weight: 700;
     }
 
+    .difficulty-badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
+    .diff-easy { background: rgba(46, 204, 113, 0.2); color: #2ecc71; border: 1px solid #2ecc71; }
+    .diff-medium { background: rgba(241, 196, 15, 0.2); color: #f1c40f; border: 1px solid #f1c40f; }
+    .diff-hard { background: rgba(231, 76, 60, 0.2); color: #e74c3c; border: 1px solid #e74c3c; }
+
     .risk-banner {
       background: linear-gradient(90deg, #e67e22, #e74c3c);
       color: #fff;
@@ -396,7 +408,7 @@
     <!-- Stadium Header -->
     <header class="app-header">
       <div class="app-logo">⚽ <span>PASSWORD CHALLENGE</span></div>
-      <div class="app-subtitle">تحدي كرة القدم الجماعي </div>
+      <div class="app-subtitle">تحدي كرة القدم الجماعي — بدون مؤقت</div>
     </header>
 
     <!-- 1. Home Screen -->
@@ -456,6 +468,7 @@
       </div>
 
       <div style="text-align: center;">
+        <div id="difficulty-badge" class="difficulty-badge diff-easy">مستوى سهل</div>
         <div id="round-badge" class="round-badge">الجولة 1 من 4</div>
       </div>
 
@@ -497,10 +510,11 @@
             <p>يقوم أحد أفراد الفريق بقراءة معلومات البطاقة (الاسم، الجنسية، النادي الحالي، والمركز) دون نطق اسم اللاعب صراحة. تتنافس الفرق في الإجابة السريعة والدقيقة.</p>
           </div>
           <div class="rules-section">
-            <h4>💯 نظام النقاط والمخاطرة</h4>
-            <p>• الإجابة الصحيحة العادية = <strong>نقطة واحدة (1)</strong>.<br>
-            • <strong>جولة المخاطرة المشتركة</strong> (العشوائية) = <strong>نقطتان (2)</strong> للفريق الفائز.<br>
-            • التخطي متاح في أي وقت ولا يستهلك عدد الجولات ولا يخصم نقاطاً.</p>
+            <h4>💯 مستويات الصعوبة والنقاط</h4>
+            <p>• تتنوع مستويات الصعوبة ديناميكياً بين (سهل، متوسط، وصعب) في كل جولة عشوائياً.<br>
+            • الإجابة الصحيحة العادية = <strong>نقطة واحدة (1)</strong>.<br>
+            • <strong>جولة المخاطرة المشتركة</strong> = <strong>نقطتان (2)</strong> للفريق الفائز.<br>
+            • التخطي متاح في أي وقت دون خسارة الدور أو النقاط.</p>
           </div>
           <div class="rules-section">
             <h4>🏆 قواعد الفوز والتعادل</h4>
@@ -594,72 +608,130 @@
     // --- Full Verified Top 5 Leagues Database (152 Players) ---
     const PLAYERS_DB = [
       // PSG & Ligue 1
-      { id: "dembele", name: "عثمان ديمبيلي", enName: "Ousmane Dembélé", club: "باريس سان جيرمان", league: "الدوري الفرنسي", nation: "فرنسا", flag: "🇫🇷", pos: "مهاجم / جناح", diff: "easy" },
-      { id: "hakimi", name: "أشرف حكيمي", enName: "Achraf Hakimi", club: "باريس سان جيرمان", league: "الدوري الفرنسي", nation: "المغرب", flag: "🇲🇦", pos: "مدافع / ظهير", diff: "easy" },
-      { id: "vitinha_psg", name: "فيتينيا", enName: "Vitinha", club: "باريس سان جيرمان", league: "الدوري الفرنسي", nation: "البرتغال", flag: "🇵🇹", pos: "وسط", diff: "medium" },
-      { id: "joao_neves", name: "جواو نيفيز", enName: "João Neves", club: "باريس سان جيرمان", league: "الدوري الفرنسي", nation: "البرتغال", flag: "🇵🇹", pos: "وسط", diff: "medium" },
-      { id: "nuno_mendes", name: "نونو مينديز", enName: "Nuno Mendes", club: "باريس سان جيرمان", league: "الدوري الفرنسي", nation: "البرتغال", flag: "🇵🇹", pos: "مدافع / ظهير", diff: "medium" },
-      { id: "marquinhos", name: "ماركينوس", enName: "Marquinhos", club: "باريس سان جيرمان", league: "الدوري الفرنسي", nation: "البرازيل", flag: "🇧🇷", pos: "مدافع", diff: "easy" },
-      { id: "kvaratskhelia", name: "خفيتشا كفاراتسخيليا", enName: "Khvicha Kvaratskhelia", club: "باريس سان جيرمان", league: "الدوري الفرنسي", nation: "جورجيا", flag: "🇬🇪", pos: "جناح", diff: "easy" },
-      { id: "barcola", name: "برادلي باركولا", enName: "Bradley Barcola", club: "باريس سان جيرمان", league: "الدوري الفرنسي", nation: "فرنسا", flag: "🇫🇷", pos: "جناح", diff: "medium" },
-      { id: "doue", name: "ديزيري دويه", enName: "Désiré Doué", club: "باريس سان جيرمان", league: "الدوري الفرنسي", nation: "فرنسا", flag: "🇫🇷", pos: "وسط / جناح", diff: "medium" },
-      { id: "zaire_emery", name: "وارن زاير إيمري", enName: "Warren Zaïre-Emery", club: "باريس سان جيرمان", league: "الدوري الفرنسي", nation: "فرنسا", flag: "🇫🇷", pos: "وسط", diff: "medium" },
+      { id: "dembele", name: "عثمان ديمبيلي", enName: "Ousmane Dembélé", club: "باريس سان جيرمان", league: "الدوري الفرنسي", nation: "فرنسا", flag: "🇫🇷", pos: "مهاجم / جناح" },
+      { id: "hakimi", name: "أشرف حكيمي", enName: "Achraf Hakimi", club: "باريس سان جيرمان", league: "الدوري الفرنسي", nation: "المغرب", flag: "🇲🇦", pos: "مدافع / ظهير" },
+      { id: "vitinha_psg", name: "فيتينيا", enName: "Vitinha", club: "باريس سان جيرمان", league: "الدوري الفرنسي", nation: "البرتغال", flag: "🇵🇹", pos: "وسط" },
+      { id: "joao_neves", name: "جواو نيفيز", enName: "João Neves", club: "باريس سان جيرمان", league: "الدوري الفرنسي", nation: "البرتغال", flag: "🇵🇹", pos: "وسط" },
+      { id: "nuno_mendes", name: "نونو مينديز", enName: "Nuno Mendes", club: "باريس سان جيرمان", league: "الدوري الفرنسي", nation: "البرتغال", flag: "🇵🇹", pos: "مدافع / ظهير" },
+      { id: "marquinhos", name: "ماركينوس", enName: "Marquinhos", club: "باريس سان جيرمان", league: "الدوري الفرنسي", nation: "البرازيل", flag: "🇧🇷", pos: "مدافع" },
+      { id: "kvaratskhelia", name: "خفيتشا كفاراتسخيليا", enName: "Khvicha Kvaratskhelia", club: "باريس سان جيرمان", league: "الدوري الفرنسي", nation: "جورجيا", flag: "🇬🇪", pos: "جناح" },
+      { id: "barcola", name: "برادلي باركولا", enName: "Bradley Barcola", club: "باريس سان جيرمان", league: "الدوري الفرنسي", nation: "فرنسا", flag: "🇫🇷", pos: "جناح" },
+      { id: "doue", name: "ديزيري دويه", enName: "Désiré Doué", club: "باريس سان جيرمان", league: "الدوري الفرنسي", nation: "فرنسا", flag: "🇫🇷", pos: "وسط / جناح" },
+      { id: "zaire_emery", name: "وارن زاير إيمري", enName: "Warren Zaïre-Emery", club: "باريس سان جيرمان", league: "الدوري الفرنسي", nation: "فرنسا", flag: "🇫🇷", pos: "وسط" },
+      { id: "goncalo_ramos", name: "غونكالو راموس", enName: "Gonçalo Ramos", club: "باريس سان جيرمان", league: "الدوري الفرنسي", nation: "البرتغال", flag: "🇵🇹", pos: "مهاجم" },
+      { id: "lucas_hernandez", name: "لوكاس هيرنانديز", enName: "Lucas Hernández", club: "باريس سان جيرمان", league: "الدوري الفرنسي", nation: "فرنسا", flag: "🇫🇷", pos: "مدافع" },
+      { id: "fabian_ruiz", name: "فابيان رويز", enName: "Fabián Ruiz", club: "باريس سان جيرمان", league: "الدوري الفرنسي", nation: "إسبانيا", flag: "🇪🇸", pos: "وسط" },
+      { id: "lee_kang_in", name: "لي كانغ إن", enName: "Lee Kang-in", club: "باريس سان جيرمان", league: "الدوري الفرنسي", nation: "كوريا الجنوبية", flag: "🇰🇷", pos: "وسط / جناح" },
+      { id: "beraldo", name: "لوكاس بيرالدو", enName: "Lucas Beraldo", club: "باريس سان جيرمان", league: "الدوري الفرنسي", nation: "البرازيل", flag: "🇧🇷", pos: "مدافع" },
+      { id: "mayulu", name: "سيني مايولو", enName: "Senny Mayulu", club: "باريس سان جيرمان", league: "الدوري الفرنسي", nation: "فرنسا", flag: "🇫🇷", pos: "وسط" },
+      { id: "safonov", name: "ماتفي سافونوف", enName: "Matvey Safonov", club: "باريس سان جيرمان", league: "الدوري الفرنسي", nation: "روسيا", flag: "🇷🇺", pos: "حارس مرمى" },
+      { id: "mbaye", name: "إبراهيم مباي", enName: "Ibrahim Mbaye", club: "باريس سان جيرمان", league: "الدوري الفرنسي", nation: "فرنسا", flag: "🇫🇷", pos: "جناح" },
+      { id: "cherki", name: "رايان شرقي", enName: "Rayan Cherki", club: "أولمبيك ليون", league: "الدوري الفرنسي", nation: "فرنسا", flag: "🇫🇷", pos: "وسط / صانع ألعاب" },
       
       // Premier League Stars
-      { id: "salah", name: "محمد صلاح", enName: "Mohamed Salah", club: "ليفربول", league: "الدوري الإنجليزي", nation: "مصر", flag: "🇪🇬", pos: "مهاجم / جناح", diff: "easy" },
-      { id: "haaland", name: "إيرلينغ هالاند", enName: "Erling Haaland", club: "مانشستر سيتي", league: "الدوري الإنجليزي", nation: "النرويج", flag: "🇳🇴", pos: "مهاجم", diff: "easy" },
-      { id: "rodri", name: "رودري", enName: "Rodri", club: "مانشستر سيتي", league: "الدوري الإنجليزي", nation: "إسبانيا", flag: "🇪🇸", pos: "وسط", diff: "easy" },
-      { id: "foden", name: "فيل فودين", enName: "Phil Foden", club: "مانشستر سيتي", league: "الدوري الإنجليزي", nation: "إنجلترا", flag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿", pos: "وسط / جناح", diff: "easy" },
-      { id: "bernardo_silva", name: "بيرناردو سيلفا", enName: "Bernardo Silva", club: "مانشستر سيتي", league: "الدوري الإنجليزي", nation: "البرتغال", flag: "🇵🇹", pos: "وسط", diff: "easy" },
-      { id: "ruben_dias", name: "روبن دياز", enName: "Rúben Dias", club: "مانشستر سيتي", league: "الدوري الإنجليزي", nation: "البرتغال", flag: "🇵🇹", pos: "مدافع", diff: "easy" },
-      { id: "doku", name: "جيريمي دوكو", enName: "Jérémy Doku", club: "مانشستر سيتي", league: "الدوري الإنجليزي", nation: "بلجيكا", flag: "🇧🇪", pos: "جناح", diff: "easy" },
-      { id: "saka", name: "بوكايو ساكا", enName: "Bukayo Saka", club: "أرسنال", league: "الدوري الإنجليزي", nation: "إنجلترا", flag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿", pos: "جناح", diff: "easy" },
-      { id: "rice", name: "ديكلان رايس", enName: "Declan Rice", club: "أرسنال", league: "الدوري الإنجليزي", nation: "إنجلترا", flag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿", pos: "وسط", diff: "easy" },
-      { id: "odegaard", name: "مارتن أوديغارد", enName: "Martin Ødegaard", club: "أرسنال", league: "الدوري الإنجليزي", nation: "النرويج", flag: "🇳🇴", pos: "وسط", diff: "easy" },
-      { id: "havertz", name: "كاي هافيرتز", enName: "Kai Havertz", club: "أرسنال", league: "الدوري الإنجليزي", nation: "ألمانيا", flag: "🇩🇪", pos: "مهاجم / وسط", diff: "easy" },
-      { id: "saliba", name: "ويليام ساليبا", enName: "William Saliba", club: "أرسنال", league: "الدوري الإنجليزي", nation: "فرنسا", flag: "🇫🇷", pos: "مدافع", diff: "easy" },
-      { id: "van_dijk", name: "فيرجيل فان دايك", enName: "Virgil van Dijk", club: "ليفربول", league: "الدوري الإنجليزي", nation: "هولندا", flag: "🇳🇱", pos: "مدافع", diff: "easy" },
-      { id: "alisson", name: "أليسون بيكر", enName: "Alisson Becker", club: "ليفربول", league: "الدوري الإنجليزي", nation: "البرازيل", flag: "🇧🇷", pos: "حارس مرمى", diff: "easy" },
-      { id: "mac_allister", name: "أليكسيس ماك أليستر", enName: "Alexis Mac Allister", club: "ليفربول", league: "الدوري الإنجليزي", nation: "الأرجنتين", flag: "🇦🇷", pos: "وسط", diff: "easy" },
-      { id: "szoboszlai", name: "دومينيك سوبوسلاي", enName: "Dominik Szoboszlai", club: "ليفربول", league: "الدوري الإنجليزي", nation: "المجر", flag: "🇭🇺", pos: "وسط", diff: "easy" },
-      { id: "bruno_fernandes", name: "برونو فيرنانديز", enName: "Bruno Fernandes", club: "مانشستر يونايتد", league: "الدوري الإنجليزي", nation: "البرتغال", flag: "🇵🇹", pos: "وسط", diff: "easy" },
-      { id: "lisandro_martinez", name: "ليسانسدرو مارتينيز", enName: "Lisandro Martínez", club: "مانشستر يونايتد", league: "الدوري الإنجليزي", nation: "الأرجنتين", flag: "🇦🇷", pos: "مدافع", diff: "easy" },
-      { id: "de_ligt", name: "ماتايس دي ليخت", enName: "Matthijs de Ligt", club: "مانشستر يونايتد", league: "الدوري الإنجليزي", nation: "هولندا", flag: "🇳🇱", pos: "مدافع", diff: "easy" },
-      { id: "casemiro", name: "كاسيميرو", enName: "Casemiro", club: "مانشستر يونايتد", league: "الدوري الإنجليزي", nation: "البرازيل", flag: "🇧🇷", pos: "وسط", diff: "easy" },
-      { id: "maguire", name: "هاري ماغواير", enName: "Harry Maguire", club: "مانشستر يونايتد", league: "الدوري الإنجليزي", nation: "إنجلترا", flag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿", pos: "مدافع", diff: "easy" },
-      { id: "palmer", name: "كول بالمر", enName: "Cole Palmer", club: "تشيلسي", league: "الدوري الإنجليزي", nation: "إنجلترا", flag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿", pos: "وسط", diff: "easy" },
-      { id: "enzo_fernandez", name: "إينزو فيرنانديز", enName: "Enzo Fernández", club: "تشيلسي", league: "الدوري الإنجليزي", nation: "الأرجنتين", flag: "🇦🇷", pos: "وسط", diff: "easy" },
-      { id: "caicedo", name: "مويسيس كايسيدو", enName: "Moisés Caicedo", club: "تشيلسي", league: "الدوري الإنجليزي", nation: "الإكوادور", flag: "🇪🇨", pos: "وسط", diff: "easy" },
-      { id: "reece_james", name: "ريس جيمس", enName: "Reece James", club: "تشيلسي", league: "الدوري الإنجليزي", nation: "إنجلترا", flag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿", pos: "مدافع", diff: "easy" },
-      { id: "maddison", name: "جيمس ماديسون", enName: "James Maddison", club: "توتنهام هوتسبير", league: "الدوري الإنجليزي", nation: "إنجلترا", flag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿", pos: "وسط", diff: "easy" },
-      { id: "richarlison", name: "ريشارليسون", enName: "Richarlison", club: "توتنهام هوتسبير", league: "الدوري الإنجليزي", nation: "البرازيل", flag: "🇧🇷", pos: "مهاجم", diff: "easy" },
-      { id: "romero", name: "كريستيان روميرو", enName: "Cristian Romero", club: "توتنهام هوتسبير", league: "الدوري الإنجليزي", nation: "الأرجنتين", flag: "🇦🇷", pos: "مدافع", diff: "easy" },
-      { id: "solanke", name: "دومينيك سولانكي", enName: "Dominic Solanke", club: "توتنهام هوتسبير", league: "الدوري الإنجليزي", nation: "إنجلترا", flag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿", pos: "مهاجم", diff: "easy" },
-      { id: "bruno_guimaraes", name: "برونو غيماريش", enName: "Bruno Guimarães", club: "نيوكاسل يونايتد", league: "الدوري الإنجليزي", nation: "البرازيل", flag: "🇧🇷", pos: "وسط", diff: "easy" },
-      { id: "tonali", name: "ساندرو تونالي", enName: "Sandro Tonali", club: "نيوكاسل يونايتد", league: "الدوري الإنجليزي", nation: "إيطاليا", flag: "🇮🇹", pos: "وسط", diff: "easy" },
-      { id: "isak", name: "ألكسندر إيساك", enName: "Alexander Isak", club: "نيوكاسل يونايتد", league: "الدوري الإنجليزي", nation: "السويد", flag: "🇸🇪", pos: "مهاجم", diff: "easy" },
-      { id: "watkins", name: "أولي واتكينز", enName: "Ollie Watkins", club: "أستون فيلا", league: "الدوري الإنجليزي", nation: "إنجلترا", flag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿", pos: "مهاجم", diff: "easy" },
-      { id: "emi_martinez", name: "إيميليانو مارتينيز", enName: "Emiliano Martínez", club: "أستون فيلا", league: "الدوري الإنجليزي", nation: "الأرجنتين", flag: "🇦🇷", pos: "حارس مرمى", diff: "easy" },
-      { id: "kudus", name: "محمد قدوس", enName: "Mohammed Kudus", club: "وست هام يونايتد", league: "الدوري الإنجليزي", nation: "غانا", flag: "🇬🇭", pos: "وسط / جناح", diff: "easy" },
-      { id: "paqueta", name: "لوكاس باكيتا", enName: "Lucas Paquetá", club: "وست هام يونايتد", league: "الدوري الإنجليزي", nation: "البرازيل", flag: "🇧🇷", pos: "وسط", diff: "easy" },
+      { id: "salah", name: "محمد صلاح", enName: "Mohamed Salah", club: "ليفربول", league: "الدوري الإنجليزي", nation: "مصر", flag: "🇪🇬", pos: "مهاجم / جناح" },
+      { id: "haaland", name: "إيرلينغ هالاند", enName: "Erling Haaland", club: "مانشستر سيتي", league: "الدوري الإنجليزي", nation: "النرويج", flag: "🇳🇴", pos: "مهاجم" },
+      { id: "rodri", name: "رودري", enName: "Rodri", club: "مانشستر سيتي", league: "الدوري الإنجليزي", nation: "إسبانيا", flag: "🇪🇸", pos: "وسط" },
+      { id: "foden", name: "فيل فودين", enName: "Phil Foden", club: "مانشستر سيتي", league: "الدوري الإنجليزي", nation: "إنجلترا", flag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿", pos: "وسط / جناح" },
+      { id: "bernardo_silva", name: "بيرناردو سيلفا", enName: "Bernardo Silva", club: "مانشستر سيتي", league: "الدوري الإنجليزي", nation: "البرتغال", flag: "🇵🇹", pos: "وسط" },
+      { id: "ruben_dias", name: "روبن دياز", enName: "Rúben Dias", club: "مانشستر سيتي", league: "الدوري الإنجليزي", nation: "البرتغال", flag: "🇵🇹", pos: "مدافع" },
+      { id: "doku", name: "جيريمي دوكو", enName: "Jérémy Doku", club: "مانشستر سيتي", league: "الدوري الإنجليزي", nation: "بلجيكا", flag: "🇧🇪", pos: "جناح" },
+      { id: "de_bruyne", name: "كيفين دي بروين", enName: "Kevin De Bruyne", club: "مانشستر سيتي", league: "الدوري الإنجليزي", nation: "بلجيكا", flag: "🇧🇪", pos: "وسط" },
+      { id: "nico_oreilly", name: "نيكو أورايلي", enName: "Nico O'Reilly", club: "مانشستر سيتي", league: "الدوري الإنجليزي", nation: "إنجلترا", flag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿", pos: "وسط" },
+      { id: "saka", name: "بوكايو ساكا", enName: "Bukayo Saka", club: "أرسنال", league: "الدوري الإنجليزي", nation: "إنجلترا", flag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿", pos: "جناح" },
+      { id: "rice", name: "ديكلان رايس", enName: "Declan Rice", club: "أرسنال", league: "الدوري الإنجليزي", nation: "إنجلترا", flag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿", pos: "وسط" },
+      { id: "odegaard", name: "مارتن أوديغارد", enName: "Martin Ødegaard", club: "أرسنال", league: "الدوري الإنجليزي", nation: "النرويج", flag: "🇳🇴", pos: "وسط" },
+      { id: "havertz", name: "كاي هافيرتز", enName: "Kai Havertz", club: "أرسنال", league: "الدوري الإنجليزي", nation: "ألمانيا", flag: "🇩🇪", pos: "مهاجم / وسط" },
+      { id: "saliba", name: "ويليام ساليبا", enName: "William Saliba", club: "أرسنال", league: "الدوري الإنجليزي", nation: "فرنسا", flag: "🇫🇷", pos: "مدافع" },
+      { id: "gabriel_magalhaes", name: "غابرييل ماغالايس", enName: "Gabriel Magalhães", club: "أرسنال", league: "الدوري الإنجليزي", nation: "البرازيل", flag: "🇧🇷", pos: "مدافع" },
+      { id: "van_dijk", name: "فيرجيل فان دايك", enName: "Virgil van Dijk", club: "ليفربول", league: "الدوري الإنجليزي", nation: "هولندا", flag: "🇳🇱", pos: "مدافع" },
+      { id: "alisson", name: "أليسون بيكر", enName: "Alisson Becker", club: "ليفربول", league: "الدوري الإنجليزي", nation: "البرازيل", flag: "🇧🇷", pos: "حارس مرمى" },
+      { id: "mac_allister", name: "أليكسيس ماك أليستر", enName: "Alexis Mac Allister", club: "ليفربول", league: "الدوري الإنجليزي", nation: "الأرجنتين", flag: "🇦🇷", pos: "وسط" },
+      { id: "szoboszlai", name: "دومينيك سوبوسلاي", enName: "Dominik Szoboszlai", club: "ليفربول", league: "الدوري الإنجليزي", nation: "المجر", flag: "🇭🇺", pos: "وسط" },
+      { id: "gakpo", name: "كودي جاكبو", enName: "Cody Gakpo", club: "ليفربول", league: "الدوري الإنجليزي", nation: "هولندا", flag: "🇳🇱", pos: "مهاجم / جناح" },
+      { id: "bruno_fernandes", name: "برونو فيرنانديز", enName: "Bruno Fernandes", club: "مانشستر يونايتد", league: "الدوري الإنجليزي", nation: "البرتغال", flag: "🇵🇹", pos: "وسط" },
+      { id: "amad", name: "عماد ديالو", enName: "Amad Diallo", club: "مانشستر يونايتد", league: "الدوري الإنجليزي", nation: "ساحل العاج", flag: "🇨🇮", pos: "جناح" },
+      { id: "lisandro_martinez", name: "ليسانسدرو مارتينيز", enName: "Lisandro Martínez", club: "مانشستر يونايتد", league: "الدوري الإنجليزي", nation: "الأرجنتين", flag: "🇦🇷", pos: "مدافع" },
+      { id: "de_ligt", name: "ماتايس دي ليخت", enName: "Matthijs de Ligt", club: "مانشستر يونايتد", league: "الدوري الإنجليزي", nation: "هولندا", flag: "🇳🇱", pos: "مدافع" },
+      { id: "casemiro", name: "كاسيميرو", enName: "Casemiro", club: "مانشستر يونايتد", league: "الدوري الإنجليزي", nation: "البرازيل", flag: "🇧🇷", pos: "وسط" },
+      { id: "maguire", name: "هاري ماغواير", enName: "Harry Maguire", club: "مانشستر يونايتد", league: "الدوري الإنجليزي", nation: "إنجلترا", flag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿", pos: "مدافع" },
+      { id: "palmer", name: "كول بالمر", enName: "Cole Palmer", club: "تشيلسي", league: "الدوري الإنجليزي", nation: "إنجلترا", flag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿", pos: "وسط" },
+      { id: "enzo_fernandez", name: "إينزو فيرنانديز", enName: "Enzo Fernández", club: "تشيلسي", league: "الدوري الإنجليزي", nation: "الأرجنتين", flag: "🇦🇷", pos: "وسط" },
+      { id: "caicedo", name: "مويسيس كايسيدو", enName: "Moisés Caicedo", club: "تشيلسي", league: "الدوري الإنجليزي", nation: "الإكوادور", flag: "🇪🇨", pos: "وسط" },
+      { id: "reece_james", name: "ريس جيمس", enName: "Reece James", club: "تشيلسي", league: "الدوري الإنجليزي", nation: "إنجلترا", flag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿", pos: "مدافع" },
+      { id: "pedro_neto", name: "بيدرو نيتو", enName: "Pedro Neto", club: "تشيلسي", league: "الدوري الإنجليزي", nation: "البرتغال", flag: "🇵🇹", pos: "جناح" },
+      { id: "maddison", name: "جيمس ماديسون", enName: "James Maddison", club: "توتنهام هوتسبير", league: "الدوري الإنجليزي", nation: "إنجلترا", flag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿", pos: "وسط" },
+      { id: "son", name: "سون هيونغ مين", enName: "Son Heung-min", club: "توتنهام هوتسبير", league: "الدوري الإنجليزي", nation: "كوريا الجنوبية", flag: "🇰🇷", pos: "مهاجم / جناح" },
+      { id: "richarlison", name: "ريشارليسون", enName: "Richarlison", club: "توتنهام هوتسبير", league: "الدوري الإنجليزي", nation: "البرازيل", flag: "🇧🇷", pos: "مهاجم" },
+      { id: "romero", name: "كريستيان روميرو", enName: "Cristian Romero", club: "توتنهام هوتسبير", league: "الدوري الإنجليزي", nation: "الأرجنتين", flag: "🇦🇷", pos: "مدافع" },
+      { id: "van_de_ven", name: "ميكي فان دي فين", enName: "Micky van de Ven", club: "توتنهام هوتسبير", league: "الدوري الإنجليزي", nation: "هولندا", flag: "🇳🇱", pos: "مدافع" },
+      { id: "solanke", name: "دومينيك سولانكي", enName: "Dominic Solanke", club: "توتنهام هوتسبير", league: "الدوري الإنجليزي", nation: "إنجلترا", flag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿", pos: "مهاجم" },
+      { id: "kulusevski", name: "ديجان كولوسيفسكي", enName: "Dejan Kulusevski", club: "توتنهام هوتسبير", league: "الدوري الإنجليزي", nation: "السويد", flag: "🇸🇪", pos: "وسط / جناح" },
+      { id: "bruno_guimaraes", name: "برونو غيماريش", enName: "Bruno Guimarães", club: "نيوكاسل يونايتد", league: "الدوري الإنجليزي", nation: "البرازيل", flag: "🇧🇷", pos: "وسط" },
+      { id: "tonali", name: "ساندرو تونالي", enName: "Sandro Tonali", club: "نيوكاسل يونايتد", league: "الدوري الإنجليزي", nation: "إيطاليا", flag: "🇮🇹", pos: "وسط" },
+      { id: "isak", name: "ألكسندر إيساك", enName: "Alexander Isak", club: "نيوكاسل يونايتد", league: "الدوري الإنجليزي", nation: "السويد", flag: "🇸🇪", pos: "مهاجم" },
+      { id: "gordon", name: "أنتوني غوردون", enName: "Anthony Gordon", club: "نيوكاسل يونايتد", league: "الدوري الإنجليزي", nation: "إنجلترا", flag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿", pos: "جناح" },
+      { id: "barnes", name: "هارفي بارنز", enName: "Harvey Barnes", club: "نيوكاسل يونايتد", league: "الدوري الإنجليزي", nation: "إنجلترا", flag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿", pos: "جناح" },
+      { id: "watkins", name: "أولي واتكينز", enName: "Ollie Watkins", club: "أستون فيلا", league: "الدوري الإنجليزي", nation: "إنجلترا", flag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿", pos: "مهاجم" },
+      { id: "emi_martinez", name: "إيميليانو مارتينيز", enName: "Emiliano Martínez", club: "أستون فيلا", league: "الدوري الإنجليزي", nation: "الأرجنتين", flag: "🇦🇷", pos: "حارس مرمى" },
+      { id: "tielemans", name: "يوري تيليمانس", enName: "Youri Tielemans", club: "أستون فيلا", league: "الدوري الإنجليزي", nation: "بلجيكا", flag: "🇧🇪", pos: "وسط" },
+      { id: "rogers", name: "مورغان روجرز", enName: "Morgan Rogers", club: "أستون فيلا", league: "الدوري الإنجليزي", nation: "إنجلترا", flag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿", pos: "وسط / جناح" },
+      { id: "mcginn", name: "جون ماكجين", enName: "John McGinn", club: "أستون فيلا", league: "الدوري الإنجليزي", nation: "إسكتلندا", flag: "🏴󠁧󠁢󠁳󠁣󠁴󠁿", pos: "وسط" },
+      { id: "bowen", name: "جارود بوين", enName: "Jarrod Bowen", club: "وست هام يونايتد", league: "الدوري الإنجليزي", nation: "إنجلترا", flag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿", pos: "جناح" },
+      { id: "kudus", name: "محمد قدوس", enName: "Mohammed Kudus", club: "وست هام يونايتد", league: "الدوري الإنجليزي", nation: "غانا", flag: "🇬🇭", pos: "وسط / جناح" },
+      { id: "paqueta", name: "لوكاس باكيتا", enName: "Lucas Paquetá", club: "وست هام يونايتد", league: "الدوري الإنجليزي", nation: "البرازيل", flag: "🇧🇷", pos: "وسط" },
+      { id: "eze", name: "إيبيريتشي إيزي", enName: "Eberechi Eze", club: "كريستال بالاس", league: "الدوري الإنجليزي", nation: "إنجلترا", flag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿", pos: "وسط" },
+      { id: "mateta", name: "جان فيليب ماتيتا", enName: "Jean-Philippe Mateta", club: "كريستال بالاس", league: "الدوري الإنجليزي", nation: "فرنسا", flag: "🇫🇷", pos: "مهاجم" },
+      { id: "mbeumo", name: "بريان مبيومو", enName: "Bryan Mbeumo", club: "برينتفورد", league: "الدوري الإنجليزي", nation: "الكاميرون", flag: "🇨🇲", pos: "جناح / مهاجم" },
+      { id: "cunha", name: "ماتيوس كونيا", enName: "Matheus Cunha", club: "ولفرهامبتون", league: "الدوري الإنجليزي", nation: "البرازيل", flag: "🇧🇷", pos: "مهاجم" },
+      { id: "tarkowski", name: "جيمس تاركوفسكي", enName: "James Tarkowski", club: "إيفرتون", league: "الدوري الإنجليزي", nation: "إنجلترا", flag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿", pos: "مدافع" },
+      { id: "calvert_lewin", name: "دومينيك كالفرت لوين", enName: "Dominic Calvert-Lewin", club: "إيفرتون", league: "الدوري الإنجليزي", nation: "إنجلترا", flag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿", pos: "مهاجم" },
+      { id: "semenyo", name: "أنطوان سيمينيو", enName: "Antoine Semenyo", club: "بورنموث", league: "الدوري الإنجليزي", nation: "غانا", flag: "🇬🇭", pos: "جناح" },
+      { id: "joao_pedro", name: "جواو بيدرو", enName: "João Pedro", club: "برايتون", league: "الدوري الإنجليزي", nation: "البرازيل", flag: "🇧🇷", pos: "مهاجم" },
+      { id: "gibbs_white", name: "مورغان غيبس وايت", enName: "Morgan Gibbs-White", club: "نوتينغهام فورست", league: "الدوري الإنجليزي", nation: "إنجلترا", flag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿", pos: "وسط" },
+      { id: "gyokeres", name: "فيكتور غيوكيريس", enName: "Viktor Gyökeres", club: "سبورتينغ لشبونة", league: "الدوري البرتغالي", nation: "السويد", flag: "🇸🇪", pos: "مهاجم" },
 
       // La Liga Stars
-      { id: "mbappe", name: "كيليان مبابي", enName: "Kylian Mbappé", club: "ريال مدريد", league: "الدوري الإسباني", nation: "فرنسا", flag: "🇫🇷", pos: "مهاجم", diff: "easy" },
-      { id: "vinicius", name: "فينيسيوس جونيور", enName: "Vinícius Júnior", club: "ريال مدريد", league: "الدوري الإسباني", nation: "البرازيل", flag: "🇧🇷", pos: "جناح", diff: "easy" },
-      { id: "bellingham", name: "جود بيلينغهام", enName: "Jude Bellingham", club: "ريال مدريد", league: "الدوري الإسباني", nation: "إنجلترا", flag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿", pos: "وسط", diff: "easy" },
-      { id: "valverde", name: "فيديريكو فالفيردي", enName: "Federico Valverde", club: "ريال مدريد", league: "الدوري الإسباني", nation: "أوروغواي", flag: "🇺🇾", pos: "وسط", diff: "easy" },
-      { id: "courtois", name: "تيبو كورتوا", enName: "Thibaut Courtois", club: "ريال مدريد", league: "الدوري الإسباني", nation: "بلجيكا", flag: "🇧🇪", pos: "حارس مرمى", diff: "easy" },
-      { id: "yamal", name: "لامين يامال", enName: "Lamine Yamal", club: "برشلونة", league: "الدوري الإسباني", nation: "إسبانيا", flag: "🇪🇸", pos: "جناح", diff: "easy" },
-      { id: "raphinha", name: "رافينيا", enName: "Raphinha", club: "برشلونة", league: "الدوري الإسباني", nation: "البرازيل", flag: "🇧🇷", pos: "جناح", diff: "easy" },
-      { id: "pedri", name: "بيدري", enName: "Pedri", club: "برشلونة", league: "الدوري الإسباني", nation: "إسبانيا", flag: "🇪🇸", pos: "وسط", diff: "easy" },
-      { id: "gavi", name: "جاڤي", enName: "Gavi", club: "برشلونة", league: "الدوري الإسباني", nation: "إسبانيا", flag: "🇪🇸", pos: "وسط", diff: "easy" },
-      { id: "lewandowski", name: "روبرت ليفاندوفسكي", enName: "Robert Lewandowski", club: "برشلونة", league: "الدوري الإسباني", nation: "بولندا", flag: "🇵🇱", pos: "مهاجم", diff: "easy" },
-      { id: "dani_olmo", name: "داني أولمو", enName: "Dani Olmo", club: "برشلونة", league: "الدوري الإسباني", nation: "إسبانيا", flag: "🇪🇸", pos: "وسط", diff: "easy" },
-      { id: "griezmann", name: "أنطوان غريزمان", enName: "Antoine Griezmann", club: "أتلتيكو مدريد", league: "الدوري الإسباني", nation: "فرنسا", flag: "🇫🇷", pos: "مهاجم", diff: "easy" },
-      { id: "julian_alvarez", name: "خوليان ألفاريز", enName: "Julián Álvarez", club: "أتلتيكو مدريد", league: "الدوري الإسباني", nation: "الأرجنتين", flag: "🇦🇷", pos: "مهاجم", diff: "easy" },
-      { id: "oblak", name: "يان أوبلاك", enName: "Jan Oblak", club: "أتلتيكو مدريد", league: "الدوري الإسباني", nation: "سلوفينيا", flag: "🇸🇮", pos: "حارس مرمى", diff: "easy" },
-      { id: "nico_williams", name: "نيكو ويليامز", enName: "Nico Williams", club: "أتلتيك بيلباو", league: "الدوري الإسباني", nation: "إسبانيا", flag: "🇪🇸", pos: "جناح", diff: "easy" },
-      { id: "isco", name: "إيسكو", enName: "Isco", club: "ريال بيتيس", league: "الدوري الإسباني", nation: "إسبانيا", flag: "🇪🇸", pos: "وسط", diff: "easy" }
+      { id: "mbappe", name: "كيليان مبابي", enName: "Kylian Mbappé", club: "ريال مدريد", league: "الدوري الإسباني", nation: "فرنسا", flag: "🇫🇷", pos: "مهاجم" },
+      { id: "vinicius", name: "فينيسيوس جونيور", enName: "Vinícius Júnior", club: "ريال مدريد", league: "الدوري الإسباني", nation: "البرازيل", flag: "🇧🇷", pos: "جناح" },
+      { id: "bellingham", name: "جود بيلينغهام", enName: "Jude Bellingham", club: "ريال مدريد", league: "الدوري الإسباني", nation: "إنجلترا", flag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿", pos: "وسط" },
+      { id: "valverde", name: "فيديريكو فالفيردي", enName: "Federico Valverde", club: "ريال مدريد", league: "الدوري الإسباني", nation: "أوروغواي", flag: "🇺🇾", pos: "وسط" },
+      { id: "rodrygo", name: "رودريغو جويس", enName: "Rodrygo", club: "ريال مدريد", league: "الدوري الإسباني", nation: "البرازيل", flag: "🇧🇷", pos: "مهاجم / جناح" },
+      { id: "arda_guler", name: "أردا غولر", enName: "Arda Güler", club: "ريال مدريد", league: "الدوري الإسباني", nation: "تركيا", flag: "🇹🇷", pos: "وسط / صانع ألعاب" },
+      { id: "courtois", name: "تيبو كورتوا", enName: "Thibaut Courtois", club: "ريال مدريد", league: "الدوري الإسباني", nation: "بلجيكا", flag: "🇧🇪", pos: "حارس مرمى" },
+      { id: "yamal", name: "لامين يامال", enName: "Lamine Yamal", club: "برشلونة", league: "الدوري الإسباني", nation: "إسبانيا", flag: "🇪🇸", pos: "جناح" },
+      { id: "raphinha", name: "رافينيا", enName: "Raphinha", club: "برشلونة", league: "الدوري الإسباني", nation: "البرازيل", flag: "🇧🇷", pos: "جناح" },
+      { id: "pedri", name: "بيدري", enName: "Pedri", club: "برشلونة", league: "الدوري الإسباني", nation: "إسبانيا", flag: "🇪🇸", pos: "وسط" },
+      { id: "gavi", name: "جاڤي", enName: "Gavi", club: "برشلونة", league: "الدوري الإسباني", nation: "إسبانيا", flag: "🇪🇸", pos: "وسط" },
+      { id: "frenkie_de_jong", name: "فرينكي دي يونغ", enName: "Frenkie de Jong", club: "برشلونة", league: "الدوري الإسباني", nation: "هولندا", flag: "🇳🇱", pos: "وسط" },
+      { id: "lewandowski", name: "روبرت ليفاندوفسكي", enName: "Robert Lewandowski", club: "برشلونة", league: "الدوري الإسباني", nation: "بولندا", flag: "🇵🇱", pos: "مهاجم" },
+      { id: "dani_olmo", name: "داني أولمو", enName: "Dani Olmo", club: "برشلونة", league: "الدوري الإسباني", nation: "إسبانيا", flag: "🇪🇸", pos: "وسط / صانع ألعاب" },
+      { id: "kounde", name: "جول كوندي", enName: "Jules Koundé", club: "برشلونة", league: "الدوري الإسباني", nation: "فرنسا", flag: "🇫🇷", pos: "مدافع" },
+      { id: "ferran_torres", name: "فيران توريس", enName: "Ferran Torres", club: "برشلونة", league: "الدوري الإسباني", nation: "إسبانيا", flag: "🇪🇸", pos: "مهاجم / جناح" },
+      { id: "casado", name: "مارك كاسادو", enName: "Marc Casadó", club: "برشلونة", league: "الدوري الإسباني", nation: "إسبانيا", flag: "🇪🇸", pos: "وسط" },
+      { id: "fermin_lopez", name: "فيرمين لوبيز", enName: "Fermín López", club: "برشلونة", league: "الدوري الإسباني", nation: "إسبانيا", flag: "🇪🇸", pos: "وسط" },
+      { id: "cubarsi", name: "باو كوبارسي", enName: "Pau Cubarsí", club: "برشلونة", league: "الدوري الإسباني", nation: "إسبانيا", flag: "🇪🇸", pos: "مدافع" },
+      { id: "griezmann", name: "أنطوان غريزمان", enName: "Antoine Griezmann", club: "أتلتيكو مدريد", league: "الدوري الإسباني", nation: "فرنسا", flag: "🇫🇷", pos: "مهاجم" },
+      { id: "julian_alvarez", name: "خوليان ألفاريز", enName: "Julián Álvarez", club: "أتلتيكو مدريد", league: "الدوري الإسباني", nation: "الأرجنتين", flag: "🇦🇷", pos: "مهاجم" },
+      { id: "pablo_barrios", name: "بابلو باريوس", enName: "Pablo Barrios", club: "أتلتيكو مدريد", league: "الدوري الإسباني", nation: "إسبانيا", flag: "🇪🇸", pos: "وسط" },
+      { id: "oblak", name: "يان أوبلاك", enName: "Jan Oblak", club: "أتلتيكو مدريد", league: "الدوري الإسباني", nation: "سلوفينيا", flag: "🇸🇮", pos: "حارس مرمى" },
+      { id: "sorloth", name: "ألكسندر سورلوث", enName: "Alexander Sørloth", club: "أتلتيكو مدريد", league: "الدوري الإسباني", nation: "النرويج", flag: "🇳🇴", pos: "مهاجم" },
+      { id: "nico_williams", name: "نيكو ويليامز", enName: "Nico Williams", club: "أتلتيك بيلباو", league: "الدوري الإسباني", nation: "إسبانيا", flag: "🇪🇸", pos: "جناح" },
+      { id: "inaki_williams", name: "إينياكي ويليامز", enName: "Iñaki Williams", club: "أتلتيك بيلباو", league: "الدوري الإسباني", nation: "غانا", flag: "🇬🇭", pos: "مهاجم / جناح" },
+      { id: "dani_vivian", name: "داني فيفيان", enName: "Dani Vivian", club: "أتلتيك بيلباو", league: "الدوري الإسباني", nation: "إسبانيا", flag: "🇪🇸", pos: "مدافع" },
+      { id: "oyarzabal", name: "ميكل أويارزابال", enName: "Mikel Oyarzabal", club: "ريال سوسيداد", league: "الدوري الإسباني", nation: "إسبانيا", flag: "🇪🇸", pos: "مهاجم / جناح" },
+      { id: "kubo", name: "تاكيفوسا كوبو", enName: "Takefusa Kubo", club: "ريال سوسيداد", league: "الدوري الإسباني", nation: "اليابان", flag: "🇯🇵", pos: "جناح" },
+      { id: "isco", name: "إيسكو", enName: "Isco", club: "ريال بيتيس", league: "الدوري الإسباني", nation: "إسبانيا", flag: "🇪🇸", pos: "وسط" },
+      { id: "alex_baena", name: "أليكس بايينا", enName: "Álex Baena", club: "فياريال", league: "الدوري الإسباني", nation: "إسبانيا", flag: "🇪🇸", pos: "وسط" },
+      { id: "gerard_moreno", name: "جيرارد مورينو", enName: "Gerard Moreno", club: "فياريال", league: "الدوري الإسباني", nation: "إسبانيا", flag: "🇪🇸", pos: "مهاجم" },
+      { id: "parejo", name: "داني باريخو", enName: "Dani Parejo", club: "فياريال", league: "الدوري الإسباني", nation: "إسبانيا", flag: "🇪🇸", pos: "وسط" },
+      { id: "ayoze_perez", name: "أيوزي بيريز", enName: "Ayoze Pérez", club: "فياريال", league: "الدوري الإسباني", nation: "إسبانيا", flag: "🇪🇸", pos: "مهاجم" },
+      { id: "cazorla", name: "سانتي كازورلا", enName: "Santi Cazorla", club: "ريال أوفيدو", league: "الدوري الإسباني", nation: "إسبانيا", flag: "🇪🇸", pos: "وسط" },
+      { id: "muriqi", name: "فيدات موريكي", enName: "Vedat Muriqi", club: "ريال مايوركا", league: "الدوري الإسباني", nation: "كوسوفو", flag: "🇽🇰", pos: "مهاجم" },
+      { id: "borja_iglesias", name: "بورخا إيغليسياس", enName: "Borja Iglesias", club: "سيلتا فيغو", league: "الدوري الإسباني", nation: "إسبانيا", flag: "🇪🇸", pos: "مهاجم" },
+
+      // Bundesliga & Serie A Stars
+      { id: "wirtz", name: "فلوريان فيرتز", enName: "Florian Wirtz", club: "باير ليفركوزن", league: "الدوري الألماني", nation: "ألمانيا", flag: "🇩🇪", pos: "وسط / صانع ألعاب" }
     ];
 
     // --- State Management ---
@@ -677,8 +749,23 @@
       isRiskActive: false,
       isGoldenGoal: false,
       currentPlayer: null,
+      currentDifficulty: 'easy',
       playedPlayerIds: []
     };
+
+    // Fisher-Yates Shuffle Algorithm
+    function shuffleArray(array) {
+      let currentIndex = array.length, randomIndex;
+      while (currentIndex != 0) {
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex--;
+        [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+      }
+      return array;
+    }
+
+    // Shuffle DB on app boot
+    shuffleArray(PLAYERS_DB);
 
     function showScreen(screenId) {
       playBeep(440, 'sine', 0.05);
@@ -728,6 +815,7 @@
       gameState.currentRound = 1;
       gameState.isGoldenGoal = false;
       gameState.riskRoundNumber = Math.floor(Math.random() * 4) + 1;
+      gameState.playedPlayerIds = [];
 
       renderScoreboardHUD();
       renderGuessButtons();
@@ -748,6 +836,7 @@
       gameState.currentRound = 1;
       gameState.isGoldenGoal = false;
       gameState.riskRoundNumber = Math.floor(Math.random() * selectedRoundsCount) + 1;
+      gameState.playedPlayerIds = [];
 
       renderScoreboardHUD();
       renderGuessButtons();
@@ -782,6 +871,20 @@
         if (elem) elem.innerText = t.score;
       });
 
+      // Update Difficulty Badge display
+      const diffBadge = document.getElementById('difficulty-badge');
+      diffBadge.className = "difficulty-badge ";
+      if (gameState.currentDifficulty === 'easy') {
+        diffBadge.innerText = "⭐ مستوى الصعوبة: سهل";
+        diffBadge.classList.add("diff-easy");
+      } else if (gameState.currentDifficulty === 'medium') {
+        diffBadge.innerText = "⚡ مستوى الصعوبة: متوسط";
+        diffBadge.classList.add("diff-medium");
+      } else {
+        diffBadge.innerText = "🔥 مستوى الصعوبة: تحدي صعب";
+        diffBadge.classList.add("diff-hard");
+      }
+
       if (gameState.isGoldenGoal) {
         document.getElementById('round-badge').innerText = "⚽ جولة الهدف الذهبي الحاسمة";
         document.getElementById('risk-alert').style.display = "none";
@@ -803,14 +906,27 @@
       let available = PLAYERS_DB.filter(p => !gameState.playedPlayerIds.includes(p.id) && !history.includes(p.id));
 
       if (available.length === 0) {
+        // Reset pool when exhausted, shuffle again
         localStorage.setItem('global_played_players', '[]');
-        available = PLAYERS_DB.filter(p => !gameState.playedPlayerIds.includes(p.id));
+        gameState.playedPlayerIds = [];
+        shuffleArray(PLAYERS_DB);
+        available = [...PLAYERS_DB];
       }
 
       const player = available[Math.floor(Math.random() * available.length)];
       gameState.playedPlayerIds.push(player.id);
       history.push(player.id);
       localStorage.setItem('global_played_players', JSON.stringify(history));
+
+      // Dynamic weighted random difficulty per round: Easy (45%), Medium (40%), Hard (15%)
+      const randDiff = Math.random();
+      if (randDiff < 0.45) {
+        gameState.currentDifficulty = 'easy';
+      } else if (randDiff < 0.85) {
+        gameState.currentDifficulty = 'medium';
+      } else {
+        gameState.currentDifficulty = 'hard';
+      }
 
       return player;
     }
@@ -824,6 +940,7 @@
       document.getElementById('card-player-nation').innerText = `${p.flag} ${p.nation}`;
       document.getElementById('card-player-club').innerText = `🛡️ ${p.club}`;
       document.getElementById('card-player-pos').innerText = `⚽ ${p.pos}`;
+      updateRoundHUD();
     }
 
     function skipPlayer() {
