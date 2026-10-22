@@ -3,24 +3,22 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Password Challenge — تحدي كرة القدم الاحترافي</title>
+  <title>Password Challenge — تحدي كلمة السر</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
 
   <style>
     :root {
-      --bg-dark: #070b09;
-      --bg-stadium: radial-gradient(circle at 50% 20%, rgba(18, 45, 30, 0.45) 0%, rgba(7, 11, 9, 0.98) 70%);
-      --bg-card: rgba(15, 26, 20, 0.85);
-      --bg-card-border: rgba(46, 204, 113, 0.28);
+      --bg-dark: #0a0f0d;
+      --bg-card: rgba(18, 28, 23, 0.88);
+      --bg-card-border: rgba(46, 204, 113, 0.25);
       --neon-green: #2ecc71;
-      --neon-green-hover: #27ae60;
-      --neon-green-glow: rgba(46, 204, 113, 0.45);
+      --neon-green-glow: rgba(46, 204, 113, 0.4);
       --neon-gold: #f39c12;
       --neon-gold-glow: rgba(243, 156, 18, 0.4);
       --text-main: #ffffff;
-      --text-muted: #94a3b8;
+      --text-muted: #a0aec0;
       --accent-red: #e74c3c;
       --font-family: 'Tajawal', sans-serif;
     }
@@ -36,7 +34,9 @@
 
     body {
       background-color: var(--bg-dark);
-      background-image: var(--bg-stadium);
+      background-image: 
+        radial-gradient(circle at 50% 10%, rgba(46, 204, 113, 0.12), transparent 60%),
+        radial-gradient(circle at 50% 90%, rgba(10, 15, 13, 0.95), #050806);
       color: var(--text-main);
       min-height: 100vh;
       display: flex;
@@ -44,12 +44,12 @@
       justify-content: space-between;
       align-items: center;
       overflow-x: hidden;
-      padding: 16px;
+      padding: 15px;
     }
 
     .container {
       width: 100%;
-      max-width: 480px;
+      max-width: 500px;
       margin: 0 auto;
       display: flex;
       flex-direction: column;
@@ -61,7 +61,7 @@
       display: none;
       flex-direction: column;
       width: 100%;
-      animation: fadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      animation: fadeIn 0.3s ease-in-out;
     }
 
     .screen.active {
@@ -69,21 +69,21 @@
     }
 
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(12px) scale(0.98); }
-      to { opacity: 1; transform: translateY(0) scale(1); }
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
-    /* Stadium Header */
+    /* Header & Logo */
     .app-header {
       text-align: center;
-      margin-bottom: 24px;
+      margin-bottom: 20px;
     }
 
     .app-logo {
-      font-size: 2.2rem;
+      font-size: 2.1rem;
       font-weight: 900;
       color: #fff;
-      text-shadow: 0 0 20px var(--neon-green-glow);
+      text-shadow: 0 0 14px var(--neon-green-glow);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -96,70 +96,57 @@
     }
 
     .app-subtitle {
-      font-size: 0.88rem;
+      font-size: 0.85rem;
       color: var(--text-muted);
       margin-top: 4px;
-      font-weight: 500;
-      letter-spacing: 0.5px;
     }
 
-    /* Professional Stadium Cards */
+    /* Cards */
     .card {
       background: var(--bg-card);
       border: 1px solid var(--bg-card-border);
-      border-radius: 20px;
-      padding: 22px;
-      margin-bottom: 16px;
-      backdrop-filter: blur(12px);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      border-radius: 18px;
+      padding: 20px;
+      margin-bottom: 15px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
     }
 
-    /* Modern Buttons */
+    /* Buttons */
     .btn {
       width: 100%;
-      padding: 15px 20px;
-      border-radius: 14px;
+      padding: 14px 20px;
+      border-radius: 12px;
       border: none;
-      font-size: 1.1rem;
-      font-weight: 800;
+      font-size: 1.05rem;
+      font-weight: 700;
       cursor: pointer;
-      transition: all 0.25s ease;
+      transition: all 0.2s ease;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 10px;
       margin-bottom: 12px;
-      letter-spacing: 0.3px;
     }
 
     .btn-primary {
-      background: linear-gradient(135deg, #2ecc71, #219653);
+      background: linear-gradient(135deg, #2ecc71, #27ae60);
       color: #fff;
-      box-shadow: 0 4px 20px var(--neon-green-glow);
-    }
-
-    .btn-primary:hover {
-      background: linear-gradient(135deg, #34d07c, #27ae60);
-      transform: translateY(-1px);
+      box-shadow: 0 4px 15px var(--neon-green-glow);
     }
 
     .btn-primary:active {
-      transform: scale(0.97);
+      transform: scale(0.98);
     }
 
     .btn-secondary {
-      background: rgba(255, 255, 255, 0.06);
+      background: rgba(255, 255, 255, 0.08);
       color: var(--text-main);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-    }
-
-    .btn-secondary:hover {
-      background: rgba(255, 255, 255, 0.1);
-      border-color: rgba(255, 255, 255, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.15);
     }
 
     .btn-secondary:active {
-      transform: scale(0.97);
+      background: rgba(255, 255, 255, 0.15);
     }
 
     /* Form Controls */
@@ -178,19 +165,17 @@
 
     .form-input {
       width: 100%;
-      padding: 13px 16px;
-      border-radius: 12px;
-      background: rgba(0, 0, 0, 0.5);
+      padding: 12px 15px;
+      border-radius: 10px;
+      background: rgba(0, 0, 0, 0.4);
       border: 1px solid rgba(255, 255, 255, 0.15);
       color: #fff;
-      font-size: 1.05rem;
+      font-size: 1rem;
       outline: none;
-      transition: border-color 0.2s ease;
     }
 
     .form-input:focus {
       border-color: var(--neon-green);
-      box-shadow: 0 0 10px var(--neon-green-glow);
     }
 
     .selector-grid {
@@ -202,132 +187,103 @@
     .grid-5 { grid-template-columns: repeat(5, 1fr); }
 
     .opt-btn {
-      padding: 12px 10px;
-      border-radius: 10px;
-      background: rgba(0, 0, 0, 0.4);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      color: var(--text-muted);
+      padding: 10px;
+      border-radius: 8px;
+      background: rgba(0,0,0,0.3);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: #fff;
       text-align: center;
       font-weight: 700;
       cursor: pointer;
-      transition: all 0.2s ease;
     }
 
     .opt-btn.selected {
       background: var(--neon-green);
-      color: #050b08;
+      color: #000;
       border-color: var(--neon-green);
-      box-shadow: 0 0 15px var(--neon-green-glow);
-      font-weight: 900;
     }
 
     /* Scoreboard HUD */
     .score-board {
       display: grid;
-      gap: 10px;
-      background: rgba(0, 0, 0, 0.55);
-      padding: 14px;
-      border-radius: 16px;
+      gap: 8px;
+      background: rgba(0,0,0,0.6);
+      padding: 12px;
+      border-radius: 14px;
       border: 1px solid var(--bg-card-border);
-      margin-bottom: 16px;
+      margin-bottom: 15px;
     }
 
     .team-score-card {
       text-align: center;
-      background: rgba(255, 255, 255, 0.03);
-      padding: 10px 8px;
-      border-radius: 12px;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      transition: all 0.25s ease;
-    }
-
-    .team-score-card.active-turn {
-      border-color: var(--neon-green);
-      background: rgba(46, 204, 113, 0.08);
-      box-shadow: 0 0 12px var(--neon-green-glow);
+      background: rgba(255,255,255,0.04);
+      padding: 8px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.08);
     }
 
     .team-name-lbl {
-      font-size: 0.82rem;
+      font-size: 0.8rem;
       color: var(--text-muted);
       font-weight: 700;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      margin-bottom: 2px;
     }
 
     .team-pts-val {
-      font-size: 1.6rem;
+      font-size: 1.5rem;
       font-weight: 900;
       color: var(--neon-green);
     }
 
     .round-badge {
       text-align: center;
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       color: var(--neon-gold);
       background: rgba(243, 156, 18, 0.15);
       border: 1px solid var(--neon-gold);
-      padding: 5px 16px;
+      padding: 4px 12px;
       border-radius: 20px;
       display: inline-block;
-      margin: 0 auto 14px auto;
-      font-weight: 700;
-      box-shadow: 0 0 12px var(--neon-gold-glow);
+      margin: 0 auto 12px auto;
     }
 
     .risk-banner {
       background: linear-gradient(90deg, #e67e22, #e74c3c);
       color: #fff;
-      padding: 10px;
-      border-radius: 12px;
+      padding: 8px;
+      border-radius: 8px;
       text-align: center;
-      font-size: 0.9rem;
-      font-weight: 900;
-      margin-bottom: 14px;
-      box-shadow: 0 4px 15px rgba(231, 76, 60, 0.4);
-      animation: pulseRisk 1.5s infinite;
+      font-size: 0.85rem;
+      font-weight: 800;
+      margin-bottom: 12px;
+      animation: pulse 1.5s infinite;
     }
 
-    @keyframes pulseRisk {
-      0% { transform: scale(1); opacity: 0.9; }
-      50% { transform: scale(1.02); opacity: 1; }
-      100% { transform: scale(1); opacity: 0.9; }
+    @keyframes pulse {
+      0% { opacity: 0.85; }
+      50% { opacity: 1; }
+      100% { opacity: 0.85; }
     }
 
     /* Player Profile Card */
     .player-card {
       text-align: center;
-      padding: 26px 16px;
-      background: linear-gradient(135deg, rgba(18, 32, 24, 0.9), rgba(10, 18, 14, 0.95));
-      border: 1px solid rgba(46, 204, 113, 0.35);
-      box-shadow: 0 10px 40px rgba(0,0,0,0.6), inset 0 0 20px rgba(46, 204, 113, 0.08);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .player-card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0; height: 3px;
-      background: linear-gradient(90deg, transparent, var(--neon-green), transparent);
+      padding: 22px 15px;
     }
 
     .player-name {
-      font-size: 1.9rem;
+      font-size: 1.7rem;
       font-weight: 900;
       color: #fff;
       margin-bottom: 6px;
-      text-shadow: 0 2px 10px rgba(0,0,0,0.5);
     }
 
     .player-en {
-      font-size: 0.95rem;
+      font-size: 0.85rem;
       color: var(--text-muted);
-      margin-bottom: 16px;
-      font-weight: 600;
-      letter-spacing: 0.5px;
+      margin-bottom: 14px;
     }
 
     .player-meta {
@@ -338,52 +294,52 @@
     }
 
     .meta-tag {
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      padding: 6px 14px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+      padding: 5px 12px;
       border-radius: 20px;
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       font-weight: 700;
-      color: #e2e8f0;
     }
 
     .guess-grid {
       display: grid;
-      gap: 10px;
-      margin-top: 16px;
+      gap: 8px;
+      margin-top: 15px;
     }
 
-    /* Rules & Stats Body */
-    .rules-body, .stats-body {
-      font-size: 0.92rem;
-      line-height: 1.75;
-      color: #cbd5e1;
+    /* Rules Modal Box */
+    .rules-body {
+      font-size: 0.9rem;
+      line-height: 1.7;
+      color: #e2e8f0;
       max-height: 60vh;
       overflow-y: auto;
       text-align: right;
-      padding-left: 6px;
+      padding-left: 5px;
     }
 
     .rules-section {
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
 
     .rules-section h4 {
       color: var(--neon-green);
-      font-size: 1.05rem;
-      margin-bottom: 5px;
-      font-weight: 800;
+      font-size: 1rem;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
 
     /* Footer */
     .copyright-footer {
       text-align: center;
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       color: rgba(255, 255, 255, 0.45);
-      padding: 18px 0 6px 0;
+      padding: 15px 0 5px 0;
       width: 100%;
       direction: rtl;
-      font-weight: 500;
     }
 
     .copyright-footer span {
@@ -396,24 +352,23 @@
 
   <div class="container">
     
-    <!-- Stadium Header -->
+    <!-- Header -->
     <header class="app-header">
-      <div class="app-logo">⚽ <span>PASSWORD CHALLENGE</span></div>
-      <div class="app-subtitle">تحدي كرة القدم الجماعي الاحترافي — بدون مؤقت</div>
+      <div class="app-logo">⚽ <span>Password Challenge</span></div>
+      <div class="app-subtitle">تحدي كرة القدم الجماعي — بدون مؤقت</div>
     </header>
 
     <!-- 1. Home Screen -->
     <div id="screen-home" class="screen active">
-      <div class="card" style="text-align: center; padding: 25px 20px;">
-        <button class="btn btn-primary" style="font-size: 1.2rem; padding: 18px;" onclick="quickStartMatch()">⚽ ابدأ اللعب فوراً</button>
-        <button class="btn btn-secondary" onclick="showScreen('screen-setup')">⚙️ إنشاء مباراة جديدة</button>
-        <button class="btn btn-secondary" onclick="showScreen('screen-rules')">📜 قواعد اللعبة</button>
-        <button class="btn btn-secondary" onclick="showStats()">📊 الإحصائيات والنتائج</button>
+      <div class="card">
+        <button class="btn btn-primary" onclick="showScreen('screen-setup')">🎮 ابدأ مباراة جديدة</button>
+        <button class="btn btn-secondary" onclick="showScreen('screen-rules')">📜 قواعد اللعبة وطريقة اللعب</button>
+        <button class="btn btn-secondary" onclick="showStats()">📊 الإحصائيات وسجل المباريات</button>
       </div>
 
       <div class="card" id="last-match-card" style="display:none;">
-        <div class="form-label" style="text-align: center; margin-bottom: 6px;">🏆 آخر نتيجة محفوظة في السجل:</div>
-        <div id="last-match-summary" style="font-size: 0.95rem; color: #fff; text-align: center; font-weight: 700;"></div>
+        <div class="form-label">🏆 آخر نتيجة محفوظة:</div>
+        <div id="last-match-summary" style="font-size: 0.9rem; color: #fff; text-align: center; font-weight: 700;"></div>
       </div>
     </div>
 
@@ -431,7 +386,7 @@
         </div>
 
         <div id="team-inputs-container">
-          <!-- Dynamic team name inputs -->
+          <!-- Inputs dynamically rendered here -->
         </div>
         
         <div class="form-group">
@@ -445,8 +400,8 @@
           </div>
         </div>
 
-        <button class="btn btn-primary" onclick="startGame()">🚀 انطلاق المباراة الآن</button>
-        <button class="btn btn-secondary" onclick="showScreen('screen-home')">العودة للرئيسية</button>
+        <button class="btn btn-primary" onclick="startGame()">⚽ انطلاق المباراة</button>
+        <button class="btn btn-secondary" onclick="showScreen('screen-home')">إلغاء</button>
       </div>
     </div>
 
@@ -454,14 +409,14 @@
     <div id="screen-game" class="screen">
       
       <div id="risk-alert" class="risk-banner" style="display:none;">
-        🔥 جولة المخاطرة المشتركة! الفريق الفائز في هذه الجولة يحصل على (2) نقطتين
+        🔥 جولة المخاطرة المشتركة! الفريق الكسبان ياخد (2) نقطتين
       </div>
 
       <div style="text-align: center;">
         <div id="round-badge" class="round-badge">الجولة 1 من 4</div>
       </div>
 
-      <!-- Scoreboard HUD -->
+      <!-- Scoreboard HUD Dynamic -->
       <div id="scoreboard-hud" class="score-board">
         <!-- Rendered dynamically -->
       </div>
@@ -479,49 +434,49 @@
 
       <!-- Guess Action Buttons -->
       <div id="guess-buttons-container" class="guess-grid">
-        <!-- Rendered dynamically -->
+        <!-- Action buttons rendered dynamically -->
       </div>
 
-      <button class="btn btn-secondary" style="margin-top: 10px;" onclick="skipPlayer()">🔄 تخطي اللاعب (دون ضياع الجولة)</button>
+      <button class="btn btn-secondary" style="margin-top:10px;" onclick="skipPlayer()">🔄 تخطي اللاعب (دون ضياع الجولة)</button>
     </div>
 
     <!-- 4. Game Rules Screen -->
     <div id="screen-rules" class="screen">
       <div class="card">
-        <h3 style="color: var(--neon-green); text-align: center; margin-bottom: 16px;">📜 دليل وقواعد PASSWORD CHALLENGE</h3>
+        <h3 style="color: var(--neon-green); text-align: center; margin-bottom: 15px;">📜 دليل وقواعد اللعبة</h3>
         <div class="rules-body">
           <div class="rules-section">
             <h4>🎯 هدف اللعبة</h4>
-            <p>تخمين اسم لاعب كرة القدم المستهدف من خلال التلميحات والأوصاف التي يقدمها مقدم الكلمة، وتجميع أكبر رصيد من النقاط للفريق للفوز بالمباراة.</p>
+            <p>تخمين اسم لاعب كرة القدم المستهدف من خلال التلميحات التي يقدمها موجه الكلمة، وتجميع أكبر عدد من النقاط للفوز.</p>
           </div>
           <div class="rules-section">
-            <h4>⚽ طريقة اللعب والدور</h4>
-            <p>يقوم أحد أفراد الفريق بقراءة معلومات البطاقة (الاسم، الجنسية، النادي الحالي، والمركز) دون نطق اسم اللاعب صراحة. تتنافس الفرق في الإجابة السريعة والدقيقة.</p>
+            <h4>⚽ طريقة اللعب</h4>
+            <p>يتولى أحد اللاعبين في كل دور دور "مقدم التلميح" حيث تظهر له بيانات البطاقة (الاسم، الجنسية، النادي، والمركز)، ويقوم بإعطاء كلمات دالة دون نطق اسم اللاعب نفسه. يُسمح للفرق بالتخمين.</p>
           </div>
           <div class="rules-section">
-            <h4>💯 نظام النقاط والمخاطرة</h4>
-            <p>• الإجابة الصحيحة العادية = <strong>نقطة واحدة (1)</strong>.<br>
-            • <strong>جولة المخاطرة المشتركة</strong> (العشوائية) = <strong>نقطتان (2)</strong> للفريق الفائز.<br>
-            • التخطي متاح في أي وقت ولا يستهلك عدد الجولات ولا يخصم نقاطاً.</p>
+            <h4>💯 نظام النقاط والجولات</h4>
+            <p>• الإجابة الصحيحة = <strong>1 نقطة</strong>.<br>
+            • في <strong>جولة المخاطرة العشوائية</strong> = تُحسب الإجابة الصحيحة بـ <strong>2 نقطتين</strong>.<br>
+            • التخطي لا يستهلك الجولة ولا يخصم نقاطاً.</p>
           </div>
           <div class="rules-section">
             <h4>🏆 قواعد الفوز والتعادل</h4>
-            <p>الفريق الحاصل على أعلى نقاط عند اكتمال الجولات يُعلن بطلاً للمباراة. وفي حال التعادل، تشتعل المنافسة عبر <strong>الهدف الذهبي</strong> (أول فريق يجيب إجابة صحيحة يحسم اللقب فوراً).</p>
+            <p>الفريق صاحب أكبر عدد من النقاط في نهاية الجولات هو الفائز. عند التعادل، يتم الانتقال تلقائياً إلى <strong>الهدف الذهبي</strong> (أول فريق يسجل يفوز فوراً).</p>
           </div>
         </div>
-        <button class="btn btn-secondary" style="margin-top: 16px;" onclick="showScreen('screen-home')">العودة للرئيسية</button>
+        <button class="btn btn-secondary" style="margin-top: 15px;" onclick="showScreen('screen-home')">العودة للرئيسية</button>
       </div>
     </div>
 
     <!-- 5. Match Results Screen -->
     <div id="screen-result" class="screen">
-      <div class="card" style="text-align: center; padding: 28px 18px;">
-        <h2 style="color: var(--neon-gold); font-size: 1.5rem; margin-bottom: 10px;">🏆 بطل المباراة</h2>
-        <div id="winner-name" style="font-size: 2.2rem; font-weight: 900; color: #fff; margin-bottom: 15px; text-shadow: 0 0 15px var(--neon-gold-glow);">---</div>
-        <div id="final-scoreboard-summary" style="font-size: 1.05rem; color: var(--text-muted); margin-bottom: 20px; line-height: 1.8;"></div>
-        <div id="golden-goal-note" style="color: var(--neon-green); font-weight: 700; margin-bottom: 15px; display:none;">✨ حُسمت المعركة بالهدف الذهبي!</div>
+      <div class="card" style="text-align: center; padding: 25px 15px;">
+        <h2 style="color: var(--neon-gold); font-size: 1.4rem; margin-bottom: 10px;">🏆 بطل المباراة</h2>
+        <div id="winner-name" style="font-size: 2rem; font-weight: 900; color: #fff; margin-bottom: 15px;">---</div>
+        <div id="final-scoreboard-summary" style="font-size: 1rem; color: var(--text-muted); margin-bottom: 20px; line-height: 1.8;"></div>
+        <div id="golden-goal-note" style="color: var(--neon-green); font-weight: 700; margin-bottom: 15px; display:none;">✨ حُسمت بالهدف الذهبي!</div>
 
-        <button class="btn btn-primary" onclick="restartMatch()">🔄 إعادة المباراة بنفس الإعدادات</button>
+        <button class="btn btn-primary" onclick="restartMatch()">🔄 إعادة المباراة</button>
         <button class="btn btn-secondary" onclick="showScreen('screen-home')">العودة للرئيسية</button>
       </div>
     </div>
@@ -529,11 +484,11 @@
     <!-- 6. Stats Screen -->
     <div id="screen-stats" class="screen">
       <div class="card">
-        <h3 style="margin-bottom: 16px; text-align: center; color: var(--neon-green);">📊 سجل الإحصائيات والمباريات السابقة</h3>
-        <div id="stats-list" class="stats-body">
-          لا توجد مباريات مسجلة في السجل حتى الآن.
+        <h3 style="margin-bottom: 15px; text-align: center; color: var(--neon-green);">📊 إحصائيات المباريات السابقة</h3>
+        <div id="stats-list" style="font-size: 0.9rem; line-height: 1.6; color: var(--text-muted);">
+          لا توجد مباريات مسجلة بعد.
         </div>
-        <button class="btn btn-secondary" style="margin-top: 16px;" onclick="showScreen('screen-home')">العودة للرئيسية</button>
+        <button class="btn btn-secondary" style="margin-top: 15px;" onclick="showScreen('screen-home')">رجوع</button>
       </div>
     </div>
 
@@ -616,7 +571,7 @@
       { id: "isco", name: "إيسكو", enName: "Isco", club: "ريال بيتيس", league: "الدوري الإسباني", nation: "إسبانيا", flag: "🇪🇸", pos: "وسط", diff: "easy" }
     ];
 
-    // --- State Management ---
+    // --- State ---
     let selectedTeamCount = 2;
     let selectedRoundsCount = 4;
 
@@ -667,25 +622,6 @@
       }
     }
 
-    function quickStartMatch() {
-      selectedTeamCount = 2;
-      selectedRoundsCount = 4;
-      gameState.teams = [
-        { name: "فريق ١", score: 0 },
-        { name: "فريق ٢", score: 0 }
-      ];
-      gameState.totalRounds = 4;
-      gameState.currentRound = 1;
-      gameState.isGoldenGoal = false;
-      gameState.riskRoundNumber = Math.floor(Math.random() * 4) + 1;
-
-      renderScoreboardHUD();
-      renderGuessButtons();
-      updateRoundHUD();
-      nextPlayer();
-      showScreen('screen-game');
-    }
-
     function startGame() {
       gameState.teams = [];
       for (let i = 1; i <= selectedTeamCount; i++) {
@@ -709,7 +645,7 @@
       const hud = document.getElementById('scoreboard-hud');
       hud.style.gridTemplateColumns = `repeat(${gameState.teams.length}, 1fr)`;
       hud.innerHTML = gameState.teams.map((t, idx) => `
-        <div id="team-score-card-${idx}" class="team-score-card">
+        <div class="team-score-card">
           <div class="team-name-lbl">${t.name}</div>
           <div id="score-val-${idx}" class="team-pts-val">${t.score}</div>
         </div>
@@ -718,9 +654,10 @@
 
     function renderGuessButtons() {
       const container = document.getElementById('guess-buttons-container');
+      container.style.gridTemplateColumns = gameState.teams.length > 2 ? '1fr 1fr' : '1fr 1fr';
       container.innerHTML = gameState.teams.map((t, idx) => `
         <button class="btn btn-primary" onclick="scorePoint(${idx})">
-          ✅ تخمين صحيح لـ ${t.name}
+          ✅ تخمين ${t.name}
         </button>
       `).join('');
     }
@@ -732,7 +669,7 @@
       });
 
       if (gameState.isGoldenGoal) {
-        document.getElementById('round-badge').innerText = "⚽ جولة الهدف الذهبي الحاسمة";
+        document.getElementById('round-badge').innerText = "⚽ الهدف الذهبي";
         document.getElementById('risk-alert').style.display = "none";
         gameState.isRiskActive = false;
       } else {
@@ -793,6 +730,7 @@
         updateRoundHUD();
         nextPlayer();
       } else {
+        // Check ties among highest score
         let maxScore = Math.max(...gameState.teams.map(t => t.score));
         let winners = gameState.teams.filter(t => t.score === maxScore);
 
@@ -828,20 +766,19 @@
       localStorage.setItem('match_history', JSON.stringify(stats));
 
       document.getElementById('last-match-card').style.display = 'block';
-      document.getElementById('last-match-summary').innerText = `${summary} | الفائز: ${winner}`;
+      document.getElementById('last-match-summary').innerText = `${summary} (الفائز: ${winner})`;
     }
 
     function showStats() {
       let stats = JSON.parse(localStorage.getItem('match_history') || '[]');
       const container = document.getElementById('stats-list');
       if (stats.length === 0) {
-        container.innerHTML = "لا توجد مباريات مسجلة في السجل حتى الآن.";
+        container.innerHTML = "لا توجد مباريات مسجلة بعد.";
       } else {
         container.innerHTML = stats.slice(0, 5).map(s => `
-          <div style="border-bottom: 1px solid rgba(255,255,255,0.1); padding: 10px 0;">
-            🏆 <strong>الفائز: ${s.winner}</strong><br>
-            📊 النتيجة: ${s.summary}<br>
-            <small style="color:var(--text-muted);">📅 التاريخ: ${s.date}</small>
+          <div style="border-bottom: 1px solid rgba(255,255,255,0.1); padding: 8px 0;">
+            🏆 <strong>${s.winner}</strong> (${s.summary}) <br>
+            <small style="color:#718096;">📅 ${s.date}</small>
           </div>
         `).join('');
       }
