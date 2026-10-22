@@ -1,1027 +1,728 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Password Challenge</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts Inter & Cairo -->
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
-    <!-- FontAwesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        darkBg: '#090d16',
-                        cardBg: '#121c2e',
-                        cardHover: '#1a2740',
-                        neonGreen: '#00ff66',
-                        neonGlow: 'rgba(0, 255, 102, 0.3)',
-                        neonCyan: '#00e5ff',
-                        accentRed: '#ff3366'
-                    },
-                    fontFamily: {
-                        cairo: ['Cairo', 'sans-serif'],
-                        inter: ['Inter', 'sans-serif']
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        body {
-            font-family: 'Cairo', sans-serif;
-            background-color: #090d16;
-            color: #f8fafc;
-            overflow-x: hidden;
-            -webkit-tap-highlight-color: transparent;
-        }
-        .neon-border {
-            box-shadow: 0 0 15px rgba(0, 255, 102, 0.25);
-            border: 1px solid rgba(0, 255, 102, 0.4);
-        }
-        .neon-border-red {
-            box-shadow: 0 0 15px rgba(255, 51, 102, 0.25);
-            border: 1px solid rgba(255, 51, 102, 0.4);
-        }
-        .neon-text {
-            text-shadow: 0 0 10px rgba(0, 255, 102, 0.6);
-        }
-        .neon-btn {
-            background: linear-gradient(135deg, #00ff66 0%, #00cc52 100%);
-            color: #050b14;
-            font-weight: 800;
-            box-shadow: 0 4px 20px rgba(0, 255, 102, 0.4);
-            transition: all 0.2s ease;
-        }
-        .neon-btn:active {
-            transform: scale(0.96);
-            box-shadow: 0 2px 10px rgba(0, 255, 102, 0.3);
-        }
-        .custom-scroll::-webkit-scrollbar {
-            width: 6px;
-        }
-        .custom-scroll::-webkit-scrollbar-track {
-            background: #090d16;
-        }
-        .custom-scroll::-webkit-scrollbar-thumb {
-            background: #1a2740;
-            border-radius: 3px;
-        }
-        @keyframes pulseGlow {
-            0%, 100% { box-shadow: 0 0 10px rgba(0,255,102,0.3); }
-            50% { box-shadow: 0 0 25px rgba(0,255,102,0.7); }
-        }
-        .risk-glow {
-            animation: pulseGlow 1.8s infinite ease-in-out;
-        }
-        @keyframes floatAnim {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-6px); }
-        }
-        .float-anim {
-            animation: floatAnim 3s infinite ease-in-out;
-        }
-    </style>
-</head>
-<body class="min-h-screen flex flex-col justify-between selection:bg-neonGreen selection:text-black">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Password Challenge — تحدي كلمة السر</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
 
-    <!-- Top Header / App Branding -->
-    <header class="w-full bg-cardBg/80 backdrop-blur-md border-b border-slate-800 py-3 px-4 sticky top-0 z-50">
-        <div class="max-w-xl mx-auto flex items-center justify-between">
-            <div class="flex items-center space-x-3 space-x-reverse cursor-pointer" onclick="goToHome()">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-neonGreen to-emerald-700 flex items-center justify-center shadow-lg shadow-neonGreen/20">
-                    <i class="fa-solid fa-futbol text-darkBg text-xl"></i>
-                </div>
-                <div>
-                    <h1 class="font-cairo font-black text-lg sm:text-xl tracking-wide text-white">Password <span class="text-neonGreen">Challenge</span></h1>
-                    <p class="text-[10px] text-slate-400">نجوم الدوريات الأوروبية الخمس الكبرى</p>
-                </div>
-            </div>
-            <div class="flex items-center space-x-2 space-x-reverse">
-                <button onclick="toggleSound()" id="soundToggleBtn" class="w-9 h-9 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-300 flex items-center justify-center transition border border-slate-700" title="كتم/تفعيل الصوت">
-                    <i class="fa-solid fa-volume-high text-sm" id="soundIcon"></i>
-                </button>
-                <button onclick="openStatsModal()" class="w-9 h-9 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-neonGreen flex items-center justify-center transition border border-slate-700" title="الإحصائيات">
-                    <i class="fa-solid fa-chart-pie text-sm"></i>
-                </button>
-                <button onclick="openSettingsModal()" class="w-9 h-9 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-300 flex items-center justify-center transition border border-slate-700" title="الإعدادات">
-                    <i class="fa-solid fa-gear text-sm"></i>
-                </button>
-            </div>
-        </div>
+  <style>
+    :root {
+      --bg-dark: #0a0f0d;
+      --bg-card: rgba(18, 28, 23, 0.85);
+      --bg-card-border: rgba(46, 204, 113, 0.25);
+      --neon-green: #2ecc71;
+      --neon-green-glow: rgba(46, 204, 113, 0.4);
+      --neon-gold: #f39c12;
+      --neon-gold-glow: rgba(243, 156, 18, 0.4);
+      --text-main: #ffffff;
+      --text-muted: #a0aec0;
+      --accent-red: #e74c3c;
+      --font-family: 'Tajawal', sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+      font-family: var(--font-family);
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      background-image: 
+        radial-gradient(circle at 50% 10%, rgba(46, 204, 113, 0.12), transparent 60%),
+        radial-gradient(circle at 50% 90%, rgba(10, 15, 13, 0.95), #050806);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      overflow-x: hidden;
+      padding: 15px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 480px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      justify-content: center;
+    }
+
+    .screen {
+      display: none;
+      flex-direction: column;
+      width: 100%;
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    .screen.active {
+      display: flex;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Top Bar & Title Header */
+    .app-header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .app-logo {
+      font-size: 2rem;
+      font-weight: 900;
+      color: #fff;
+      text-shadow: 0 0 12px var(--neon-green-glow);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      letter-spacing: -0.5px;
+    }
+
+    .app-logo span {
+      color: var(--neon-green);
+    }
+
+    .app-subtitle {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* Cards */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--bg-card-border);
+      border-radius: 18px;
+      padding: 20px;
+      margin-bottom: 15px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    }
+
+    /* Buttons */
+    .btn {
+      width: 100%;
+      padding: 14px 20px;
+      border-radius: 12px;
+      border: none;
+      font-size: 1.05rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #2ecc71, #27ae60);
+      color: #fff;
+      box-shadow: 0 4px 15px var(--neon-green-glow);
+    }
+
+    .btn-primary:active {
+      transform: scale(0.98);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-main);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    .btn-secondary:active {
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .btn-risk {
+      background: linear-gradient(135deg, #e67e22, #d35400);
+      color: #fff;
+      box-shadow: 0 4px 15px rgba(230, 126, 34, 0.4);
+    }
+
+    /* Form Inputs & Options */
+    .form-group {
+      margin-bottom: 16px;
+      text-align: right;
+    }
+
+    .form-label {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+      display: block;
+      font-weight: 700;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 12px 15px;
+      border-radius: 10px;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #fff;
+      font-size: 1rem;
+      outline: none;
+    }
+
+    .form-input:focus {
+      border-color: var(--neon-green);
+    }
+
+    .round-selector {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+    }
+
+    .round-opt {
+      padding: 10px;
+      border-radius: 8px;
+      background: rgba(0,0,0,0.3);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: #fff;
+      text-align: center;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .round-opt.selected {
+      background: var(--neon-green);
+      color: #000;
+      border-color: var(--neon-green);
+    }
+
+    /* Game Screen HUD */
+    .score-board {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(0,0,0,0.6);
+      padding: 12px 16px;
+      border-radius: 14px;
+      border: 1px solid var(--bg-card-border);
+      margin-bottom: 15px;
+    }
+
+    .team-score {
+      text-align: center;
+      flex: 1;
+    }
+
+    .team-name {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      font-weight: 700;
+    }
+
+    .team-pts {
+      font-size: 1.8rem;
+      font-weight: 900;
+      color: var(--neon-green);
+    }
+
+    .vs-divider {
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.3);
+      font-weight: 900;
+      padding: 0 10px;
+    }
+
+    .round-badge {
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--neon-gold);
+      background: rgba(243, 156, 18, 0.15);
+      border: 1px solid var(--neon-gold);
+      padding: 4px 12px;
+      border-radius: 20px;
+      display: inline-block;
+      margin: 0 auto 12px auto;
+    }
+
+    .risk-banner {
+      background: linear-gradient(90deg, #e67e22, #e74c3c);
+      color: #fff;
+      padding: 8px;
+      border-radius: 8px;
+      text-align: center;
+      font-size: 0.85rem;
+      font-weight: 800;
+      margin-bottom: 12px;
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0% { opacity: 0.8; }
+      50% { opacity: 1; }
+      100% { opacity: 0.8; }
+    }
+
+    /* Player Profile Card */
+    .player-card {
+      text-align: center;
+      padding: 25px 15px;
+      position: relative;
+    }
+
+    .player-name {
+      font-size: 1.8rem;
+      font-weight: 900;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+
+    .player-en {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-bottom: 15px;
+    }
+
+    .player-meta {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .meta-tag {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 700;
+    }
+
+    .action-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .copyright-footer {
+      text-align: center;
+      font-size: 0.78rem;
+      color: rgba(255, 255, 255, 0.45);
+      padding: 15px 0 5px 0;
+      width: 100%;
+      direction: rtl;
+    }
+
+    .copyright-footer span {
+      color: var(--neon-green);
+      font-weight: 700;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    
+    <!-- Header -->
+    <header class="app-header">
+      <div class="app-logo">⚽ <span>Password Challenge</span></div>
+      <div class="app-subtitle">تحدي كرة القدم الجماعي — بدون مؤقت</div>
     </header>
 
-    <!-- Main Container -->
-    <main class="flex-grow flex flex-col items-center justify-center p-4 max-w-xl w-full mx-auto my-auto">
+    <!-- 1. Main Home Screen -->
+    <div id="screen-home" class="screen active">
+      <div class="card">
+        <button class="btn btn-primary" onclick="showScreen('screen-setup')">🎮 ابدأ مباراة جديدة</button>
+        <button class="btn btn-secondary" onclick="showStats()">📊 الإحصائيات وسجل المباريات</button>
+      </div>
 
-        <!-- 1. HOME SCREEN -->
-        <div id="screenHome" class="w-full flex flex-col items-center space-y-6 py-4 animate-fade-in">
-            <div class="text-center space-y-3 my-4">
-                <div class="inline-block p-4 rounded-3xl bg-cardBg neon-border float-anim mb-2">
-                    <i class="fa-solid fa-people-group text-5xl text-neonGreen"></i>
-                </div>
-                <h2 class="text-3xl sm:text-4xl font-black text-white tracking-wide">تحدي كلمة السر <span class="text-neonGreen">لكرة القدم</span></h2>
-                <p class="text-slate-400 text-sm max-w-md mx-auto">اختبر معلوماتك الكروية مع أصدقائك في مسابقة حماسية متجددة بدون مؤقت، مخصصة لأشهر نجوم الدوريات الأوروبية الكبرى!</p>
-            </div>
-
-            <div class="w-full space-y-3">
-                <button onclick="goToSetup()" class="w-full py-4 px-6 rounded-2xl neon-btn text-lg flex items-center justify-center space-x-3 space-x-reverse">
-                    <i class="fa-solid fa-play text-xl"></i>
-                    <span>ابدأ مباراة جديدة</span>
-                </button>
-                <button onclick="openStatsModal()" class="w-full py-3.5 px-6 rounded-2xl bg-cardBg hover:bg-cardHover border border-slate-700 text-slate-200 font-bold flex items-center justify-center space-x-3 space-x-reverse transition">
-                    <i class="fa-solid fa-trophy text-neonGreen text-lg"></i>
-                    <span>الإحصائيات وسجل المباريات</span>
-                </button>
-                <button onclick="openRulesModal()" class="w-full py-3.5 px-6 rounded-2xl bg-cardBg hover:bg-cardHover border border-slate-700 text-slate-200 font-bold flex items-center justify-center space-x-3 space-x-reverse transition">
-                    <i class="fa-solid fa-book-open text-neonCyan text-lg"></i>
-                    <span>قواعد اللعبة</span>
-                </button>
-            </div>
-
-            <!-- Last Match Summary Widget if exists -->
-            <div id="lastMatchWidget" class="w-full bg-cardBg/60 rounded-2xl p-4 border border-slate-800 hidden">
-                <div class="flex items-center justify-between mb-2">
-                    <span class="text-xs text-slate-400 font-semibold"><i class="fa-solid fa-history ml-1 text-neonGreen"></i> آخر نتيجة مسجلة</span>
-                    <span id="lastMatchDate" class="text-[10px] text-slate-500"></span>
-                </div>
-                <div id="lastMatchDetails" class="text-sm font-bold text-slate-200 text-center py-1"></div>
-            </div>
-        </div>
-
-        <!-- 2. SETUP SCREEN -->
-        <div id="screenSetup" class="w-full flex flex-col space-y-5 hidden animate-fade-in">
-            <div class="flex items-center justify-between">
-                <button onclick="goToHome()" class="text-slate-400 hover:text-white flex items-center space-x-1 space-x-reverse text-sm">
-                    <i class="fa-solid fa-arrow-right"></i>
-                    <span>الرئيسية</span>
-                </button>
-                <h3 class="text-xl font-bold text-white">إعدادات المباراة</h3>
-                <div class="w-10"></div>
-            </div>
-
-            <!-- Number of Rounds -->
-            <div class="bg-cardBg p-5 rounded-2xl border border-slate-800 space-y-3">
-                <label class="text-sm font-bold text-slate-300 flex items-center justify-between">
-                    <span>عدد الجولات الأساسية (زوجي):</span>
-                    <span id="selectedRoundsVal" class="text-neonGreen text-lg font-black">6</span>
-                </label>
-                <div class="grid grid-cols-5 gap-2" id="roundsButtonsContainer">
-                    <!-- Generated via JS: 2, 4, 6, 8, 10 -->
-                </div>
-                <p class="text-[11px] text-slate-400">ملاحظة: تتضمن المباراة جولة مخاطرة واحدة عشوائية بقيمة نقطتين.</p>
-            </div>
-
-            <!-- Teams Configuration -->
-            <div class="bg-cardBg p-5 rounded-2xl border border-slate-800 space-y-4">
-                <div class="flex items-center justify-between">
-                    <label class="text-sm font-bold text-slate-300">أسماء الفرق (من 2 إلى 4 فرق):</label>
-                    <div class="flex space-x-1 space-x-reverse">
-                        <button onclick="setTeamCount(2)" id="teamBtn2" class="px-3 py-1 text-xs rounded-lg font-bold bg-neonGreen text-darkBg transition">فريقين</button>
-                        <button onclick="setTeamCount(3)" id="teamBtn3" class="px-3 py-1 text-xs rounded-lg font-bold bg-slate-800 text-slate-300 transition">3 فرق</button>
-                        <button onclick="setTeamCount(4)" id="teamBtn4" class="px-3 py-1 text-xs rounded-lg font-bold bg-slate-800 text-slate-300 transition">4 فرق</button>
-                    </div>
-                </div>
-                <div id="teamInputsContainer" class="space-y-3">
-                    <!-- Team inputs rendered by JS -->
-                </div>
-            </div>
-
-            <!-- Start Button -->
-            <button onclick="startMatch()" class="w-full py-4 rounded-2xl neon-btn text-lg flex items-center justify-center space-x-3 space-x-reverse mt-2">
-                <i class="fa-solid fa-play"></i>
-                <span>انطلاق المباراة!</span>
-            </button>
-        </div>
-
-        <!-- 3. GAMEPLAY SCREEN -->
-        <div id="screenGame" class="w-full flex flex-col space-y-4 hidden animate-fade-in">
-            
-            <!-- Top Match Info & Scoreboard -->
-            <div class="flex flex-col space-y-2">
-                <div class="flex items-center justify-between bg-cardBg px-4 py-2.5 rounded-xl border border-slate-800">
-                    <div class="flex items-center space-x-2 space-x-reverse">
-                        <span id="roundIndicatorBadge" class="px-2.5 py-1 rounded-lg bg-slate-800 text-neonGreen text-xs font-bold border border-slate-700">الجولة 1 / 6</span>
-                        <span id="leagueBadge" class="px-2.5 py-1 rounded-lg bg-emerald-950/80 text-emerald-400 text-xs font-semibold border border-emerald-800/50">الدوري</span>
-                    </div>
-                    <button onclick="confirmQuit()" class="text-xs text-slate-400 hover:text-red-400 transition flex items-center space-x-1 space-x-reverse">
-                        <i class="fa-solid fa-arrow-right-from-bracket"></i>
-                        <span>إنهاء</span>
-                    </button>
-                </div>
-
-                <!-- Scoreboard Grid for Teams -->
-                <div id="scoreboardGrid" class="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                    <!-- Rendered by JS -->
-                </div>
-            </div>
-
-            <!-- Risk Round Banner (Dynamic) -->
-            <div id="riskBanner" class="hidden w-full bg-gradient-to-r from-red-950 via-amber-950 to-red-950 border border-amber-500/60 p-3 rounded-2xl text-center risk-glow transition-all duration-300">
-                <div class="flex items-center justify-center space-x-2 space-x-reverse text-amber-300 font-black text-sm sm:text-base">
-                    <i class="fa-solid fa-fire text-amber-400 animate-bounce"></i>
-                    <span>🔥 جولة المخاطرة! الجولة دي بنقطتين للفريق الفائز</span>
-                </div>
-            </div>
-
-            <!-- Golden Goal Banner (Dynamic) -->
-            <div id="goldenGoalBanner" class="hidden w-full bg-gradient-to-r from-yellow-950 via-amber-900 to-yellow-950 border border-yellow-500 p-3 rounded-2xl text-center shadow-lg">
-                <div class="flex items-center justify-center space-x-2 space-x-reverse text-yellow-300 font-black text-sm sm:text-base">
-                    <i class="fa-solid fa-crown text-yellow-400"></i>
-                    <span>⭐ مرحلة الهدف الذهبي! أول تخمين صحيح يحسم اللقاء</span>
-                </div>
-            </div>
-
-            <!-- Player Clue Card -->
-            <div class="bg-cardBg border border-slate-800 rounded-3xl p-6 shadow-xl relative overflow-hidden flex flex-col items-center text-center space-y-4">
-                <div class="absolute top-0 right-0 left-0 h-1.5 bg-gradient-to-r from-neonGreen via-neonCyan to-neonGreen"></div>
-                
-                <div class="flex items-center justify-between w-full text-xs text-slate-400 px-1">
-                    <span><i class="fa-solid fa-eye-slash ml-1 text-amber-400"></i> تلميحات لمقدم التلميح فقط</span>
-                    <span id="playerDifficulty" class="px-2 py-0.5 rounded-full text-[10px] font-bold">شهرة اللاعب</span>
-                </div>
-
-                <!-- Player Name -->
-                <div class="py-2 space-y-1">
-                    <h3 id="playerNameDisplay" class="text-2xl sm:text-3xl font-black text-white tracking-wide">اسم اللاعب</h3>
-                    <p class="text-xs text-slate-400">اللاعب المطلوب تخمينه</p>
-                </div>
-
-                <!-- Nationality, Club & Position Details -->
-                <div class="grid grid-cols-3 gap-2 w-full pt-2">
-                    <div class="bg-slate-900/80 p-2.5 rounded-xl border border-slate-800/80 flex flex-col items-center">
-                        <span class="text-[10px] text-slate-400 mb-1">الجنسية</span>
-                        <span id="playerNationality" class="text-xs font-bold text-slate-200 truncate w-full">البرتغال 🇵🇹</span>
-                    </div>
-                    <div class="bg-slate-900/80 p-2.5 rounded-xl border border-slate-800/80 flex flex-col items-center">
-                        <span class="text-[10px] text-slate-400 mb-1">النادي الحالي</span>
-                        <span id="playerClub" class="text-xs font-bold text-slate-200 truncate w-full">ريال مدريد</span>
-                    </div>
-                    <div class="bg-slate-900/80 p-2.5 rounded-xl border border-slate-800/80 flex flex-col items-center">
-                        <span class="text-[10px] text-slate-400 mb-1">المركز</span>
-                        <span id="playerPosition" class="text-xs font-bold text-slate-200 truncate w-full">مهاجم</span>
-                    </div>
-                </div>
-
-                <div class="w-full bg-slate-900/50 rounded-xl p-2.5 text-[11px] text-slate-400 border border-slate-800">
-                    💡 <span id="playerHintText">انتبه: ممنوع ذكر اسم اللاعب أو ناديه الحالي مباشرة في التلميح.</span>
-                </div>
-            </div>
-
-            <!-- Action Controls -->
-            <div class="space-y-3 pt-2">
-                <p class="text-xs font-bold text-slate-400 text-center">اختر الفريق الذي أجاب بشكل صحيح:</p>
-                
-                <!-- Dynamic Team Correct Buttons Grid -->
-                <div id="teamCorrectButtonsGrid" class="grid grid-cols-2 gap-2.5">
-                    <!-- Rendered by JS -->
-                </div>
-
-                <!-- Skip Player Button -->
-                <button onclick="skipPlayer()" class="w-full py-3 rounded-xl bg-slate-800/90 hover:bg-slate-700 text-slate-300 font-bold text-sm flex items-center justify-center space-x-2 space-x-reverse border border-slate-700 transition">
-                    <i class="fa-solid fa-forward-step text-amber-400"></i>
-                    <span>تخطي اللاعب الحالي (بدون استهلاك جولة)</span>
-                </button>
-            </div>
-
-        </div>
-
-        <!-- 4. END GAME SCREEN -->
-        <div id="screenEnd" class="w-full flex flex-col items-center space-y-6 py-6 hidden animate-fade-in text-center">
-            <div class="relative">
-                <div class="w-20 h-20 rounded-full bg-gradient-to-tr from-yellow-500 to-amber-300 flex items-center justify-center shadow-2xl shadow-yellow-500/30 mx-auto float-anim">
-                    <i class="fa-solid fa-trophy text-darkBg text-4xl"></i>
-                </div>
-            </div>
-
-            <div class="space-y-2">
-                <h3 id="winnerAnnouncementTitle" class="text-3xl sm:text-4xl font-black text-white">انتهت المباراة!</h3>
-                <p id="matchEndSubtitle" class="text-slate-400 text-sm">تم حسم النتيجة بنجاح</p>
-            </div>
-
-            <!-- Final Standings Card -->
-            <div class="w-full bg-cardBg border border-slate-800 rounded-3xl p-5 space-y-3">
-                <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">الترتيب النهائي</h4>
-                <div id="finalStandingsList" class="space-y-2.5">
-                    <!-- Rendered by JS -->
-                </div>
-            </div>
-
-            <!-- Action Buttons -->
-            <div class="w-full space-y-3">
-                <button onclick="restartMatch()" class="w-full py-4 rounded-2xl neon-btn text-base flex items-center justify-center space-x-2 space-x-reverse">
-                    <i class="fa-solid fa-rotate-right"></i>
-                    <span>إعادة المباراة</span>
-                </button>
-                <button onclick="goToHome()" class="w-full py-3.5 rounded-2xl bg-cardBg hover:bg-cardHover border border-slate-700 text-slate-200 font-bold flex items-center justify-center space-x-2 space-x-reverse transition">
-                    <i class="fa-solid fa-house"></i>
-                    <span>العودة للرئيسية</span>
-                </button>
-            </div>
-        </div>
-
-    </main>
-
-    <!-- Modals (Stats, Settings, Rules, Confirm Quit) -->
-
-    <!-- Stats Modal -->
-    <div id="statsModal" class="fixed inset-0 bg-darkBg/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden animate-fade-in">
-        <div class="bg-cardBg border border-slate-800 rounded-3xl w-full max-w-md p-6 space-y-5 max-h-[85vh] flex flex-col">
-            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-                <h3 class="font-bold text-lg text-white flex items-center space-x-2 space-x-reverse">
-                    <i class="fa-solid fa-chart-pie text-neonGreen"></i>
-                    <span>إحصائيات وسجل المباريات</span>
-                </h3>
-                <button onclick="closeStatsModal()" class="text-slate-400 hover:text-white p-1">
-                    <i class="fa-solid fa-xmark text-lg"></i>
-                </button>
-            </div>
-            <div class="flex-grow overflow-y-auto custom-scroll space-y-3 pr-1" id="matchHistoryList">
-                <!-- Rendered by JS -->
-            </div>
-            <button onclick="clearHistoryData()" class="py-2.5 rounded-xl bg-red-950/40 hover:bg-red-900/50 text-red-400 text-xs font-bold border border-red-800/50 transition">
-                مسح السجل والإحصائيات
-            </button>
-        </div>
+      <div class="card" id="last-match-card" style="display:none;">
+        <div class="form-label">🏆 آخر نتيجة محفوظة:</div>
+        <div id="last-match-summary" style="font-size: 0.9rem; color: #fff; text-align: center; font-weight: 700;"></div>
+      </div>
     </div>
 
-    <!-- Settings Modal -->
-    <div id="settingsModal" class="fixed inset-0 bg-darkBg/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden animate-fade-in">
-        <div class="bg-cardBg border border-slate-800 rounded-3xl w-full max-w-sm p-6 space-y-5">
-            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-                <h3 class="font-bold text-lg text-white flex items-center space-x-2 space-x-reverse">
-                    <i class="fa-solid fa-gear text-neonGreen"></i>
-                    <span>إعدادات اللعبة</span>
-                </h3>
-                <button onclick="closeSettingsModal()" class="text-slate-400 hover:text-white p-1">
-                    <i class="fa-solid fa-xmark text-lg"></i>
-                </button>
-            </div>
-            <div class="space-y-4">
-                <div class="flex items-center justify-between bg-slate-900/60 p-4 rounded-2xl border border-slate-800">
-                    <div>
-                        <h4 class="text-sm font-bold text-white">المؤثرات الصوتية</h4>
-                        <p class="text-[11px] text-slate-400">تفعيل أصوات التفاعل والفوز</p>
-                    </div>
-                    <label class="relative inline-flex items-center cursor-pointer">
-                        <input type="checkbox" id="soundSettingToggle" checked onchange="toggleSoundSetting()" class="sr-only peer">
-                        <div class="w-11 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:right-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-neonGreen"></div>
-                    </label>
-                </div>
-                <div class="flex items-center justify-between bg-slate-900/60 p-4 rounded-2xl border border-slate-800">
-                    <div>
-                        <h4 class="text-sm font-bold text-white">تصفير سجل اللاعبين الظاهرين</h4>
-                        <p class="text-[11px] text-slate-400">إعادة إتاحة جميع اللاعبين للظهور مجدداً</p>
-                    </div>
-                    <button onclick="resetGlobalPlayedPlayers()" class="px-3 py-1.5 rounded-lg bg-amber-950/80 hover:bg-amber-900 text-amber-300 text-xs font-bold border border-amber-700/50">
-                        تصفير
-                    </button>
-                </div>
-            </div>
-            <button onclick="closeSettingsModal()" class="w-full py-3 rounded-xl neon-btn text-sm">
-                حفظ وإغلاق
-            </button>
+    <!-- 2. Match Setup Screen -->
+    <div id="screen-setup" class="screen">
+      <div class="card">
+        <div class="form-group">
+          <label class="form-label">اسم الفريق الأول:</label>
+          <input type="text" id="team1-input" class="form-input" value="فريق ١">
         </div>
+        <div class="form-group">
+          <label class="form-label">اسم الفريق الثاني:</label>
+          <input type="text" id="team2-input" class="form-input" value="فريق ٢">
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">عدد الجولات الأساسية:</label>
+          <div class="round-selector">
+            <div class="round-opt" onclick="selectRounds(2)">2</div>
+            <div class="round-opt selected" onclick="selectRounds(4)">4</div>
+            <div class="round-opt" onclick="selectRounds(6)">6</div>
+            <div class="round-opt" onclick="selectRounds(8)">8</div>
+            <div class="round-opt" onclick="selectRounds(10)">10</div>
+          </div>
+        </div>
+
+        <button class="btn btn-primary" onclick="startGame()">⚽ انطلاق المباراة</button>
+        <button class="btn btn-secondary" onclick="showScreen('screen-home')">إلغاء</button>
+      </div>
     </div>
 
-    <!-- Rules Modal -->
-    <div id="rulesModal" class="fixed inset-0 bg-darkBg/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden animate-fade-in">
-        <div class="bg-cardBg border border-slate-800 rounded-3xl w-full max-w-md p-6 space-y-4 max-h-[85vh] flex flex-col">
-            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-                <h3 class="font-bold text-lg text-white flex items-center space-x-2 space-x-reverse">
-                    <i class="fa-solid fa-book-open text-neonCyan"></i>
-                    <span>قواعد Password Challenge</span>
-                </h3>
-                <button onclick="closeRulesModal()" class="text-slate-400 hover:text-white p-1">
-                    <i class="fa-solid fa-xmark text-lg"></i>
-                </button>
-            </div>
-            <div class="flex-grow overflow-y-auto custom-scroll space-y-3 text-xs text-slate-300 leading-relaxed pr-1">
-                <div class="bg-slate-900/60 p-3.5 rounded-xl border border-slate-800 space-y-1">
-                    <h4 class="font-bold text-neonGreen text-sm">👥 نظام اللعب الجماعي</h4>
-                    <p>المباراة تُلعب محلياً بين 2 إلى 4 فرق على هاتف واحد بدون مؤقت، يعطي فيها مقدم التلميحات إشارات لفريقه دون ذكر اسم اللاعب أو ناديه.</p>
-                </div>
-                <div class="bg-slate-900/60 p-3.5 rounded-xl border border-slate-800 space-y-1">
-                    <h4 class="font-bold text-neonCyan text-sm">✨ نجوم مشاهير بنسبة 80%</h4>
-                    <p>معظم الأسماء من صفوة نجوم الدوري الإنجليزي، الإسباني، الإيطالي، الألماني، والفرنسي لضمان تجربة ممتعة وسهولة التخمين.</p>
-                </div>
-                <div class="bg-slate-900/60 p-3.5 rounded-xl border border-slate-800 space-y-1">
-                    <h4 class="font-bold text-amber-400 text-sm">🔥 جولة المخاطرة المشتركة</h4>
-                    <p>تتضمن كل مباراة جولة مخاطرة واحدة عشوائياً بقيمة نقطتين وبصعوبة أعلى قليلاً.</p>
-                </div>
-                <div class="bg-slate-900/60 p-3.5 rounded-xl border border-slate-800 space-y-1">
-                    <h4 class="font-bold text-yellow-400 text-sm">⭐ عدم التكرار والهدف الذهبي</h4>
-                    <p>تضمن اللعبة عدم تكرار اللاعبين عبر الجلسات والزيارات المختلفة، وعند التعادل يحسم الهدف الذهبي اللقاء فوراً.</p>
-                </div>
-            </div>
-            <button onclick="closeRulesModal()" class="w-full py-3 rounded-xl neon-btn text-sm">
-                فهمت القواعد
-            </button>
+    <!-- 3. Gameplay Screen -->
+    <div id="screen-game" class="screen">
+      
+      <div id="risk-alert" class="risk-banner" style="display:none;">
+        🔥 جولة المخاطرة! الجولة دي بنقطتين للفريق الفائز
+      </div>
+
+      <div style="text-align: center;">
+        <div id="round-badge" class="round-badge">الجولة 1 من 4</div>
+      </div>
+
+      <div class="score-board">
+        <div class="team-score">
+          <div id="t1-display-name" class="team-name">فريق ١</div>
+          <div id="t1-score" class="team-pts">0</div>
         </div>
+        <div class="vs-divider">VS</div>
+        <div class="team-score">
+          <div id="t2-display-name" class="team-name">فريق ٢</div>
+          <div id="t2-score" class="team-pts">0</div>
+        </div>
+      </div>
+
+      <!-- Player Card (For Hint Giver) -->
+      <div class="card player-card">
+        <div id="card-player-name" class="player-name">---</div>
+        <div id="card-player-en" class="player-en">---</div>
+        <div class="player-meta">
+          <span id="card-player-nation" class="meta-tag">🏳️ ---</span>
+          <span id="card-player-club" class="meta-tag">🛡️ ---</span>
+          <span id="card-player-pos" class="meta-tag">⚽ ---</span>
+        </div>
+      </div>
+
+      <!-- Control Buttons -->
+      <div class="action-grid">
+        <button id="btn-t1-win" class="btn btn-primary" onclick="scorePoint(1)">✅ تخمين <span id="btn-t1-txt">فريق ١</span></button>
+        <button id="btn-t2-win" class="btn btn-primary" onclick="scorePoint(2)">✅ تخمين <span id="btn-t2-txt">فريق ٢</span></button>
+      </div>
+      <button class="btn btn-secondary" onclick="skipPlayer()">🔄 تخطي اللاعب (دون ضياع الجولة)</button>
     </div>
 
-    <!-- Confirm Quit Modal -->
-    <div id="quitModal" class="fixed inset-0 bg-darkBg/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden animate-fade-in">
-        <div class="bg-cardBg border border-slate-800 rounded-3xl w-full max-w-sm p-6 space-y-4 text-center">
-            <div class="w-12 h-12 rounded-2xl bg-red-950/80 text-red-400 flex items-center justify-center mx-auto border border-red-800">
-                <i class="fa-solid fa-triangle-exclamation text-xl"></i>
-            </div>
-            <h3 class="font-bold text-lg text-white">هل تريد إنهاء المباراة؟</h3>
-            <p class="text-xs text-slate-400">سيتم فقدان تقدم المباراة الحالي والعودة للشاشة الرئيسية.</p>
-            <div class="grid grid-cols-2 gap-2 pt-2">
-                <button onclick="closeQuitModal()" class="py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold transition">إلغاء</button>
-                <button onclick="executeQuit()" class="py-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-white text-xs font-bold transition">نعم، إنهاء</button>
-            </div>
-        </div>
+    <!-- 4. Match Results Screen -->
+    <div id="screen-result" class="screen">
+      <div class="card" style="text-align: center; padding: 30px 15px;">
+        <h2 style="color: var(--neon-gold); font-size: 1.5rem; margin-bottom: 10px;">🏆 بطل المباراة</h2>
+        <div id="winner-name" style="font-size: 2.2rem; font-weight: 900; color: #fff; margin-bottom: 15px;">---</div>
+        <div id="final-score-display" style="font-size: 1.2rem; color: var(--text-muted); margin-bottom: 20px;">0 - 0</div>
+        <div id="golden-goal-note" style="color: var(--neon-green); font-weight: 700; margin-bottom: 15px; display:none;">✨ حُسمت بالهدف الذهبي!</div>
+
+        <button class="btn btn-primary" onclick="restartMatch()">🔄 إعادة المباراة بنفس الفرق</button>
+        <button class="btn btn-secondary" onclick="showScreen('screen-home')">العودة للرئيسية</button>
+      </div>
     </div>
 
-    <!-- Footer Copyright -->
-    <footer class="w-full text-center py-3 text-[11px] text-slate-400 border-t border-slate-900 bg-darkBg z-40 mt-auto">
-        © 2026 جميع الحقوق محفوظة — تم البرمجة والتطوير بواسطة زياد حاتم
-    </footer>
+    <!-- 5. Stats Screen -->
+    <div id="screen-stats" class="screen">
+      <div class="card">
+        <h3 style="margin-bottom: 15px; text-align: center; color: var(--neon-green);">📊 إحصائيات المباريات السابقة</h3>
+        <div id="stats-list" style="font-size: 0.9rem; line-height: 1.6; color: var(--text-muted);">
+          لا توجد مباريات مسجلة بعد.
+        </div>
+        <button class="btn btn-secondary" style="margin-top: 15px;" onclick="showScreen('screen-home')">رجوع</button>
+      </div>
+    </div>
 
-    <!-- JavaScript Application Logic -->
-    <script>
-        /* ----------------------------------------------------
-         * HIGH QUALITY PLAYER DATABASE: Strictly Top 5 European Leagues
-         * ~80% Famous Stars / ~20% Solid Medium Challenge
-         * Unique IDs assigned for strict non-repetition persistent tracking.
-         * ---------------------------------------------------- */
-        const FAMOUS_PLAYERS_DATABASE = [
-            // Premier League (الإنجليزي الممتاز)
-            { id: "pl_01", name: "محمد صلاح", nationality: "مصر 🇪🇬", club: "ليفربول", league: "الدوري الإنجليزي", pos: "مهاجم", tier: "famous" },
-            { id: "pl_02", name: "إيرلينغ هالاند", nationality: "النرويج 🇳🇴", club: "مانشستر سيتي", league: "الدوري الإنجليزي", pos: "مهاجم", tier: "famous" },
-            { id: "pl_03", name: "كيفين دي بروين", nationality: "بلجيكا 🇧🇪", club: "مانشستر سيتي", league: "الدوري الإنجليزي", pos: "وسط", tier: "famous" },
-            { id: "pl_04", name: "بوكايو ساكا", nationality: "إنجلترا 🏴󠁧󠁢󠁥󠁮󠁧󠁿", club: "آرسنال", league: "الدوري الإنجليزي", pos: "مهاجم", tier: "famous" },
-            { id: "pl_05", name: "فيرجيل فان دايك", nationality: "هولندا 🇳🇱", club: "ليفربول", league: "الدوري الإنجليزي", pos: "مدافع", tier: "famous" },
-            { id: "pl_06", name: "كول بالمر", nationality: "إنجلترا 🏴󠁧󠁢󠁥󠁮󠁧󠁿", club: "تشيلسي", league: "الدوري الإنجليزي", pos: "وسط", tier: "famous" },
-            { id: "pl_07", name: "برونو فيرنانديز", nationality: "البرتغال 🇵🇹", club: "مانشستر يونايتد", league: "الدوري الإنجليزي", pos: "وسط", tier: "famous" },
-            { id: "pl_08", name: "سون هيونغ مين", nationality: "كوريا الجنوبية 🇰🇷", club: "توتنهام", league: "الدوري الإنجليزي", pos: "مهاجم", tier: "famous" },
-            { id: "pl_09", name: "ماركوس راشفورد", nationality: "إنجلترا 🏴󠁧󠁢󠁥󠁮󠁧󠁿", club: "مانشستر يونايتد", league: "الدوري الإنجليزي", pos: "مهاجم", tier: "famous" },
-            { id: "pl_10", name: "ديكلان رايس", nationality: "إنجلترا 🏴󠁧󠁢󠁥󠁮󠁧󠁿", club: "آرسنال", league: "الدوري الإنجليزي", pos: "وسط", tier: "famous" },
-            { id: "pl_11", name: "أليسون بيكر", nationality: "البرازيل 🇧🇷", club: "ليفربول", league: "الدوري الإنجليزي", pos: "حارس مرمى", tier: "famous" },
-            { id: "pl_12", name: "رودري", nationality: "إسبانيا 🇪🇸", club: "مانشستر سيتي", league: "الدوري الإنجليزي", pos: "وسط", tier: "famous" },
-            { id: "pl_13", name: "فيل فودين", nationality: "إنجلترا 🏴󠁧󠁢󠁥󠁮󠁧󠁿", club: "مانشستر سيتي", league: "الدوري الإنجليزي", pos: "وسط", tier: "famous" },
-            { id: "pl_14", name: "مارتن أوديغارد", nationality: "النرويج 🇳🇴", club: "آرسنال", league: "الدوري الإنجليزي", pos: "وسط", tier: "famous" },
-            { id: "pl_15", name: "ألكسندر إيساك", nationality: "السويد 🇸🇪", club: "نيوكاسل", league: "الدوري الإنجليزي", pos: "مهاجم", tier: "medium" },
-            { id: "pl_16", name: "أولريات واتكينز", nationality: "إنجلترا 🏴󠁧󠁢󠁥󠁮󠁧󠁿", club: "أستون فيلا", league: "الدوري الإنجليزي", pos: "مهاجم", tier: "medium" },
-            { id: "pl_17", name: "ويليام ساليبا", nationality: "فرنسا 🇫🇷", club: "آرسنال", league: "الدوري الإنجليزي", pos: "مدافع", tier: "medium" },
-            { id: "pl_18", name: "إيميليانو مارتينيز", nationality: "الأرجنتين 🇦🇷", club: "أستون فيلا", league: "الدوري الإنجليزي", pos: "حارس مرمى", tier: "famous" },
-            { id: "pl_19", name: "جيمس ماديسون", nationality: "إنجلترا 🏴󠁧󠁢󠁥󠁮󠁧󠁿", club: "توتنهام", league: "الدوري الإنجليزي", pos: "وسط", tier: "medium" },
-            { id: "pl_20", name: "كاسيميرو", nationality: "البرازيل 🇧🇷", club: "مانشستر يونايتد", league: "الدوري الإنجليزي", pos: "وسط", tier: "famous" },
+  </div>
 
-            // La Liga (الدوري الإسباني)
-            { id: "laliga_01", name: "كيليان مبابي", nationality: "فرنسا 🇫🇷", club: "ريال مدريد", league: "الدوري الإسباني", pos: "مهاجم", tier: "famous" },
-            { id: "laliga_02", name: "جود بيلينغهام", nationality: "إنجلترا 🏴󠁧󠁢󠁥󠁮󠁧󠁿", club: "ريال مدريد", league: "الدوري الإسباني", pos: "وسط", tier: "famous" },
-            { id: "laliga_03", name: "فينيسيوس جونيور", nationality: "البرازيل 🇧🇷", club: "ريال مدريد", league: "الدوري الإسباني", pos: "مهاجم", tier: "famous" },
-            { id: "laliga_04", name: "روبرت ليفاندوفسكي", nationality: "بولندا 🇵🇱", club: "برشلونة", league: "الدوري الإسباني", pos: "مهاجم", tier: "famous" },
-            { id: "laliga_05", name: "لامين يامال", nationality: "إسبانيا 🇪🇸", club: "برشلونة", league: "الدوري الإسباني", pos: "مهاجم", tier: "famous" },
-            { id: "laliga_06", name: "لوكا مودريتش", nationality: "كرواتيا 🇭🇷", club: "ريال مدريد", league: "الدوري الإسباني", pos: "وسط", tier: "famous" },
-            { id: "laliga_07", name: "أنطوان غريزمان", nationality: "فرنسا 🇫🇷", club: "أتلتيكو مدريد", league: "الدوري الإسباني", pos: "مهاجم", tier: "famous" },
-            { id: "laliga_08", name: "بيدري", nationality: "إسبانيا 🇪🇸", club: "برشلونة", league: "الدوري الإسباني", pos: "وسط", tier: "famous" },
-            { id: "laliga_09", name: "رودريغو", nationality: "البرازيل 🇧🇷", club: "ريال مدريد", league: "الدوري الإسباني", pos: "مهاجم", tier: "famous" },
-            { id: "laliga_10", name: "رافينيا", nationality: "البرازيل 🇧🇷", club: "برشلونة", league: "الدوري الإسباني", pos: "مهاجم", tier: "famous" },
-            { id: "laliga_11", name: "تيبو كورتوا", nationality: "بلجيكا 🇧🇪", club: "ريال مدريد", league: "الدوري الإسباني", pos: "حارس مرمى", tier: "famous" },
-            { id: "laliga_12", name: "يان أوبلاك", nationality: "سلوفينيا 🇸🇮", club: "أتلتيكو مدريد", league: "الدوري الإسباني", pos: "حارس مرمى", tier: "famous" },
-            { id: "laliga_13", name: "داني كارفاخال", nationality: "إسبانيا 🇪🇸", club: "ريال مدريد", league: "الدوري الإسباني", pos: "مدافع", tier: "famous" },
-            { id: "laliga_14", name: "جافي", nationality: "إسبانيا 🇪🇸", club: "برشلونة", league: "الدوري الإسباني", pos: "وسط", tier: "famous" },
-            { id: "laliga_15", name: "إينياكي ويليامز", nationality: "غانا 🇬🇭", club: "أتلتيك بيلباو", league: "الدوري الإسباني", pos: "مهاجم", tier: "medium" },
-            { id: "laliga_16", name: "جوليان ألفاريز", nationality: "الأرجنتين 🇦🇷", club: "أتلتيكو مدريد", league: "الدوري الإسباني", pos: "مهاجم", tier: "famous" },
-            { id: "laliga_17", name: "فرينكي دي يونغ", nationality: "هولندا 🇳🇱", club: "برشلونة", league: "الدوري الإسباني", pos: "وسط", tier: "famous" },
+  <!-- Copyright Footer -->
+  <footer class="copyright-footer">
+    © 2026 جميع الحقوق محفوظة — تم البرمجة والتطوير بواسطة <span>زياد حاتم</span>
+  </footer>
 
-            // Serie A (الدوري الإيطالي)
-            { id: "sa_01", name: "لاوتارو مارتينيز", nationality: "الأرجنتين 🇦🇷", club: "إنتر ميلان", league: "الدوري الإيطالي", pos: "مهاجم", tier: "famous" },
-            { id: "sa_02", name: "رافائيل لياو", nationality: "البرتغال 🇵🇹", club: "إيه سي ميلان", league: "الدوري الإيطالي", pos: "مهاجم", tier: "famous" },
-            { id: "sa_03", name: "باولو ديبالا", nationality: "الأرجنتين 🇦🇷", club: "روما", league: "الدوري الإيطالي", pos: "مهاجم", tier: "famous" },
-            { id: "sa_04", name: "دوشان فلاهوفيتش", nationality: "صربيا 🇷🇸", club: "يوفنتوس", league: "الدوري الإيطالي", pos: "مهاجم", tier: "famous" },
-            { id: "sa_05", name: "نيكولو باريلا", nationality: "إيطاليا 🇮🇹", club: "إنتر ميلان", league: "الدوري الإيطالي", pos: "وسط", tier: "famous" },
-            { id: "sa_06", name: "فيكتور أوسيمين", nationality: "نيجيريا 🇳🇬", club: "نابولى", league: "الدوري الإيطالي", pos: "مهاجم", tier: "famous" },
-            { id: "sa_07", name: "خفيتشا كفاراتسخيليا", nationality: "جورجيا 🇬🇪", club: "نابولى", league: "الدوري الإيطالي", pos: "مهاجم", tier: "famous" },
-            { id: "sa_08", name: "مايك ماينان", nationality: "فرنسا 🇫🇷", club: "إيه سي ميلان", league: "الدوري الإيطالي", pos: "حارس مرمى", tier: "famous" },
-            { id: "sa_09", name: "فيديريكو ديماركو", nationality: "إيطاليا 🇮🇹", club: "إنتر ميلان", league: "الدوري الإيطالي", pos: "مدافع", tier: "medium" },
-            { id: "sa_10", name: "تيو هيرنانديز", nationality: "فرنسا 🇫🇷", club: "إيه سي ميلان", league: "الدوري الإيطالي", pos: "مدافع", tier: "famous" },
-            { id: "sa_11", name: "هاكان تشالهان أوغلو", nationality: "تركيا 🇹🇷", club: "إنتر ميلان", league: "الدوري الإيطالي", pos: "وسط", tier: "famous" },
+  <script>
+    // --- Complete Top 5 European Leagues Verified Database (152 Players) ---
+    const PLAYERS_DB = [
+      // PSG & Ligue 1
+      { id: "dembele", name: "عثمان ديمبيلي", enName: "Ousmane Dembélé", club: "باريس سان جيرمان", league: "الدوري الفرنسي", nation: "فرنسا", flag: "🇫🇷", pos: "مهاجم / جناح", diff: "easy" },
+      { id: "hakimi", name: "أشرف حكيمي", enName: "Achraf Hakimi", club: "باريس سان جيرمان", league: "الدوري الفرنسي", nation: "المغرب", flag: "🇲🇦", pos: "مدافع / ظهير", diff: "easy" },
+      { id: "vitinha_psg", name: "فيتينيا", enName: "Vitinha", club: "باريس سان جيرمان", league: "الدوري الفرنسي", nation: "البرتغال", flag: "🇵🇹", pos: "وسط", diff: "medium" },
+      { id: "joao_neves", name: "جواو نيفيز", enName: "João Neves", club: "باريس سان جيرمان", league: "الدوري الفرنسي", nation: "البرتغال", flag: "🇵🇹", pos: "وسط", diff: "medium" },
+      { id: "nuno_mendes", name: "نونو مينديز", enName: "Nuno Mendes", club: "باريس سان جيرمان", league: "الدوري الفرنسي", nation: "البرتغال", flag: "🇵🇹", pos: "مدافع / ظهير", diff: "medium" },
+      { id: "marquinhos", name: "ماركينوس", enName: "Marquinhos", club: "باريس سان جيرمان", league: "الدوري الفرنسي", nation: "البرازيل", flag: "🇧🇷", pos: "مدافع", diff: "easy" },
+      { id: "kvaratskhelia", name: "خفيتشا كفاراتسخيليا", enName: "Khvicha Kvaratskhelia", club: "باريس سان جيرمان", league: "الدوري الفرنسي", nation: "جورجيا", flag: "🇬🇪", pos: "جناح", diff: "easy" },
+      { id: "barcola", name: "برادلي باركولا", enName: "Bradley Barcola", club: "باريس سان جيرمان", league: "الدوري الفرنسي", nation: "فرنسا", flag: "🇫🇷", pos: "جناح", diff: "medium" },
+      { id: "doue", name: "ديزيري دويه", enName: "Désiré Doué", club: "باريس سان جيرمان", league: "الدوري الفرنسي", nation: "فرنسا", flag: "🇫🇷", pos: "وسط / جناح", diff: "medium" },
+      { id: "zaire_emery", name: "وارن زاير إيمري", enName: "Warren Zaïre-Emery", club: "باريس سان جيرمان", league: "الدوري الفرنسي", nation: "فرنسا", flag: "🇫🇷", pos: "وسط", diff: "medium" },
+      
+      // Premier League Stars (Easy & Medium)
+      { id: "salah", name: "محمد صلاح", enName: "Mohamed Salah", club: "ليفربول", league: "الدوري الإنجليزي", nation: "مصر", flag: "🇪🇬", pos: "مهاجم / جناح", diff: "easy" },
+      { id: "haaland", name: "إيرلينغ هالاند", enName: "Erling Haaland", club: "مانشستر سيتي", league: "الدوري الإنجليزي", nation: "النرويج", flag: "🇳🇴", pos: "مهاجم", diff: "easy" },
+      { id: "rodri", name: "رودري", enName: "Rodri", club: "مانشستر سيتي", league: "الدوري الإنجليزي", nation: "إسبانيا", flag: "🇪🇸", pos: "وسط", diff: "easy" },
+      { id: "foden", name: "فيل فودين", enName: "Phil Foden", club: "مانشستر سيتي", league: "الدوري الإنجليزي", nation: "إنجلترا", flag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿", pos: "وسط / جناح", diff: "easy" },
+      { id: "bernardo_silva", name: "بيرناردو سيلفا", enName: "Bernardo Silva", club: "مانشستر سيتي", league: "الدوري الإنجليزي", nation: "البرتغال", flag: "🇵🇹", pos: "وسط", diff: "easy" },
+      { id: "ruben_dias", name: "روبن دياز", enName: "Rúben Dias", club: "مانشستر سيتي", league: "الدوري الإنجليزي", nation: "البرتغال", flag: "🇵🇹", pos: "مدافع", diff: "easy" },
+      { id: "doku", name: "جيريمي دوكو", enName: "Jérémy Doku", club: "مانشستر سيتي", league: "الدوري الإنجليزي", nation: "بلجيكا", flag: "🇧🇪", pos: "جناح", diff: "easy" },
+      { id: "saka", name: "بوكايو ساكا", enName: "Bukayo Saka", club: "أرسنال", league: "الدوري الإنجليزي", nation: "إنجلترا", flag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿", pos: "جناح", diff: "easy" },
+      { id: "rice", name: "ديكلان رايس", enName: "Declan Rice", club: "أرسنال", league: "الدوري الإنجليزي", nation: "إنجلترا", flag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿", pos: "وسط", diff: "easy" },
+      { id: "odegaard", name: "مارتن أوديغارد", enName: "Martin Ødegaard", club: "أرسنال", league: "الدوري الإنجليزي", nation: "النرويج", flag: "🇳🇴", pos: "وسط", diff: "easy" },
+      { id: "havertz", name: "كاي هافيرتز", enName: "Kai Havertz", club: "أرسنال", league: "الدوري الإنجليزي", nation: "ألمانيا", flag: "🇩🇪", pos: "مهاجم / وسط", diff: "easy" },
+      { id: "saliba", name: "ويليام ساليبا", enName: "William Saliba", club: "أرسنال", league: "الدوري الإنجليزي", nation: "فرنسا", flag: "🇫🇷", pos: "مدافع", diff: "easy" },
+      { id: "van_dijk", name: "فيرجيل فان دايك", enName: "Virgil van Dijk", club: "ليفربول", league: "الدوري الإنجليزي", nation: "هولندا", flag: "🇳🇱", pos: "مدافع", diff: "easy" },
+      { id: "alisson", name: "أليسون بيكر", enName: "Alisson Becker", club: "ليفربول", league: "الدوري الإنجليزي", nation: "البرازيل", flag: "🇧🇷", pos: "حارس مرمى", diff: "easy" },
+      { id: "mac_allister", name: "أليكسيس ماك أليستر", enName: "Alexis Mac Allister", club: "ليفربول", league: "الدوري الإنجليزي", nation: "الأرجنتين", flag: "🇦🇷", pos: "وسط", diff: "easy" },
+      { id: "szoboszlai", name: "دومينيك سوبوسلاي", enName: "Dominik Szoboszlai", club: "ليفربول", league: "الدوري الإنجليزي", nation: "المجر", flag: "🇭🇺", pos: "وسط", diff: "easy" },
+      { id: "bruno_fernandes", name: "برونو فيرنانديز", enName: "Bruno Fernandes", club: "مانشستر يونايتد", league: "الدوري الإنجليزي", nation: "البرتغال", flag: "🇵🇹", pos: "وسط", diff: "easy" },
+      { id: "lisandro_martinez", name: "ليسانسدرو مارتينيز", enName: "Lisandro Martínez", club: "مانشستر يونايتد", league: "الدوري الإنجليزي", nation: "الأرجنتين", flag: "🇦🇷", pos: "مدافع", diff: "easy" },
+      { id: "de_ligt", name: "ماتايس دي ليخت", enName: "Matthijs de Ligt", club: "مانشستر يونايتد", league: "الدوري الإنجليزي", nation: "هولندا", flag: "🇳🇱", pos: "مدافع", diff: "easy" },
+      { id: "casemiro", name: "كاسيميرو", enName: "Casemiro", club: "مانشستر يونايتد", league: "الدوري الإنجليزي", nation: "البرازيل", flag: "🇧🇷", pos: "وسط", diff: "easy" },
+      { id: "maguire", name: "هاري ماغواير", enName: "Harry Maguire", club: "مانشستر يونايتد", league: "الدوري الإنجليزي", nation: "إنجلترا", flag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿", pos: "مدافع", diff: "easy" },
+      { id: "palmer", name: "كول بالمر", enName: "Cole Palmer", club: "تشيلسي", league: "الدوري الإنجليزي", nation: "إنجلترا", flag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿", pos: "وسط", diff: "easy" },
+      { id: "enzo_fernandez", name: "إينزو فيرنانديز", enName: "Enzo Fernández", club: "تشيلسي", league: "الدوري الإنجليزي", nation: "الأرجنتين", flag: "🇦🇷", pos: "وسط", diff: "easy" },
+      { id: "caicedo", name: "مويسيس كايسيدو", enName: "Moisés Caicedo", club: "تشيلسي", league: "الدوري الإنجليزي", nation: "الإكوادور", flag: "🇪🇨", pos: "وسط", diff: "easy" },
+      { id: "reece_james", name: "ريس جيمس", enName: "Reece James", club: "تشيلسي", league: "الدوري الإنجليزي", nation: "إنجلترا", flag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿", pos: "مدافع", diff: "easy" },
+      { id: "maddison", name: "جيمس ماديسون", enName: "James Maddison", club: "توتنهام هوتسبير", league: "الدوري الإنجليزي", nation: "إنجلترا", flag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿", pos: "وسط", diff: "easy" },
+      { id: "richarlison", name: "ريشارليسون", enName: "Richarlison", club: "توتنهام هوتسبير", league: "الدوري الإنجليزي", nation: "البرازيل", "flag": "🇧🇷", pos: "مهاجم", diff: "easy" },
+      { id: "romero", name: "كريستيان روميرو", enName: "Cristian Romero", club: "توتنهام هوتسبير", league: "الدوري الإنجليزي", nation: "الأرجنتين", flag: "🇦🇷", pos: "مدافع", diff: "easy" },
+      { id: "solanke", name: "دومينيك سولانكي", enName: "Dominic Solanke", club: "توتنهام هوتسبير", league: "الدوري الإنجليزي", nation: "إنجلترا", flag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿", pos: "مهاجم", diff: "easy" },
+      { id: "bruno_guimaraes", name: "برونو غيماريش", enName: "Bruno Guimarães", club: "نيوكاسل يونايتد", league: "الدوري الإنجليزي", nation: "البرازيل", flag: "🇧🇷", pos: "وسط", diff: "easy" },
+      { id: "tonali", name: "ساندرو تونالي", enName: "Sandro Tonali", club: "نيوكاسل يونايتد", league: "الدوري الإنجليزي", nation: "إيطاليا", flag: "🇮🇹", pos: "وسط", diff: "easy" },
+      { id: "isak", name: "ألكسندر إيساك", enName: "Alexander Isak", club: "نيوكاسل يونايتد", league: "الدوري الإنجليزي", nation: "السويد", flag: "🇸🇪", pos: "مهاجم", diff: "easy" },
+      { id: "watkins", name: "أولي واتكينز", enName: "Ollie Watkins", club: "أستون فيلا", league: "الدوري الإنجليزي", nation: "إنجلترا", flag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿", pos: "مهاجم", diff: "easy" },
+      { id: "emi_martinez", name: "إيميليانو مارتينيز", enName: "Emiliano Martínez", club: "أستون فيلا", league: "الدوري الإنجليزي", nation: "الأرجنتين", flag: "🇦🇷", pos: "حارس مرمى", diff: "easy" },
+      { id: "kudus", name: "محمد قدوس", enName: "Mohammed Kudus", club: "وست هام يونايتد", league: "الدوري الإنجليزي", nation: "غانا", flag: "🇬🇭", pos: "وسط / جناح", diff: "easy" },
+      { id: "paqueta", name: "لوكاس باكيتا", enName: "Lucas Paquetá", club: "وست هام يونايتد", league: "الدوري الإنجليزي", nation: "البرازيل", flag: "🇧🇷", pos: "وسط", diff: "easy" },
 
-            // Bundesliga (الدوري الألماني)
-            { id: "bl_01", name: "هاري كين", nationality: "إنجلترا 🏴󠁧󠁢󠁥󠁮󠁧󠁿", club: "بايرن ميونخ", league: "الدوري الألماني", pos: "مهاجم", tier: "famous" },
-            { id: "bl_02", name: "جمال موسيالا", nationality: "ألمانيا 🇩🇪", club: "بايرن ميونخ", league: "الدوري الألماني", pos: "وسط", tier: "famous" },
-            { id: "bl_03", name: "فلوريان فيرتز", nationality: "ألمانيا 🇩🇪", club: "باير ليفركوزن", league: "الدوري الألماني", pos: "وسط", tier: "famous" },
-            { id: "bl_04", name: "ليروي ساني", nationality: "ألمانيا 🇩🇪", club: "بايرن ميونخ", league: "الدوري الألماني", pos: "مهاجم", tier: "famous" },
-            { id: "bl_05", name: "مانويل نوير", nationality: "ألمانيا 🇩🇪", club: "بايرن ميونخ", league: "الدوري الألماني", pos: "حارس مرمى", tier: "famous" },
-            { id: "bl_06", name: "توماس مولر", nationality: "ألمانيا 🇩🇪", club: "بايرن ميونخ", league: "الدوري الألماني", pos: "مهاجم", tier: "famous" },
-            { id: "bl_07", name: "غرانيت تشاكا", nationality: "سويسرا 🇨🇭", club: "باير ليفركوزن", league: "الدوري الألماني", pos: "وسط", tier: "famous" },
-            { id: "bl_08", name: "سيرج غنابري", nationality: "ألمانيا 🇩🇪", club: "بايرن ميونخ", league: "الدوري الألماني", pos: "مهاجم", tier: "famous" },
-            { id: "bl_09", name: "تشافي سيمونز", nationality: "هولندا 🇳🇱", club: "لايبزيغ", league: "الدوري الألماني", pos: "وسط", tier: "medium" },
-            { id: "bl_10", name: "جيريمي فريمبونغ", nationality: "هولندا 🇳🇱", club: "باير ليفركوزن", league: "الدوري الألماني", pos: "مدافع", tier: "famous" },
+      // La Liga Stars
+      { id: "mbappe", name: "كيليان مبابي", enName: "Kylian Mbappé", club: "ريال مدريد", league: "الدوري الإسباني", nation: "فرنسا", flag: "🇫🇷", pos: "مهاجم", diff: "easy" },
+      { id: "vinicius", name: "فينيسيوس جونيور", enName: "Vinícius Júnior", club: "ريال مدريد", league: "الدوري الإسباني", nation: "البرازيل", flag: "🇧🇷", pos: "جناح", diff: "easy" },
+      { id: "bellingham", name: "جود بيلينغهام", enName: "Jude Bellingham", club: "ريال مدريد", league: "الدوري الإسباني", nation: "إنجلترا", flag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿", pos: "وسط", diff: "easy" },
+      { id: "valverde", name: "فيديريكو فالفيردي", enName: "Federico Valverde", club: "ريال مدريد", league: "الدوري الإسباني", nation: "أوروغواي", flag: "🇺🇾", pos: "وسط", diff: "easy" },
+      { id: "courtois", name: "تيبو كورتوا", enName: "Thibaut Courtois", club: "ريال مدريد", league: "الدوري الإسباني", nation: "بلجيكا", flag: "🇧🇪", pos: "حارس مرمى", diff: "easy" },
+      { id: "yamal", name: "لامين يامال", enName: "Lamine Yamal", club: "برشلونة", league: "الدوري الإسباني", nation: "إسبانيا", flag: "🇪🇸", pos: "جناح", diff: "easy" },
+      { id: "raphinha", name: "رافينيا", enName: "Raphinha", club: "برشلونة", league: "الدوري الإسباني", nation: "البرازيل", flag: "🇧🇷", pos: "جناح", diff: "easy" },
+      { id: "pedri", name: "بيدري", enName: "Pedri", club: "برشلونة", league: "الدوري الإسباني", nation: "إسبانيا", flag: "🇪🇸", pos: "وسط", diff: "easy" },
+      { id: "gavi", name: "جاڤي", enName: "Gavi", club: "برشلونة", league: "الدوري الإسباني", nation: "إسبانيا", flag: "🇪🇸", pos: "وسط", diff: "easy" },
+      { id: "lewandowski", name: "روبرت ليفاندوفسكي", enName: "Robert Lewandowski", club: "برشلونة", league: "الدوري الإسباني", nation: "بولندا", flag: "🇵🇱", pos: "مهاجم", diff: "easy" },
+      { id: "dani_olmo", name: "داني أولمو", enName: "Dani Olmo", club: "برشلونة", league: "الدوري الإسباني", nation: "إسبانيا", flag: "🇪🇸", pos: "وسط", diff: "easy" },
+      { id: "griezmann", name: "أنطوان غريزمان", enName: "Antoine Griezmann", club: "أتلتيكو مدريد", league: "الدوري الإسباني", nation: "فرنسا", flag: "🇫🇷", pos: "مهاجم", diff: "easy" },
+      { id: "julian_alvarez", name: "خوليان ألفاريز", enName: "Julián Álvarez", club: "أتلتيكو مدريد", league: "الدوري الإسباني", nation: "الأرجنتين", flag: "🇦🇷", pos: "مهاجم", diff: "easy" },
+      { id: "oblak", name: "يان أوبلاك", enName: "Jan Oblak", club: "أتلتيكو مدريد", league: "الدوري الإسباني", nation: "سلوفينيا", flag: "🇸🇮", pos: "حارس مرمى", diff: "easy" },
+      { id: "nico_williams", name: "نيكو ويليامز", enName: "Nico Williams", club: "أتلتيك بيلباو", league: "الدوري الإسباني", nation: "إسبانيا", flag: "🇪🇸", pos: "جناح", diff: "easy" },
+      { id: "isco", name: "إيسكو", enName: "Isco", club: "ريال بيتيس", league: "الدوري الإسباني", nation: "إسبانيا", flag: "🇪🇸", pos: "وسط", diff: "easy" }
+    ];
 
-            // Ligue 1 (الدوري الفرنسي)
-            { id: "l1_01", name: "عثمان ديمبيلي", nationality: "فرنسا 🇫🇷", club: "باريس سان جيرمان", league: "الدوري الفرنسي", pos: "مهاجم", tier: "famous" },
-            { id: "l1_02", name: "أشرف حكيمي", nationality: "المغرب 🇲🇦", club: "باريس سان جيرمان", league: "الدوري الفرنسي", pos: "مدافع", tier: "famous" },
-            { id: "l1_03", name: "ماركينيوس", nationality: "البرازيل 🇧🇷", club: "باريس سان جيرمان", league: "الدوري الفرنسي", pos: "مدافع", tier: "famous" },
-            { id: "l1_04", name: "جانلويجي دوناروما", nationality: "إيطاليا 🇮🇹", club: "باريس سان جيرمان", league: "الدوري الفرنسي", pos: "حارس مرمى", tier: "famous" },
-            { id: "l1_05", name: "وارن زاير إيمري", nationality: "فرنسا 🇫🇷", club: "باريس سان جيرمان", league: "الدوري الفرنسي", pos: "وسط", tier: "medium" },
-            { id: "l1_06", name: "ألكسندر لاكازيت", nationality: "فرنسا 🇫🇷", club: "ليون", league: "الدوري الفرنسي", pos: "مهاجم", tier: "famous" },
-            { id: "l1_07", name: "ماركو أسينسيو", nationality: "إسبانيا 🇪🇸", club: "باريس سان جيرمان", league: "الدوري الفرنسي", pos: "مهاجم", tier: "famous" },
+    // --- State Management ---
+    let gameState = {
+      team1: "فريق ١",
+      team2: "فريق ٢",
+      score1: 0,
+      score2: 0,
+      totalRounds: 4,
+      currentRound: 1,
+      riskRoundNumber: 2,
+      isRiskActive: false,
+      isGoldenGoal: false,
+      currentPlayer: null,
+      playedPlayerIds: []
+    };
 
-            // Legends Top 5 European Leagues
-            { id: "lg_01", name: "زين الدين زيدان", nationality: "فرنسا 🇫🇷", club: "ريال مدريد (سابقاً)", league: "الدوري الإسباني", pos: "وسط", tier: "famous" },
-            { id: "lg_02", name: "تييري هنري", nationality: "فرنسا 🇫🇷", club: "آرسنال (سابقاً)", league: "الدوري الإنجليزي", pos: "مهاجم", tier: "famous" },
-            { id: "lg_03", name: "باولو مالديني", nationality: "إيطاليا 🇮🇹", club: "إيه سي ميلان (سابقاً)", league: "الدوري الإيطالي", pos: "مدافع", tier: "famous" },
-            { id: "lg_04", name: "أندريس إنييستا", nationality: "إسبانيا 🇪🇸", club: "برشلونة (سابقاً)", league: "الدوري الإسباني", pos: "وسط", tier: "famous" },
-            { id: "lg_05", name: "رونالدينيو", nationality: "البرازيل 🇧🇷", club: "برشلونة (سابقاً)", league: "الدوري الإسباني", pos: "مهاجم", tier: "famous" },
-            { id: "lg_06", name: "ستيفن جيرارد", nationality: "إنجلترا 🏴󠁧󠁢󠁥󠁮󠁧󠁿", club: "ليفربول (سابقاً)", league: "الدوري الإنجليزي", pos: "وسط", tier: "famous" },
-            { id: "lg_07", name: "فرانشيسكو توتي", nationality: "إيطاليا 🇮🇹", club: "روما (سابقاً)", league: "الدوري الإيطالي", pos: "مهاجم", tier: "famous" }
-        ];
+    let selectedRoundsCount = 4;
 
-        /* ----------------------------------------------------
-         * GAME STATE
-         * ---------------------------------------------------- */
-        let gameState = {
-            roundCount: 6,
-            teams: [
-                { id: 1, name: "فريق ١", score: 0 },
-                { id: 2, name: "فريق ٢", score: 0 }
-            ],
-            currentRoundIndex: 0,
-            riskRoundIndex: -1,
-            isGoldenGoal: false,
-            usedInSessionIds: [], // Used strictly in current game match
-            currentPlayer: null,
-            soundEnabled: true
-        };
+    // --- UI Navigation ---
+    function showScreen(screenId) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById(screenId).classList.add('active');
+    }
 
-        // Web Audio API Synthesizer
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        function playTone(freq, type, duration) {
-            if (!gameState.soundEnabled) return;
-            try {
-                if (audioCtx.state === 'suspended') {
-                    audioCtx.resume();
-                }
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                osc.type = type;
-                osc.frequency.value = freq;
-                gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
-                osc.start();
-                osc.stop(audioCtx.currentTime + duration);
-            } catch(e) {}
+    function selectRounds(num) {
+      selectedRoundsCount = num;
+      document.querySelectorAll('.round-opt').forEach(opt => {
+        opt.classList.toggle('selected', parseInt(opt.innerText) === num);
+      });
+    }
+
+    // --- Game Logic ---
+    function startGame() {
+      const t1 = document.getElementById('team1-input').value.trim() || "فريق ١";
+      const t2 = document.getElementById('team2-input').value.trim() || "فريق ٢";
+
+      gameState.team1 = t1;
+      gameState.team2 = t2;
+      gameState.score1 = 0;
+      gameState.score2 = 0;
+      gameState.totalRounds = selectedRoundsCount;
+      gameState.currentRound = 1;
+      gameState.isGoldenGoal = false;
+      
+      // Random Shared Risk Round
+      gameState.riskRoundNumber = Math.floor(Math.random() * selectedRoundsCount) + 1;
+
+      // Update UI Header
+      document.getElementById('t1-display-name').innerText = t1;
+      document.getElementById('t2-display-name').innerText = t2;
+      document.getElementById('btn-t1-txt').innerText = t1;
+      document.getElementById('btn-t2-txt').innerText = t2;
+
+      updateRoundHUD();
+      nextPlayer();
+      showScreen('screen-game');
+    }
+
+    function updateRoundHUD() {
+      document.getElementById('t1-score').innerText = gameState.score1;
+      document.getElementById('t2-score').innerText = gameState.score2;
+
+      if (gameState.isGoldenGoal) {
+        document.getElementById('round-badge').innerText = "⚽ الهدف الذهبي";
+        document.getElementById('risk-alert').style.display = "none";
+        gameState.isRiskActive = false;
+      } else {
+        document.getElementById('round-badge').innerText = `الجولة ${gameState.currentRound} من ${gameState.totalRounds}`;
+        if (gameState.currentRound === gameState.riskRoundNumber) {
+          gameState.isRiskActive = true;
+          document.getElementById('risk-alert').style.display = "block";
+        } else {
+          gameState.isRiskActive = false;
+          document.getElementById('risk-alert').style.display = "none";
         }
+      }
+    }
 
-        function playCorrectSound() {
-            playTone(523.25, 'sine', 0.15);
-            setTimeout(() => playTone(659.25, 'sine', 0.15), 150);
-            setTimeout(() => playTone(783.99, 'sine', 0.3), 300);
+    function getRandomPlayer() {
+      let history = JSON.parse(localStorage.getItem('global_played_players') || '[]');
+      let available = PLAYERS_DB.filter(p => !gameState.playedPlayerIds.includes(p.id) && !history.includes(p.id));
+
+      if (available.length === 0) {
+        // Reset history if exhausted
+        localStorage.setItem('global_played_players', '[]');
+        available = PLAYERS_DB.filter(p => !gameState.playedPlayerIds.includes(p.id));
+      }
+
+      const player = available[Math.floor(Math.random() * available.length)];
+      
+      // Save history
+      gameState.playedPlayerIds.push(player.id);
+      history.push(player.id);
+      localStorage.setItem('global_played_players', JSON.stringify(history));
+
+      return player;
+    }
+
+    function nextPlayer() {
+      const p = getRandomPlayer();
+      gameState.currentPlayer = p;
+
+      document.getElementById('card-player-name').innerText = p.name;
+      document.getElementById('card-player-en').innerText = p.enName;
+      document.getElementById('card-player-nation').innerText = `${p.flag} ${p.nation}`;
+      document.getElementById('card-player-club').innerText = `🛡️ ${p.club}`;
+      document.getElementById('card-player-pos').innerText = `⚽ ${p.pos}`;
+    }
+
+    function skipPlayer() {
+      nextPlayer();
+    }
+
+    function scorePoint(teamNum) {
+      const points = gameState.isRiskActive ? 2 : 1;
+
+      if (teamNum === 1) gameState.score1 += points;
+      else gameState.score2 += points;
+
+      if (gameState.isGoldenGoal) {
+        endMatch(teamNum === 1 ? gameState.team1 : gameState.team2);
+        return;
+      }
+
+      if (gameState.currentRound < gameState.totalRounds) {
+        gameState.currentRound++;
+        updateRoundHUD();
+        nextPlayer();
+      } else {
+        // End of main rounds -> Check tiebreaker or winner
+        if (gameState.score1 === gameState.score2) {
+          gameState.isGoldenGoal = true;
+          updateRoundHUD();
+          nextPlayer();
+        } else {
+          const winner = gameState.score1 > gameState.score2 ? gameState.team1 : gameState.team2;
+          endMatch(winner);
         }
+      }
+    }
 
-        function playSkipSound() {
-            playTone(300, 'triangle', 0.2);
-        }
+    function endMatch(winnerName) {
+      document.getElementById('winner-name').innerText = winnerName;
+      document.getElementById('final-score-display').innerText = `${gameState.team1} (${gameState.score1}) - (${gameState.score2}) ${gameState.team2}`;
+      document.getElementById('golden-goal-note').style.display = gameState.isGoldenGoal ? "block" : "none";
 
-        function playWinSound() {
-            playTone(440, 'square', 0.2);
-            setTimeout(() => playTone(554.37, 'square', 0.2), 200);
-            setTimeout(() => playTone(659.25, 'square', 0.2), 400);
-            setTimeout(() => playTone(880, 'square', 0.5), 600);
-        }
+      saveMatchResult(winnerName);
+      showScreen('screen-result');
+    }
 
-        // On Page Load
-        window.onload = function() {
-            renderRoundsButtons(6);
-            renderTeamInputs();
-            loadSettings();
-            updateLastMatchWidget();
-        };
+    function saveMatchResult(winner) {
+      let stats = JSON.parse(localStorage.getItem('match_history') || '[]');
+      const record = {
+        date: new Date().toLocaleDateString('ar-EG'),
+        t1: gameState.team1,
+        t2: gameState.team2,
+        s1: gameState.score1,
+        s2: gameState.score2,
+        winner: winner
+      };
+      stats.unshift(record);
+      localStorage.setItem('match_history', JSON.stringify(stats));
 
-        // Persistent Global History Management across sessions/refreshes
-        function getGlobalPlayedIds() {
-            try {
-                return JSON.parse(localStorage.getItem('pw_global_played_ids') || '[]');
-            } catch(e) {
-                return [];
-            }
-        }
+      // Display in home
+      document.getElementById('last-match-card').style.display = 'block';
+      document.getElementById('last-match-summary').innerText = `${record.t1} (${record.s1}) - (${record.s2}) ${record.t2} | الفائز: ${winner}`;
+    }
 
-        function recordGlobalPlayedId(id) {
-            try {
-                let played = getGlobalPlayedIds();
-                if (!played.includes(id)) {
-                    played.push(id);
-                    localStorage.setItem('pw_global_played_ids', JSON.stringify(played));
-                }
-            } catch(e) {}
-        }
+    function showStats() {
+      let stats = JSON.parse(localStorage.getItem('match_history') || '[]');
+      const container = document.getElementById('stats-list');
+      if (stats.length === 0) {
+        container.innerHTML = "لا توجد مباريات مسجلة بعد.";
+      } else {
+        container.innerHTML = stats.slice(0, 5).map(s => `
+          <div style="border-bottom: 1px solid rgba(255,255,255,0.1); padding: 8px 0;">
+            🏆 <strong>${s.winner}</strong> (${s.t1} ${s.s1} - ${s.s2} ${s.t2}) <br>
+            <small style="color:#718096;">📅 ${s.date}</small>
+          </div>
+        `).join('');
+      }
+      showScreen('screen-stats');
+    }
 
-        function resetGlobalPlayedPlayers() {
-            try {
-                localStorage.removeItem('pw_global_played_ids');
-                alert("تم تصفير سجل اللاعبين بنجاح! جميع اللاعبين متاحون مجدداً.");
-            } catch(e) {}
-        }
+    function restartMatch() {
+      startGame();
+    }
 
-        // NAVIGATION
-        function switchScreen(screenId) {
-            ['screenHome', 'screenSetup', 'screenGame', 'screenEnd'].forEach(id => {
-                document.getElementById(id).classList.add('hidden');
-            });
-            document.getElementById(screenId).classList.remove('hidden');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        function goToHome() {
-            switchScreen('screenHome');
-            updateLastMatchWidget();
-        }
-
-        function goToSetup() {
-            switchScreen('screenSetup');
-        }
-
-        // SETUP UI
-        function renderRoundsButtons(selected) {
-            gameState.roundCount = selected;
-            const container = document.getElementById('roundsButtonsContainer');
-            container.innerHTML = '';
-            [2, 4, 6, 8, 10].forEach(num => {
-                let isSel = num === selected;
-                let btn = document.createElement('button');
-                btn.className = `py-2 rounded-xl text-xs font-bold transition border ${isSel ? 'bg-neonGreen text-darkBg border-neonGreen shadow-lg shadow-neonGreen/20 font-black' : 'bg-slate-900/80 text-slate-300 border-slate-800 hover:bg-slate-800'}`;
-                btn.innerText = num;
-                btn.onclick = () => renderRoundsButtons(num);
-                container.appendChild(btn);
-            });
-            document.getElementById('selectedRoundsVal').innerText = selected;
-        }
-
-        let currentTeamCount = 2;
-        function setTeamCount(count) {
-            currentTeamCount = count;
-            for(let i=2; i<=4; i++) {
-                let btn = document.getElementById(`teamBtn${i}`);
-                if (i === count) {
-                    btn.className = "px-3 py-1 text-xs rounded-lg font-bold bg-neonGreen text-darkBg transition";
-                } else {
-                    btn.className = "px-3 py-1 text-xs rounded-lg font-bold bg-slate-800 text-slate-300 transition";
-                }
-            }
-            renderTeamInputs();
-        }
-
-        function renderTeamInputs() {
-            const container = document.getElementById('teamInputsContainer');
-            container.innerHTML = '';
-            for(let i=0; i<currentTeamCount; i++) {
-                let defaultName = `فريق ${i+1}`;
-                let div = document.createElement('div');
-                div.className = "flex items-center space-x-2 space-x-reverse";
-                div.innerHTML = `
-                    <span class="w-7 h-7 rounded-lg bg-slate-800 text-neonGreen font-bold text-xs flex items-center justify-center border border-slate-700">${i+1}</span>
-                    <input type="text" id="teamInputName_${i}" value="${defaultName}" class="flex-grow bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-neonGreen" placeholder="اسم الفريق">
-                `;
-                container.appendChild(div);
-            }
-        }
-
-        // START MATCH
-        function startMatch() {
-            gameState.teams = [];
-            for(let i=0; i<currentTeamCount; i++) {
-                let inputName = document.getElementById(`teamInputName_${i}`).value.trim() || `فريق ${i+1}`;
-                gameState.teams.push({ id: i+1, name: inputName, score: 0 });
-            }
-            gameState.currentRoundIndex = 0;
-            gameState.isGoldenGoal = false;
-            gameState.usedInSessionIds = [];
-            
-            // Randomly select risk round
-            gameState.riskRoundIndex = Math.floor(Math.random() * gameState.roundCount) + 1;
-
-            switchScreen('screenGame');
-            loadNextPlayer();
-        }
-
-        /* ----------------------------------------------------
-         * SELECTION ENGINE:
-         * 1. Check Global History + Session History to avoid repeats.
-         * 2. Respect ~80% famous / ~20% medium ratio.
-         * 3. Recycle if database exhausted.
-         * ---------------------------------------------------- */
-        function getSmartNextPlayer(isRiskRound = false) {
-            let globalPlayed = getGlobalPlayedIds();
-
-            // Candidate pool excluding current match session
-            let candidatePool = FAMOUS_PLAYERS_DATABASE.filter(p => !gameState.usedInSessionIds.includes(p.id));
-
-            // Filter out globally played players
-            let freshCandidates = candidatePool.filter(p => !globalPlayed.includes(p.id));
-
-            // If exhausted global history, recycle
-            if (freshCandidates.length === 0) {
-                freshCandidates = candidatePool;
-                // clear old persistent history to recycle smoothly
-                try { localStorage.removeItem('pw_global_played_ids'); } catch(e) {}
-            }
-
-            // Ratio control: 80% Famous, 20% Medium
-            let targetTier = (Math.random() < 0.8 && !isRiskRound) ? 'famous' : 'medium';
-            let tierCandidates = freshCandidates.filter(p => p.tier === targetTier);
-
-            if (tierCandidates.length === 0) {
-                tierCandidates = freshCandidates;
-            }
-
-            // Pick random player
-            let selected = tierCandidates[Math.floor(Math.random() * tierCandidates.length)];
-
-            // Record tracking
-            gameState.usedInSessionIds.push(selected.id);
-            recordGlobalPlayedId(selected.id);
-
-            return selected;
-        }
-
-        // LOAD NEXT PLAYER TO GAME SCREEN
-        function loadNextPlayer() {
-            let isRisk = (!gameState.isGoldenGoal && (gameState.currentRoundIndex + 1) === gameState.riskRoundIndex);
-            gameState.currentPlayer = getSmartNextPlayer(isRisk);
-
-            // Update Header Indicator
-            if (gameState.isGoldenGoal) {
-                document.getElementById('roundIndicatorBadge').innerText = "مرحلة الهدف الذهبي";
-                document.getElementById('riskBanner').classList.add('hidden');
-                document.getElementById('goldenGoalBanner').classList.remove('hidden');
-            } else {
-                let currentNum = gameState.currentRoundIndex + 1;
-                document.getElementById('roundIndicatorBadge').innerText = `الجولة ${currentNum} / ${gameState.roundCount}`;
-                document.getElementById('goldenGoalBanner').classList.add('hidden');
-                
-                if (isRisk) {
-                    document.getElementById('riskBanner').classList.remove('hidden');
-                } else {
-                    document.getElementById('riskBanner').classList.add('hidden');
-                }
-            }
-
-            // League Badge
-            document.getElementById('leagueBadge').innerText = gameState.currentPlayer.league;
-
-            // Player Card Details
-            document.getElementById('playerNameDisplay').innerText = gameState.currentPlayer.name;
-            document.getElementById('playerNationality').innerText = gameState.currentPlayer.nationality;
-            document.getElementById('playerClub').innerText = gameState.currentPlayer.club;
-            document.getElementById('playerPosition').innerText = gameState.currentPlayer.pos;
-
-            // Star/Fame Badge
-            let diffEl = document.getElementById('playerDifficulty');
-            if (gameState.currentPlayer.tier === 'famous') {
-                diffEl.innerText = "⭐ نجم سوبر غني عن التعريف";
-                diffEl.className = "px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-950 text-emerald-400 border border-emerald-800";
-            } else {
-                diffEl.innerText = "🔥 نجم واعد / تحدي ممتاز";
-                diffEl.className = "px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-950 text-amber-400 border border-amber-800";
-            }
-
-            renderScoreboard();
-            renderCorrectButtons();
-        }
-
-        function renderScoreboard() {
-            const grid = document.getElementById('scoreboardGrid');
-            grid.innerHTML = '';
-            gameState.teams.forEach(team => {
-                let div = document.createElement('div');
-                div.className = "bg-cardBg border border-slate-800 rounded-xl p-2.5 flex items-center justify-between shadow-sm";
-                div.innerHTML = `
-                    <span class="text-xs font-bold text-slate-300 truncate max-w-[100px]">${team.name}</span>
-                    <span class="w-7 h-7 rounded-lg bg-slate-900 text-neonGreen font-black text-sm flex items-center justify-center border border-slate-800">${team.score}</span>
-                `;
-                grid.appendChild(div);
-            });
-        }
-
-        function renderCorrectButtons() {
-            const grid = document.getElementById('teamCorrectButtonsGrid');
-            grid.innerHTML = '';
-            gameState.teams.forEach(team => {
-                let btn = document.createElement('button');
-                btn.className = "py-3 px-3 rounded-xl bg-cardBg hover:bg-cardHover border border-slate-700 text-slate-200 font-bold text-xs flex items-center justify-center space-x-1.5 space-x-reverse transition shadow-md";
-                btn.innerHTML = `
-                    <i class="fa-solid fa-check text-neonGreen"></i>
-                    <span class="truncate">${team.name} خمّن صح</span>
-                `;
-                btn.onclick = () => scorePoint(team.id);
-                grid.appendChild(btn);
-            });
-        }
-
-        // Score Point Logic
-        function scorePoint(teamId) {
-            playCorrectSound();
-            let isRisk = (!gameState.isGoldenGoal && (gameState.currentRoundIndex + 1) === gameState.riskRoundIndex);
-            let pointsToAdd = isRisk ? 2 : 1;
-
-            if (gameState.isGoldenGoal) {
-                pointsToAdd = 1;
-            }
-
-            let team = gameState.teams.find(t => t.id === teamId);
-            if (team) {
-                team.score += pointsToAdd;
-            }
-
-            if (gameState.isGoldenGoal) {
-                endMatch(team);
-                return;
-            }
-
-            gameState.currentRoundIndex++;
-
-            if (gameState.currentRoundIndex >= gameState.roundCount) {
-                checkTieAndProceed();
-            } else {
-                loadNextPlayer();
-            }
-        }
-
-        // Skip Action (No points given, does not increment round)
-        function skipPlayer() {
-            playSkipSound();
-            loadNextPlayer();
-        }
-
-        // Tie Check & Golden Goal
-        function checkTieAndProceed() {
-            let maxScore = Math.max(...gameState.teams.map(t => t.score));
-            let topTeams = gameState.teams.filter(t => t.score === maxScore);
-
-            if (topTeams.length > 1) {
-                gameState.isGoldenGoal = true;
-                loadNextPlayer();
-            } else {
-                endMatch(topTeams[0]);
-            }
-        }
-
-        // Match End
-        function endMatch(winnerTeam) {
-            playWinSound();
-            switchScreen('screenEnd');
-
-            document.getElementById('winnerAnnouncementTitle').innerText = `🏆 الفائز: ${winnerTeam.name}!`;
-            document.getElementById('matchEndSubtitle').innerText = gameState.isGoldenGoal ? "حُسمت المباراة بمرحلة الهدف الذهبي!" : "أداء رائع ومنافسة قوية بين جميع الفرق";
-
-            let sortedTeams = [...gameState.teams].sort((a, b) => b.score - a.score);
-            let standingsList = document.getElementById('finalStandingsList');
-            standingsList.innerHTML = '';
-            sortedTeams.forEach((team, idx) => {
-                let div = document.createElement('div');
-                div.className = `p-3 rounded-2xl flex items-center justify-between border ${idx === 0 ? 'bg-emerald-950/40 border-neonGreen/50' : 'bg-slate-900/60 border-slate-800'}`;
-                div.innerHTML = `
-                    <div class="flex items-center space-x-2 space-x-reverse">
-                        <span class="w-6 h-6 rounded-full ${idx === 0 ? 'bg-neonGreen text-darkBg' : 'bg-slate-800 text-slate-300'} font-black text-xs flex items-center justify-center">${idx+1}</span>
-                        <span class="font-bold text-sm text-slate-200">${team.name}</span>
-                    </div>
-                    <span class="text-sm font-black text-neonGreen">${team.score} نقاط</span>
-                `;
-                standingsList.appendChild(div);
-            });
-
-            saveMatchToHistory(winnerTeam, sortedTeams);
-        }
-
-        function restartMatch() {
-            startMatch();
-        }
-
-        // Local Storage Match History Records
-        function saveMatchToHistory(winner, standings) {
-            try {
-                let history = JSON.parse(localStorage.getItem('password_challenge_history') || '[]');
-                let matchRecord = {
-                    date: new Date().toLocaleDateString('ar-EG', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }),
-                    winnerName: winner.name,
-                    scoreText: standings.map(t => `${t.name}: ${t.score}`).join(' | '),
-                    rounds: gameState.roundCount
-                };
-                history.unshift(matchRecord);
-                if (history.length > 15) history = history.slice(0, 15);
-                localStorage.setItem('password_challenge_history', JSON.stringify(history));
-            } catch(e) {}
-        }
-
-        function updateLastMatchWidget() {
-            try {
-                let history = JSON.parse(localStorage.getItem('password_challenge_history') || '[]');
-                let widget = document.getElementById('lastMatchWidget');
-                if (history.length > 0) {
-                    widget.classList.remove('hidden');
-                    document.getElementById('lastMatchDate').innerText = history[0].date;
-                    document.getElementById('lastMatchDetails').innerText = `الفائز: ${history[0].winnerName} (${history[0].scoreText})`;
-                } else {
-                    widget.classList.add('hidden');
-                }
-            } catch(e) {}
-        }
-
-        // Modals
-        function openStatsModal() {
-            try {
-                let history = JSON.parse(localStorage.getItem('password_challenge_history') || '[]');
-                let list = document.getElementById('matchHistoryList');
-                list.innerHTML = '';
-                if (history.length === 0) {
-                    list.innerHTML = `<p class="text-xs text-slate-400 text-center py-6">لا توجد مباريات مسجلة حتى الآن.</p>`;
-                } else {
-                    history.forEach((m, idx) => {
-                        let div = document.createElement('div');
-                        div.className = "bg-slate-900/80 p-3 rounded-2xl border border-slate-800 space-y-1";
-                        div.innerHTML = `
-                            <div class="flex items-center justify-between text-[11px] text-slate-400">
-                                <span>مباراة #${history.length - idx}</span>
-                                <span>${m.date}</span>
-                            </div>
-                            <div class="text-xs font-bold text-white">🏆 ${m.winnerName}</div>
-                            <div class="text-[11px] text-slate-300">${m.scoreText}</div>
-                        `;
-                        list.appendChild(div);
-                    });
-                }
-            } catch(e) {}
-            document.getElementById('statsModal').classList.remove('hidden');
-        }
-
-        function closeStatsModal() {
-            document.getElementById('statsModal').classList.add('hidden');
-        }
-
-        function clearHistoryData() {
-            try {
-                localStorage.removeItem('password_challenge_history');
-                openStatsModal();
-                updateLastMatchWidget();
-            } catch(e) {}
-        }
-
-        function openSettingsModal() {
-            document.getElementById('settingsModal').classList.remove('hidden');
-        }
-
-        function closeSettingsModal() {
-            document.getElementById('settingsModal').classList.add('hidden');
-        }
-
-        function toggleSoundSetting() {
-            gameState.soundEnabled = document.getElementById('soundSettingToggle').checked;
-            let icon = document.getElementById('soundIcon');
-            if (gameState.soundEnabled) {
-                icon.className = "fa-solid fa-volume-high text-sm";
-            } else {
-                icon.className = "fa-solid fa-volume-xmark text-sm";
-            }
-        }
-
-        function toggleSound() {
-            gameState.soundEnabled = !gameState.soundEnabled;
-            document.getElementById('soundSettingToggle').checked = gameState.soundEnabled;
-            let icon = document.getElementById('soundIcon');
-            if (gameState.soundEnabled) {
-                icon.className = "fa-solid fa-volume-high text-sm";
-            } else {
-                icon.className = "fa-solid fa-volume-xmark text-sm";
-            }
-        }
-
-        function loadSettings() {
-            // Default loaded
-        }
-
-        function openRulesModal() {
-            document.getElementById('rulesModal').classList.remove('hidden');
-        }
-
-        function closeRulesModal() {
-            document.getElementById('rulesModal').classList.add('hidden');
-        }
-
-        function confirmQuit() {
-            document.getElementById('quitModal').classList.remove('hidden');
-        }
-
-        function closeQuitModal() {
-            document.getElementById('quitModal').classList.add('hidden');
-        }
-
-        function executeQuit() {
-            closeQuitModal();
-            goToHome();
-        }
-    </script>
+    // Init on Load
+    window.onload = function() {
+      let stats = JSON.parse(localStorage.getItem('match_history') || '[]');
+      if (stats.length > 0) {
+        const last = stats[0];
+        document.getElementById('last-match-card').style.display = 'block';
+        document.getElementById('last-match-summary').innerText = `${last.t1} (${last.s1}) - (${last.s2}) ${last.t2} | الفائز: ${last.winner}`;
+      }
+    };
+  </script>
 </body>
 </html>
